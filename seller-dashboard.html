@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PartSouq — Partner Dashboard</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg-alt);color:var(--text);}
+  a{color:inherit;text-decoration:none;}
+  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh;}
+  .sidebar{background:var(--bg-dark);color:#AEB9CF;padding:20px 16px;}
+  .logo{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
+  .logo .mark{width:34px;height:34px;border-radius:8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:13px;}
+  .logo b{color:#fff;font-size:16px;}
+  .navlink{display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:8px;font-size:13.5px;margin-bottom:3px;}
+  .navlink.active{background:var(--brand-blue);color:#fff;font-weight:700;}
+  .navlink:not(.active):hover{background:rgba(255,255,255,.06);}
+  .navsection{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#647089;margin:18px 0 8px 10px;}
+
+  .main{padding:26px 32px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .topbar h1{font-size:21px;margin:0;}
+  .topbar span{font-size:13px;color:var(--text-secondary);}
+  .badge{background:var(--success-green-light);color:var(--success-green);font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+  .stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px;}
+  .stat .ic{width:36px;height:36px;border-radius:9px;background:var(--brand-blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+  .stat .ic svg{width:18px;height:18px;stroke:var(--brand-blue);}
+  .stat b{font-size:22px;display:block;}
+  .stat span{font-size:12px;color:var(--text-secondary);}
+
+  .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;}
+  .panel h3{font-size:15px;margin:0 0 14px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;color:var(--text-muted);font-weight:600;font-size:11.5px;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:11px 10px;border-bottom:1px solid var(--border);}
+  .status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+  .status.delivered{background:var(--success-green-light);color:var(--success-green);}
+  .status.transit{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
+  .status.processing{background:var(--accent-orange-light);color:#B75C10;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo"><div class="mark">PS</div><b>Partner Portal</b></div>
+    <div class="navlink active">📊 Dashboard</div>
+    <div class="navlink">📦 My Listings</div>
+    <div class="navlink">🧾 Orders</div>
+    <div class="navlink">🔧 Bookings</div>
+    <div class="navlink">💵 Earnings</div>
+    <div class="navsection">Account</div>
+    <div class="navlink">⚙ Settings</div>
+    <div class="navlink">🚪 Logout</div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div><h1>Welcome back, Al Twal Auto Parts</h1><span>Spare Part Supplier · Dubai</span></div>
+      <span class="badge">✓ Verified Seller</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="7" width="18" height="12" rx="2"/></svg></div><b>142</b><span>Active Listings</span></div>
+      <div class="stat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 7L9 18l-5-5"/></svg></div><b>37</b><span>Orders This Month</span></div>
+      <div class="stat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/></svg></div><b>AED 18,420</b><span>Cash Collected on Delivery</span></div>
+      <div class="stat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><b>4.8</b><span>Buyer Rating</span></div>
+    </div>
+
+    <div class="panel">
+      <h3>Recent Orders</h3>
+      <table>
+        <tr><th>Order</th><th>Part</th><th>Buyer Area</th><th>Status</th><th>Amount</th></tr>
+        <tr><td>#PS-10234</td><td>Bosch Alternator 120A</td><td>Dubai Marina</td><td><span class="status delivered">Delivered</span></td><td>AED 450.00</td></tr>
+        <tr><td>#PS-10256</td><td>NGK Spark Plug Set</td><td>Al Barsha</td><td><span class="status transit">Out for Delivery</span></td><td>AED 100.00</td></tr>
+        <tr><td>#PS-10261</td><td>AC Compressor Denso</td><td>Sharjah</td><td><span class="status processing">Processing</span></td><td>AED 650.00</td></tr>
+        <tr><td>#PS-10267</td><td>Brake Pad Set Bosch</td><td>Deira</td><td><span class="status processing">Processing</span></td><td>AED 145.00</td></tr>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>Listing Review Status</h3>
+      <table>
+        <tr><th>Part</th><th>Submitted</th><th>Review Status</th></tr>
+        <tr><td>Toyota Radiator Assembly</td><td>Jul 17, 2026</td><td><span class="status delivered">Approved · Live</span></td></tr>
+        <tr><td>Honda Suspension Strut</td><td>Jul 18, 2026</td><td><span class="status processing">Under Review</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

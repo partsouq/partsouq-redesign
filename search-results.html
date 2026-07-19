@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PartSouq — Brake Parts</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 24px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;border:1px solid var(--border);cursor:pointer;background:#fff;}
+  .btn-primary{background:var(--brand-blue);color:#fff;border-color:var(--brand-blue);}
+  header{border-bottom:1px solid var(--border);padding:14px 0;background:#fff;}
+  header .wrap{display:flex;align-items:center;gap:28px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo .mark{width:38px;height:38px;border-radius:9px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:15px;}
+  .logo .word b{font-size:19px;}
+  .logo .word small{display:block;font-size:9px;letter-spacing:.08em;color:var(--text-muted);font-weight:700;}
+  .searchbar{flex:1;display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .searchbar input{flex:1;border:none;padding:10px 12px;font-size:14px;outline:none;}
+  .searchbar button{background:var(--brand-blue);border:none;color:#fff;padding:0 18px;cursor:pointer;}
+  .headerlinks{display:flex;gap:22px;font-size:12px;color:var(--text-secondary);}
+
+  .crumbs{padding:14px 0;font-size:12.5px;color:var(--text-muted);}
+  .layout{display:grid;grid-template-columns:250px 1fr;gap:28px;padding-bottom:50px;}
+
+  .filters{border:1px solid var(--border);border-radius:var(--radius);padding:18px;height:fit-content;}
+  .filters h3{font-size:14px;margin:0 0 14px;}
+  .fgroup{margin-bottom:20px;}
+  .fgroup b{display:block;font-size:12.5px;margin-bottom:10px;}
+  .fgroup label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px;}
+  .pricebox{display:flex;gap:8px;}
+  .pricebox input{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;font-size:12.5px;}
+
+  .resultsbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+  .resultsbar span{font-size:13.5px;color:var(--text-secondary);}
+  .resultsbar select{padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .card{border:1px solid var(--border);border-radius:10px;padding:14px;background:#fff;}
+  .card .thumb{height:110px;border-radius:8px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;}
+  .card .thumb svg{width:40px;height:40px;stroke:var(--brand-blue);}
+  .card .badge{position:absolute;top:8px;left:8px;background:var(--accent-orange);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;}
+  .card .name{font-size:13px;font-weight:600;margin-bottom:2px;}
+  .card .sku{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
+  .card .price{font-weight:700;color:var(--brand-blue-dark);font-size:15px;}
+  .card .old{font-size:11.5px;color:var(--text-muted);text-decoration:line-through;margin-left:6px;}
+  .card .tag{font-size:10.5px;color:var(--success-green);margin-top:6px;display:flex;align-items:center;gap:4px;}
+  .card .addbtn{width:100%;margin-top:10px;justify-content:center;}
+
+  .pagination{display:flex;justify-content:center;gap:6px;margin-top:30px;}
+  .pagination span{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:7px;font-size:13px;color:var(--text-secondary);}
+  .pagination span.active{background:var(--brand-blue);color:#fff;border-color:var(--brand-blue);}
+
+  footer{background:var(--bg-dark);color:#AEB9CF;padding:30px 0 16px;font-size:12.5px;text-align:center;}
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></div>
+      <div class="searchbar"><input value="brake pads"><button>🔍</button></div>
+      <div class="headerlinks"><a>♡ Wishlist</a><a>🛒 Cart</a><a>👤 Account</a></div>
+    </div>
+  </header>
+
+  <div class="wrap crumbs"><a>Home</a> / <a>Brakes</a> / <span>Brake Pads</span></div>
+
+  <div class="wrap layout">
+    <aside class="filters">
+      <h3>Filters</h3>
+      <div class="fgroup"><b>Category</b>
+        <label><input type="checkbox" checked> Brake Pads</label>
+        <label><input type="checkbox"> Brake Discs</label>
+        <label><input type="checkbox"> Calipers</label>
+      </div>
+      <div class="fgroup"><b>Brand</b>
+        <label><input type="checkbox"> Bosch</label>
+        <label><input type="checkbox"> Brembo</label>
+        <label><input type="checkbox"> ATE</label>
+      </div>
+      <div class="fgroup"><b>Condition</b>
+        <label><input type="checkbox" checked> New</label>
+        <label><input type="checkbox"> Used — Inspected</label>
+      </div>
+      <div class="fgroup"><b>Price Range (AED)</b>
+        <div class="pricebox"><input placeholder="Min"><input placeholder="Max"></div>
+      </div>
+      <div class="fgroup"><b>Seller Rating</b>
+        <label><input type="checkbox"> ★★★★ &amp; up</label>
+      </div>
+      <a class="btn btn-primary" style="width:100%;justify-content:center;">Apply Filters</a>
+    </aside>
+
+    <div>
+      <div class="resultsbar">
+        <span>128 results for "brake pads"</span>
+        <select><option>Sort: Best Match</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Top Rated</option></select>
+      </div>
+      <div class="grid">
+        <div class="card"><div class="thumb"><span class="badge">-40%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">Bosch Brake Pad Set — Front</div><div class="sku">0986TB2170</div><div class="price">AED 145<span class="old">AED 240</span></div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">Brembo Brake Pad Set — Rear</div><div class="sku">P85020</div><div class="price">AED 210</div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><span class="badge">-25%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">ATE Ceramic Brake Pads</div><div class="sku">13.0460-7181</div><div class="price">AED 165<span class="old">AED 220</span></div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">Honda Genuine Brake Pad Set</div><div class="sku">45022-TLA-A00</div><div class="price">AED 120</div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">Toyota OEM Brake Pad Set</div><div class="sku">04465-YZZE1</div><div class="price">AED 130</div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">Nissan Brake Pad Set — Front</div><div class="sku">D1060-3JA0A</div><div class="price">AED 110</div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">Ferodo Racing Brake Pads</div><div class="sku">FDS1234</div><div class="price">AED 280</div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+        <div class="card"><div class="thumb"><span class="badge">-15%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="name">TRW Brake Pad Set</div><div class="sku">GDB1330</div><div class="price">AED 155<span class="old">AED 180</span></div><div class="tag">✓ Verified Seller</div><a class="btn addbtn">Add to Cart</a></div>
+      </div>
+      <div class="pagination"><span>‹</span><span class="active">1</span><span>2</span><span>3</span><span>…</span><span>16</span><span>›</span></div>
+    </div>
+  </div>
+
+  <footer>© 2026 PartSouq — partsouq.co — All rights reserved. Dubai, UAE.</footer>
+</body>
+</html>

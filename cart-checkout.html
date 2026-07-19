@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PartSouq — Cart &amp; Checkout</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;border:1px solid transparent;cursor:pointer;}
+  .btn-primary{background:var(--brand-blue);color:#fff;}
+  header{border-bottom:1px solid var(--border);padding:14px 0;background:#fff;}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo .mark{width:38px;height:38px;border-radius:9px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:15px;}
+  .logo .word b{font-size:19px;}
+  .logo .word small{display:block;font-size:9px;letter-spacing:.08em;color:var(--text-muted);font-weight:700;}
+
+  .steps{display:flex;justify-content:center;gap:0;padding:28px 0 10px;}
+  .step{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);}
+  .step .n{width:26px;height:26px;border-radius:50%;background:var(--border);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+  .step.active{color:var(--text);font-weight:700;}
+  .step.active .n{background:var(--brand-blue);}
+  .step.done .n{background:var(--success-green);}
+  .steps .sep{width:50px;height:2px;background:var(--border);margin:0 12px;align-self:center;}
+
+  .layout{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;padding:20px 0 50px;}
+
+  .cartitem{display:flex;gap:14px;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;align-items:center;}
+  .cartitem .thumb{width:60px;height:60px;border-radius:8px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cartitem .thumb svg{width:26px;height:26px;stroke:var(--brand-blue);}
+  .cartitem .name{font-size:13.5px;font-weight:600;}
+  .cartitem .seller{font-size:11.5px;color:var(--success-green);margin-top:2px;}
+  .cartitem .price{font-weight:700;color:var(--brand-blue-dark);white-space:nowrap;}
+  .qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:8px;margin-left:auto;}
+  .qty button{border:none;background:none;width:28px;height:34px;cursor:pointer;}
+  .qty span{width:26px;text-align:center;font-size:13px;}
+
+  .formbox{border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:18px;}
+  .formbox h3{font-size:14px;margin:0 0 14px;}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+  .frow input, .formbox textarea{width:100%;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;}
+
+  .summary{border:1px solid var(--border);border-radius:10px;padding:20px;height:fit-content;}
+  .summary h3{font-size:15px;margin:0 0 16px;}
+  .sumrow{display:flex;justify-content:space-between;font-size:13.5px;color:var(--text-secondary);margin-bottom:10px;}
+  .sumrow.total{color:var(--text);font-weight:800;font-size:16px;border-top:1px solid var(--border);padding-top:12px;margin-top:6px;}
+  .codbox{background:var(--brand-blue-light);color:var(--brand-blue-dark);border-radius:9px;padding:12px 14px;font-size:12.5px;margin:16px 0;display:flex;gap:8px;}
+  .summary .btn{width:100%;justify-content:center;margin-top:6px;}
+
+  footer{background:var(--bg-dark);color:#AEB9CF;padding:24px 0;font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+  <header><div class="wrap"><div class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></div><span style="font-size:13px;color:var(--text-secondary);">🔒 Secure Checkout</span></div></header>
+
+  <div class="steps">
+    <div class="step done"><div class="n">✓</div>Cart</div>
+    <div class="sep"></div>
+    <div class="step active"><div class="n">2</div>Delivery Details</div>
+    <div class="sep"></div>
+    <div class="step"><div class="n">3</div>Confirm Order</div>
+  </div>
+
+  <div class="wrap layout">
+    <div>
+      <div class="cartitem">
+        <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/></svg></div>
+        <div style="flex:1;"><div class="name">Bosch Alternator — 12V 120A</div><div class="seller">✓ Al Twal Auto Parts</div></div>
+        <div class="qty"><button>−</button><span>1</span><button>+</button></div>
+        <div class="price">AED 450.00</div>
+      </div>
+      <div class="cartitem">
+        <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div style="flex:1;"><div class="name">Bosch Brake Pad Set — Front</div><div class="seller">✓ Gulf Auto Spares</div></div>
+        <div class="qty"><button>−</button><span>2</span><button>+</button></div>
+        <div class="price">AED 290.00</div>
+      </div>
+
+      <div class="formbox">
+        <h3>Delivery Address</h3>
+        <div class="frow"><input placeholder="Full Name"><input placeholder="Mobile Number"></div>
+        <div class="frow"><input placeholder="Emirate"><input placeholder="Area"></div>
+        <textarea placeholder="Street, building, apartment / villa no." rows="2" style="margin-bottom:0;"></textarea>
+      </div>
+    </div>
+
+    <div class="summary">
+      <h3>Order Summary</h3>
+      <div class="sumrow"><span>Subtotal (3 items)</span><span>AED 740.00</span></div>
+      <div class="sumrow"><span>Delivery Fee</span><span>AED 20.00</span></div>
+      <div class="sumrow total"><span>Total (Cash on Delivery)</span><span>AED 760.00</span></div>
+      <div class="codbox">🔒 Pay AED 760.00 in cash to the delivery agent once you've confirmed every part is correct. No online payment needed.</div>
+      <a class="btn btn-primary">Confirm Order →</a>
+    </div>
+  </div>
+
+  <footer>© 2026 PartSouq — partsouq.co — All rights reserved. Dubai, UAE.</footer>
+</body>
+</html>

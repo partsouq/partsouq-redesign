@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PartSouq — Login / Register</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg-alt);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
+  a{color:inherit;text-decoration:none;}
+  .logo{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
+  .logo .mark{width:40px;height:40px;border-radius:9px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:16px;background:#fff;}
+  .logo .word b{font-size:20px;}
+  .logo .word small{display:block;font-size:9px;letter-spacing:.08em;color:var(--text-muted);font-weight:700;}
+
+  .card{width:400px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:30px;box-shadow:0 20px 40px rgba(20,57,155,.06);}
+  .segtabs{display:flex;background:var(--bg-alt);border-radius:9px;padding:4px;margin-bottom:22px;}
+  .segtabs div{flex:1;text-align:center;padding:9px;border-radius:7px;font-size:13px;font-weight:700;color:var(--text-secondary);cursor:pointer;}
+  .segtabs div.active{background:#fff;color:var(--brand-blue-dark);box-shadow:0 2px 6px rgba(0,0,0,.06);}
+
+  h2{font-size:19px;margin:0 0 4px;}
+  .sub{font-size:13px;color:var(--text-secondary);margin:0 0 20px;}
+  label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);display:block;margin-bottom:6px;}
+  .field{margin-bottom:16px;}
+  input{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-size:14px;}
+
+  .accttype{display:flex;gap:10px;margin-bottom:18px;}
+  .accttype div{flex:1;border:1px solid var(--border);border-radius:9px;padding:10px;text-align:center;font-size:12.5px;color:var(--text-secondary);}
+  .accttype div.active{border-color:var(--brand-blue);background:var(--brand-blue-light);color:var(--brand-blue-dark);font-weight:700;}
+
+  .btn{width:100%;padding:12px;border-radius:9px;background:var(--brand-blue);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;margin-top:4px;}
+  .fineprint{font-size:12px;color:var(--text-muted);text-align:center;margin-top:16px;}
+  .fineprint a{color:var(--brand-blue);font-weight:600;}
+</style>
+</head>
+<body>
+
+  <div class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></div>
+
+  <div class="card">
+    <div class="segtabs"><div class="active">Log In</div><div>Register</div></div>
+    <h2>Welcome back</h2>
+    <p class="sub">Log in to track orders and manage your account.</p>
+
+    <div class="accttype">
+      <div class="active">🛒 Buyer</div>
+      <div>🔧 Partner (Supplier / Garage)</div>
+    </div>
+
+    <div class="field"><label>Email or Mobile Number</label><input placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn">Log In →</button>
+    <p class="fineprint">Don't have an account? <a>Register</a> · <a>Forgot password?</a></p>
+  </div>
+
+</body>
+</html>

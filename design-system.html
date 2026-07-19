@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PartSouq — New Color System</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);padding:40px 24px;}
+  h1{font-size:28px;margin:0 0 6px;}
+  p.lede{color:var(--text-secondary);max-width:760px;margin:0 0 32px;line-height:1.6;}
+  h2{font-size:18px;border-top:1px solid var(--border);padding-top:28px;margin-top:36px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:16px;}
+  .swatch{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff;}
+  .swatch .fill{height:70px;}
+  .swatch .meta{padding:10px 12px;}
+  .swatch .name{font-weight:600;font-size:13px;}
+  .swatch .hex{font-size:12px;color:var(--text-secondary);font-family:monospace;}
+  .usage{font-size:12px;color:var(--text-muted);margin-top:4px;}
+  .before-after{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;}
+  .card{border:1px solid var(--border);border-radius:10px;padding:18px;}
+  .card.old{background:#0C1730;color:#fff;}
+  .card.old .tag{color:#9FB4E8;}
+  .card.new{background:var(--bg-alt);}
+  .tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;}
+  .icon-row{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;}
+  .icon-tile{width:110px;text-align:center;}
+  .icon-circle{width:52px;height:52px;border-radius:50%;background:var(--brand-blue-light);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+  .icon-circle svg{width:24px;height:24px;stroke:var(--brand-blue);}
+  .icon-tile span{font-size:12px;color:var(--text-secondary);}
+</style>
+</head>
+<body>
+  <h1>PartSouq — New Color System</h1>
+  <p class="lede">A light, low-glare palette modeled on the conventions Amazon, Facebook and eBay use for pages people read for a long time: a white or very-light-gray canvas, near-black (not pure-black) text, and just one or two restrained accent colors instead of a different hue on every tile. Dark navy is kept only for the footer — same as Amazon's dark footer strip — not spread across full content sections.</p>
+
+  <h2>Backgrounds &amp; text</h2>
+  <div class="grid">
+    <div class="swatch"><div class="fill" style="background:#FFFFFF;border-bottom:1px solid var(--border)"></div><div class="meta"><div class="name">Page background</div><div class="hex">#FFFFFF</div><div class="usage">Default canvas, all content sections</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#F5F7FA"></div><div class="meta"><div class="name">Alt section background</div><div class="hex">#F5F7FA</div><div class="usage">Alternating sections instead of dark navy blocks</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#10192E"></div><div class="meta"><div class="name">Footer only (dark)</div><div class="hex">#10192E</div><div class="usage">Footer strip only — grounding element, like Amazon's footer</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#161B22"></div><div class="meta"><div class="name">Primary text</div><div class="hex">#161B22</div><div class="usage">Headings &amp; body copy (softened from pure black)</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#57606F"></div><div class="meta"><div class="name">Secondary text</div><div class="hex">#57606F</div><div class="usage">Descriptions, captions</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#E2E8F0"></div><div class="meta"><div class="name">Border / divider</div><div class="hex">#E2E8F0</div><div class="usage">Card borders, table lines</div></div></div>
+  </div>
+
+  <h2>Accent colors (only two, used consistently)</h2>
+  <div class="grid">
+    <div class="swatch"><div class="fill" style="background:#1E56D8"></div><div class="meta"><div class="name">Brand Blue</div><div class="hex">#1E56D8</div><div class="usage">Primary CTA, links, icons, trust elements</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#EAF0FE"></div><div class="meta"><div class="name">Brand Blue — light</div><div class="hex">#EAF0FE</div><div class="usage">Icon circles, selected states</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#FF7A1A"></div><div class="meta"><div class="name">Accent Orange</div><div class="hex">#FF7A1A</div><div class="usage">Secondary CTA — supplier actions, deal badges only</div></div></div>
+    <div class="swatch"><div class="fill" style="background:#1FA37A"></div><div class="meta"><div class="name">Success Green</div><div class="hex">#1FA37A</div><div class="usage">Confirmations only (order placed, in stock) — not decorative</div></div></div>
+  </div>
+
+  <h2>Why this replaces the old system</h2>
+  <div class="before-after">
+    <div class="card old">
+      <div class="tag">Before</div>
+      <p style="margin:8px 0 0;line-height:1.6;">Full-width dark navy blocks for the hero, "Buyer Protection" and "How It Works" sections force light text on dark backgrounds across most of the page — tiring over long sessions, and each trust icon used a different hue (orange, blue, purple, pink, green), which reads as decorative rather than trustworthy.</p>
+    </div>
+    <div class="card new">
+      <div class="tag">After</div>
+      <p style="margin:8px 0 0;line-height:1.6;color:var(--text-secondary);">White/light-gray canvas with dark text throughout (Amazon/Facebook-style), dark navy reserved for the footer only. All trust icons now share one blue tone at different tints — calmer, more consistent, easier to scan for hours.</p>
+      <div class="icon-row">
+        <div class="icon-tile"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/></svg></div><span>Cash on Delivery</span></div>
+        <div class="icon-tile"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><span>Listings Checked</span></div>
+        <div class="icon-tile"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 10-3.8 7.1L21 20l-1.2-3.6a8.4 8.4 0 001.2-4.9z"/></svg></div><span>WhatsApp Updates</span></div>
+        <div class="icon-tile"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-4.35-9.5-9C1 8 3 4 7 4c2 0 4 1.5 5 3 1-1.5 3-3 5-3 4 0 6 4 4.5 8-2.5 4.65-9.5 9-9.5 9z"/></svg></div><span>Dispute Resolution</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Copy changes applied</h2>
+  <p class="lede" style="margin-top:8px;">
+    Removed: the "218 Verified Partners" tile, the "7 Emirates, One Platform" tile, and any "deal alerts &amp; restock notifications" line.
+    Softened wording that overclaimed certainty: "100% Genuine Parts" → "Quality-Checked Listings"; "UAE's First Genuine Auto Parts Marketplace" → "UAE's Trusted Auto Parts Marketplace"; the dispute tile no longer says payment is held/released (that doesn't match a cash-on-delivery model) — it now says PartSouq steps in to help resolve issues directly.
+  </p>
+</body>
+</html>

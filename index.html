@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PartSouq — Auto Parts Marketplace</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 24px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:8px;font-weight:600;font-size:14px;border:1px solid transparent;cursor:pointer;}
+  .btn-primary{background:var(--brand-blue);color:#fff;}
+  .btn-outline{background:#fff;color:var(--text);border-color:var(--border);}
+
+  /* utility bar */
+  .utility{background:var(--bg-dark);color:#C9D3E4;font-size:12.5px;padding:7px 0;}
+  .utility .wrap{display:flex;gap:28px;flex-wrap:wrap;}
+  .utility span{display:flex;align-items:center;gap:6px;}
+
+  /* header */
+  header{border-bottom:1px solid var(--border);padding:14px 0;background:#fff;}
+  header .wrap{display:flex;align-items:center;gap:28px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo .mark{width:38px;height:38px;border-radius:9px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:15px;}
+  .logo .word b{font-size:19px;color:var(--text);}
+  .logo .word small{display:block;font-size:9px;letter-spacing:.08em;color:var(--text-muted);font-weight:700;}
+  .searchbar{flex:1;display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .searchbar select{border:none;background:var(--bg-alt);padding:0 12px;font-size:13px;color:var(--text-secondary);border-right:1px solid var(--border);}
+  .searchbar input{flex:1;border:none;padding:10px 12px;font-size:14px;outline:none;}
+  .searchbar button{background:var(--brand-blue);border:none;color:#fff;padding:0 18px;cursor:pointer;}
+  .headerlinks{display:flex;gap:24px;font-size:12px;color:var(--text-secondary);}
+  .headerlinks a{display:flex;flex-direction:column;align-items:center;gap:3px;}
+  nav{background:#fff;border-bottom:1px solid var(--border);}
+  nav .wrap{display:flex;gap:28px;font-size:14px;padding:11px 24px;color:var(--text-secondary);}
+  nav a:hover{color:var(--brand-blue);}
+
+  /* hero */
+  .hero{background:var(--bg-alt);padding:48px 0;}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;}
+  .hero h1{font-size:34px;line-height:1.2;margin:14px 0 12px;}
+  .hero h1 .accent{color:var(--brand-blue);}
+  .hero p{color:var(--text-secondary);font-size:15px;line-height:1.6;max-width:480px;}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:var(--brand-blue-light);color:var(--brand-blue-dark);font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;}
+  .heroctas{display:flex;gap:12px;margin-top:20px;}
+  .heroart{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#fff;}
+
+  .finder{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:0 12px 30px rgba(20,57,155,.06);}
+  .finder h3{margin:0 0 16px;font-size:15px;display:flex;align-items:center;gap:8px;}
+  .finder .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+  .finder label{font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;}
+  .finder select, .finder input{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;background:#fff;color:var(--text);}
+  .finder .actions{display:flex;gap:10px;margin-top:6px;}
+  .finder .actions .btn{flex:1;justify-content:center;}
+
+  /* trust bar */
+  .trustbar{padding:26px 0;border-bottom:1px solid var(--border);}
+  .trustbar .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .trustitem{display:flex;gap:12px;align-items:flex-start;}
+  .trustitem .ic{width:38px;height:38px;border-radius:9px;background:var(--brand-blue-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .trustitem .ic svg{width:19px;height:19px;stroke:var(--brand-blue);}
+  .trustitem b{display:block;font-size:13.5px;}
+  .trustitem span{font-size:12px;color:var(--text-secondary);}
+
+  /* promo banner */
+  .promo{padding:44px 0;}
+  .promo-card{background:linear-gradient(120deg,var(--brand-blue-dark),var(--brand-blue));border-radius:16px;padding:38px;color:#fff;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px;overflow:hidden;}
+  .promo-card h2{font-size:24px;margin:0 0 8px;line-height:1.3;}
+  .promo-card p{color:#D7E3FF;font-size:14px;margin:0 0 18px;}
+  .promo-card .btn-primary{background:#fff;color:var(--brand-blue-dark);}
+  .promo-art{opacity:.9;}
+
+  section.section{padding:36px 0;}
+  .section h2.sectitle{font-size:20px;margin:0 0 18px;display:flex;align-items:center;justify-content:space-between;}
+  .sectitle a{font-size:13px;color:var(--brand-blue);font-weight:600;}
+
+  /* categories */
+  .cats{display:grid;grid-template-columns:repeat(9,1fr);gap:12px;}
+  .cat{text-align:center;border:1px solid var(--border);border-radius:10px;padding:14px 6px;background:#fff;}
+  .cat.active{border-color:var(--brand-blue);background:var(--brand-blue-light);}
+  .cat .ic{width:44px;height:44px;margin:0 auto 8px;border-radius:9px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;}
+  .cat .ic svg{width:22px;height:22px;stroke:var(--brand-blue);}
+  .cat span{font-size:11.5px;color:var(--text-secondary);}
+
+  /* deals */
+  .deals{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .deal{border-radius:14px;padding:22px;color:#fff;position:relative;overflow:hidden;}
+  .deal.d1{background:linear-gradient(135deg,#14399B,#1E56D8);}
+  .deal.d2{background:linear-gradient(135deg,#0F2A6B,#2C6BE0);}
+  .deal.d3{background:linear-gradient(135deg,#1B4FC4,#4C7EEA);}
+  .deal b{font-size:17px;display:block;margin-bottom:6px;}
+  .deal span{font-size:12.5px;color:#D7E3FF;}
+  .deal .btn{margin-top:16px;background:#fff;color:var(--brand-blue-dark);}
+
+  /* newly listed */
+  .products{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+  .product{border:1px solid var(--border);border-radius:10px;padding:14px;background:#fff;}
+  .product .thumb{height:80px;border-radius:8px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+  .product .thumb svg{width:34px;height:34px;stroke:var(--brand-blue);}
+  .product .name{font-size:12.5px;font-weight:600;margin-bottom:2px;}
+  .product .sku{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
+  .product .price{font-weight:700;font-size:14px;color:var(--brand-blue-dark);}
+  .product .tag{font-size:10.5px;color:var(--success-green);display:flex;align-items:center;gap:4px;margin-top:6px;}
+
+  /* footer */
+  footer{background:var(--bg-dark);color:#AEB9CF;padding:40px 0 18px;margin-top:20px;}
+  footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:24px;}
+  footer h4{color:#fff;font-size:13px;margin:0 0 12px;}
+  footer a{display:block;font-size:12.5px;color:#AEB9CF;margin-bottom:9px;}
+  footer .logo .word b, footer .logo .word small{color:#fff;}
+  .bottom{border-top:1px solid #24304A;margin-top:26px;padding-top:16px;font-size:11.5px;color:#7F8CA6;display:flex;justify-content:space-between;}
+</style>
+</head>
+<body>
+
+  <div class="utility">
+    <div class="wrap">
+      <span>🇦🇪 UAE's Trusted Auto Parts Marketplace</span>
+      <span>Up to 40% Off on selected parts</span>
+      <span>New listings added daily from 250+ verified sellers</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap">
+      <div class="logo">
+        <div class="mark">PS</div>
+        <div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div>
+      </div>
+      <div class="searchbar">
+        <select><option>All Categories</option></select>
+        <input placeholder="Search part name, OEM number or car model...">
+        <button>🔍</button>
+      </div>
+      <div class="headerlinks">
+        <a>🎧<span>Support</span></a>
+        <a>🔧<span>Sell</span></a>
+        <a>♡<span>Wishlist</span></a>
+        <a>🛒<span>Cart</span></a>
+        <a>👤<span>My Account</span></a>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="wrap">
+      <a>Home</a><a>Shop Parts</a><a>Today's Deals</a><a>Book a Garage</a><a>How It Works</a><a>Become a Partner</a><a>Contact</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="pill">✓ UAE's Trusted Auto Parts Marketplace</span>
+        <h1>Quality Parts.<br>Verified Sellers.<br><span class="accent">Right for Your Car.</span></h1>
+        <p>The platform connecting UAE drivers with verified sellers for quality auto parts — reliable, affordable, and delivered to your doorstep.</p>
+        <div class="heroctas">
+          <a class="btn btn-primary">Shop Now</a>
+          <a class="btn btn-outline">▶ How It Works</a>
+        </div>
+      </div>
+
+      <div class="finder">
+        <h3>🚗 Find parts for your car</h3>
+        <div class="row">
+          <div><label>Car Brand</label><select><option>Select or type your brand</option></select></div>
+          <div><label>Car Model</label><select><option>Select model first</option></select></div>
+        </div>
+        <div class="row" style="grid-template-columns:1fr;">
+          <div><label>Part Name</label><input placeholder="e.g. Brake, Filter, Radiator..."></div>
+        </div>
+        <div class="row" style="grid-template-columns:1fr 1fr 1fr;">
+          <div><label>Year</label><select><option>Select year</option></select></div>
+          <div><label>Spec</label><select><option>Any</option></select></div>
+          <div><label>Category</label><select><option>All parts</option></select></div>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary">🔍 Search Parts</a>
+          <a class="btn btn-outline">Request Part</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trustbar">
+    <div class="wrap">
+      <div class="trustitem"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><div><b>Quality Checked</b><span>Every listing reviewed before it's live</span></div></div>
+      <div class="trustitem"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><div><b>Verified Sellers</b><span>Trusted &amp; rated sellers</span></div></div>
+      <div class="trustitem"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="7" width="15" height="10" rx="2"/><path d="M17 10h3l2 3v4h-5z"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg></div><div><b>Fast &amp; Reliable Delivery</b><span>Across the UAE</span></div></div>
+      <div class="trustitem"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div><div><b>Secure Shopping</b><span>Safe &amp; easy payments</span></div></div>
+    </div>
+  </section>
+
+  <section class="promo">
+    <div class="wrap">
+      <div class="promo-card">
+        <div>
+          <h2>Every Part. Every Brand.<br>All in One Place.</h2>
+          <p>From engine to electrical — we've got you covered.</p>
+          <a class="btn btn-primary">Browse All Parts →</a>
+        </div>
+        <div class="promo-art">
+          <svg viewBox="0 0 200 140" width="100%" height="140">
+            <circle cx="40" cy="70" r="30" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="6"/>
+            <circle cx="40" cy="70" r="10" fill="#ffffff" fill-opacity=".7"/>
+            <rect x="90" y="40" width="20" height="60" rx="4" fill="#ffffff" fill-opacity=".35"/>
+            <rect x="118" y="30" width="20" height="70" rx="4" fill="#ffffff" fill-opacity=".5"/>
+            <rect x="146" y="50" width="20" height="50" rx="4" fill="#ffffff" fill-opacity=".35"/>
+            <circle cx="170" cy="45" r="16" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="sectitle">Shop by Category <a>View all categories →</a></h2>
+      <div class="cats">
+        <div class="cat active"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><span>All Parts</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M9 6V4h6v2"/></svg></div><span>Engine</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><span>Brakes</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 20V10l6-6 6 6v10"/></svg></div><span>Suspension</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="9" width="18" height="7" rx="2"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/></svg></div><span>Body Parts</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="6" y="5" width="12" height="14" rx="2"/><path d="M9 9h6M9 13h6"/></svg></div><span>Electrical</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2"/></svg></div><span>AC &amp; Cooling</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4v4M12 16v4M4 12h4M16 12h4"/></svg></div><span>Steering</span></div>
+        <div class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 7l3 3-8 8-4 1 1-4 8-8z"/></svg></div><span>Tools &amp; Garage</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-alt);">
+    <div class="wrap">
+      <h2 class="sectitle">Today's Deals <a>All deals →</a></h2>
+      <div class="deals">
+        <div class="deal d1"><b>Up to 40% Off Brake Systems</b><span>Pads, discs, calipers • Verified only</span><br><a class="btn">Shop Brakes →</a></div>
+        <div class="deal d2"><b>Engine &amp; Filter Parts — Save 35%</b><span>Genuine fitment • Major UAE brands</span><br><a class="btn">Shop Engine →</a></div>
+        <div class="deal d3"><b>Suspension Deals — Save 25%</b><span>Shock absorbers, struts, control arms</span><br><a class="btn">Shop Now →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="sectitle">Newly Listed Parts <a>See all →</a></h2>
+      <div class="products">
+        <div class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg></div><div class="name">Toyota Oil Filter</div><div class="sku">90915-YZZE1</div><div class="price">AED 35.00</div><div class="tag">✓ Verified Seller</div></div>
+        <div class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div><div class="name">Honda Brake Pad Set</div><div class="sku">45022-TLA-A00</div><div class="price">AED 120.00</div><div class="tag">✓ Verified Seller</div></div>
+        <div class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 5v14"/></svg></div><div class="name">Bosch Alternator</div><div class="sku">0986041230</div><div class="price">AED 450.00</div><div class="tag">✓ Verified Seller</div></div>
+        <div class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3v10M8 9l4 4 4-4"/></svg></div><div class="name">NGK Spark Plug</div><div class="sku">ILFR6A11</div><div class="price">AED 25.00</div><div class="tag">✓ Verified Seller</div></div>
+        <div class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="3"/></svg></div><div class="name">AC Compressor Denso</div><div class="sku">10S17C</div><div class="price">AED 650.00</div><div class="tag">✓ Verified Seller</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="cols">
+        <div>
+          <div class="logo"><div class="mark" style="border-color:#fff;">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></div>
+          <p style="font-size:12.5px;margin-top:12px;line-height:1.6;">Quality car parts and trusted garage services — verified, secured and coordinated through one platform.</p>
+        </div>
+        <div><h4>Shop</h4><a>All Parts</a><a>Today's Deals</a><a>Brakes &amp; Discs</a><a>Engine Parts</a><a>Suspension</a></div>
+        <div><h4>Services</h4><a>Book a Garage</a><a>How It Works</a><a>Track Order</a><a>Request a Part</a></div>
+        <div><h4>Partner Network</h4><a>Sell Your Parts</a><a>Register Garage</a><a>Partner Terms</a></div>
+        <div><h4>Help &amp; Legal</h4><a>Contact Us</a><a>Policies &amp; Terms</a></div>
+      </div>
+      <div class="bottom">
+        <span>© 2026 PartSouq — partsouq.co — All rights reserved. Dubai, UAE.</span>
+        <span>Dubai • Sharjah • Abu Dhabi • Ajman • RAK • Fujairah • UAQ</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

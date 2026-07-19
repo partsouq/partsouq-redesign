@@ -44,7 +44,7 @@
 </head>
 <body>
 
-  <div class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></div>
+  <a href="index.html" class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
 
   <div class="card">
     <div class="segtabs"><div class="active">Log In</div><div>Register</div></div>
@@ -52,15 +52,22 @@
     <p class="sub">Log in to track orders and manage your account.</p>
 
     <div class="accttype">
-      <div class="active">🛒 Buyer</div>
-      <div>🔧 Partner (Supplier / Garage)</div>
+      <div class="active" id="acct-buyer" onclick="selectAcct('buyer')">🛒 Buyer</div>
+      <div id="acct-partner" onclick="selectAcct('partner')">🔧 Partner (Supplier / Garage)</div>
     </div>
 
     <div class="field"><label>Email or Mobile Number</label><input placeholder="you@example.com"></div>
     <div class="field"><label>Password</label><input type="password" placeholder="••••••••"></div>
-    <button class="btn">Log In →</button>
-    <p class="fineprint">Don't have an account? <a>Register</a> · <a>Forgot password?</a></p>
+    <a class="btn" id="login-btn" href="my-account.html" style="display:block;text-align:center;text-decoration:none;">Log In →</a>
+    <p class="fineprint">Don't have an account? <a href="#">Register</a> · <a href="#">Forgot password?</a></p>
   </div>
 
+  <script>
+    function selectAcct(type){
+      document.getElementById('acct-buyer').classList.toggle('active', type === 'buyer');
+      document.getElementById('acct-partner').classList.toggle('active', type === 'partner');
+      document.getElementById('login-btn').setAttribute('href', type === 'buyer' ? 'my-account.html' : 'seller-dashboard.html');
+    }
+  </script>
 </body>
 </html>

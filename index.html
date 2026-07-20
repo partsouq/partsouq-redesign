@@ -172,25 +172,25 @@
         </div>
       </div>
 
-      <div class="finder">
+      <form class="finder" id="finder-form">
         <h3>🚗 Find parts for your car</h3>
         <div class="row">
-          <div><label>Car Brand</label><select><option>Select or type your brand</option></select></div>
-          <div><label>Car Model</label><select><option>Select model first</option></select></div>
+          <div><label>Car Brand</label><input id="f-brand" list="brand-list" placeholder="Select or type your brand"><datalist id="brand-list"></datalist></div>
+          <div><label>Car Model</label><input id="f-model" list="model-list" placeholder="Select brand first, or type your own"><datalist id="model-list"></datalist></div>
         </div>
         <div class="row" style="grid-template-columns:1fr;">
-          <div><label>Part Name</label><input placeholder="e.g. Brake, Filter, Radiator..."></div>
+          <div><label>Part Name</label><input id="f-part" list="part-list" placeholder="e.g. Brake, Filter, Radiator..."><datalist id="part-list"></datalist></div>
         </div>
         <div class="row" style="grid-template-columns:1fr 1fr 1fr;">
-          <div><label>Year</label><select><option>Select year</option></select></div>
-          <div><label>Spec</label><select><option>Any</option></select></div>
-          <div><label>Category</label><select><option>All parts</option></select></div>
+          <div><label>Year</label><input id="f-year" type="number" min="1990" max="2026" placeholder="e.g. 2020"></div>
+          <div><label>Spec</label><select id="f-spec"><option value="">Any</option><option>GCC</option><option>American</option><option>Japanese</option><option>European</option></select></div>
+          <div><label>Category</label><select id="f-cat"><option value="">All parts</option></select></div>
         </div>
         <div class="actions">
-          <a href="search-results.html" class="btn btn-primary">🔍 Search Parts</a>
-          <a href="become-a-partner.html" class="btn btn-outline">Request Part</a>
+          <button type="submit" class="btn btn-primary">🔍 Search Parts</button>
+          <a href="#" id="hero-request-part" class="btn btn-outline">Request Part</a>
         </div>
-      </div>
+      </form>
     </div>
   </section>
 
@@ -260,13 +260,15 @@
       </div>
       <div class="bottom">
         <span>© 2026 PartSouq — partsouq.co — All rights reserved. Dubai, UAE.</span>
-        <span>Dubai • Sharjah • Abu Dhabi • Ajman • RAK • Fujairah • UAQ</span>
+        <span>Dubai • Sharjah • Abu Dhabi • Ajman • RAK • Fujairah • UAQ · <a href="admin-portal.html" style="color:#AEB9CF;">🛡 Admin Sign In</a></span>
       </div>
     </div>
   </footer>
 
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
+  <script src="admin-data.js"></script>
+  <script src="request-part.js"></script>
   <script>
     // Populate the category select in the header search bar
     const catSelect = document.getElementById("cat-select");
@@ -274,6 +276,37 @@
       const o = document.createElement("option");
       o.value = c; o.textContent = c;
       catSelect.appendChild(o);
+    });
+
+    // Populate the car finder: brand/model typeahead, part-name typeahead, category select
+    const brandList = document.getElementById("brand-list");
+    Object.keys(CAR_DB).forEach(b => { const o = document.createElement("option"); o.value = b; brandList.appendChild(o); });
+    document.getElementById("f-brand").addEventListener("input", e => {
+      const modelList = document.getElementById("model-list");
+      modelList.innerHTML = "";
+      const models = CAR_DB[e.target.value];
+      if (models) models.forEach(m => { const o = document.createElement("option"); o.value = m; modelList.appendChild(o); });
+    });
+    const partList = document.getElementById("part-list");
+    [...new Set(PS_PRODUCTS.map(p => p.name))].forEach(n => { const o = document.createElement("option"); o.value = n; partList.appendChild(o); });
+    const fCat = document.getElementById("f-cat");
+    PS_CATEGORIES.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; fCat.appendChild(o); });
+
+    document.getElementById("finder-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const brand = document.getElementById("f-brand").value.trim();
+      const model = document.getElementById("f-model").value.trim();
+      const part = document.getElementById("f-part").value.trim();
+      const category = document.getElementById("f-cat").value;
+      const qParts = [part, brand, model].filter(Boolean);
+      const params = new URLSearchParams();
+      if (qParts.length) params.set("q", qParts.join(" "));
+      if (category) params.set("category", category);
+      location.href = "search-results.html" + (params.toString() ? "?" + params.toString() : "");
+    });
+    document.getElementById("hero-request-part").addEventListener("click", e => {
+      e.preventDefault();
+      openRequestPartModal(document.getElementById("f-part").value.trim());
     });
 
     // Render category tiles (All Parts + each real category)

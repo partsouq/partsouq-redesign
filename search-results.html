@@ -95,22 +95,30 @@
     <div>
       <div class="resultsbar">
         <span id="results-count"></span>
-        <select id="sort-select">
-          <option value="best">Sort: Best Match</option>
-          <option value="low">Price: Low to High</option>
-          <option value="high">Price: High to Low</option>
-          <option value="rating">Top Rated</option>
-        </select>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <a href="#" onclick="openRequestPartModal(document.getElementById('q-input').value);return false;" style="font-size:12.5px;color:var(--brand-blue);font-weight:600;">Can't find it? Request a part →</a>
+          <select id="sort-select">
+            <option value="best">Sort: Best Match</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
       </div>
       <div class="grid" id="results-grid"></div>
-      <p id="no-results" style="display:none;color:var(--text-secondary);font-size:14px;padding:30px 0;text-align:center;">No parts matched your search. Try clearing some filters.</p>
+      <div id="no-results" style="display:none;color:var(--text-secondary);font-size:14px;padding:30px 0;text-align:center;">
+        <p>No parts matched your search. Try clearing some filters, or let a seller find it for you.</p>
+        <a href="#" class="btn btn-primary" style="display:inline-flex;margin-top:10px;" onclick="openRequestPartModal(document.getElementById('q-input').value);return false;">Request This Part →</a>
+      </div>
     </div>
   </div>
 
-  <footer>© 2026 PartSouq — <a href="index.html" style="color:inherit;">partsouq.co</a> — All rights reserved. Dubai, UAE.</footer>
+  <footer>© 2026 PartSouq — <a href="index.html" style="color:inherit;">partsouq.co</a> — All rights reserved. Dubai, UAE. · <a href="admin-portal.html" style="color:inherit;">🛡 Admin Sign In</a></footer>
 
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
+  <script src="admin-data.js"></script>
+  <script src="request-part.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const state = {
@@ -176,9 +184,10 @@
       if (state.max !== null && p.price > state.max) return false;
       if (state.ratingOnly && p.rating < 4.5) return false;
       if (state.q) {
-        const q = state.q.toLowerCase();
-        const hay = (p.name + " " + p.sku + " " + p.brand + " " + p.category).toLowerCase();
-        if (!hay.includes(q)) return false;
+        const hay = (p.name + " " + p.sku + " " + p.brand + " " + p.category + " " + (p.desc || "")).toLowerCase();
+        const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+        // Match if every search word appears somewhere in the product's fields.
+        if (!words.every(w => hay.includes(w))) return false;
       }
       return true;
     }

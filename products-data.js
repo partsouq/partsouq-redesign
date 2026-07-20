@@ -43,6 +43,21 @@ const PS_PRODUCTS = [
   {id:"p24", name:"Hydraulic Floor Jack 2T",          sku:"HFJ-2T",       brand:"Bosch",  category:"Tools & Garage", price:260, oldPrice:300,  seller:"Deira Auto Traders",   rating:4.7, reviews:45,  desc:"2-tonne hydraulic floor jack with low entry height."}
 ];
 
+const CAR_DB = {
+  "Toyota": ["Camry","Corolla","Land Cruiser","Hilux","RAV4","Yaris","Fortuner","Prado"],
+  "Honda": ["Civic","Accord","CR-V","City","Pilot"],
+  "Nissan": ["Altima","Patrol","Sunny","X-Trail","Sentra"],
+  "Hyundai": ["Elantra","Tucson","Santa Fe","Accent"],
+  "Kia": ["Sportage","Sorento","Cerato","Optima"],
+  "Mitsubishi": ["Pajero","Lancer","Outlander","L200"],
+  "Ford": ["F-150","Explorer","Edge","Ranger"],
+  "Chevrolet": ["Tahoe","Malibu","Suburban","Camaro"],
+  "BMW": ["3 Series","5 Series","X5","X3"],
+  "Mercedes-Benz": ["C-Class","E-Class","GLE","GLC"],
+  "Lexus": ["RX","ES","LX","GX"],
+  "Mazda": ["6","CX-5","3","CX-9"]
+};
+
 function psFindProduct(id){ return PS_PRODUCTS.find(p => p.id === id); }
 function psRelated(product, limit){
   limit = limit || 5;

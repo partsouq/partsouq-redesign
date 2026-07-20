@@ -83,38 +83,59 @@
     <div class="panel">
       <h3>My Listings <span style="font-weight:400;color:var(--text-secondary);font-size:12.5px;">— Al Twal Auto Parts</span></h3>
       <table id="listings-table">
-        <tr><th>Part</th><th>SKU</th><th>Category</th><th>Price</th><th>Status</th></tr>
+        <tr><th>Image</th><th>Part</th><th>SKU</th><th>Category</th><th>Price</th><th>Status</th></tr>
       </table>
-      <form id="add-listing-form" style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+      <form id="add-listing-form" style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:flex-end;">
+        <div>
+          <label style="display:block;font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;margin-bottom:5px;">Photo</label>
+          <label for="nl-image" id="nl-image-preview" style="width:44px;height:44px;border:1.5px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg-alt);font-size:18px;color:var(--text-muted);overflow:hidden;">📷
+            <input id="nl-image" type="file" accept="image/*" style="display:none;">
+          </label>
+        </div>
         <input id="nl-name" placeholder="Part name" required style="flex:1;min-width:160px;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;">
         <input id="nl-sku" placeholder="SKU" required style="width:140px;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;">
         <select id="nl-category" style="padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;"></select>
         <input id="nl-price" type="number" placeholder="Price (AED)" required style="width:130px;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;">
-        <button type="submit" class="btn" style="background:var(--brand-blue);color:#fff;border:none;padding:9px 18px;border-radius:7px;font-weight:600;font-size:13px;cursor:pointer;">+ Add Listing</button>
+        <button type="submit" class="btn" style="background:var(--brand-blue);color:#fff;border:none;padding:9px 18px;border-radius:7px;font-weight:600;font-size:13px;cursor:pointer;">+ Submit for Review</button>
       </form>
+      <p style="font-size:11.5px;color:var(--text-muted);margin-top:8px;">New listings go to PartSouq for review before they appear in search — track status above.</p>
     </div>
   </div>
 </div>
 
 <script src="products-data.js"></script>
 <script src="cart.js"></script>
+<script src="admin-data.js"></script>
 <script>
   const SELLER_NAME = "Al Twal Auto Parts";
-  const SELLER_KEY = "ps_seller_listings";
+  let nlImageData = null;
+
+  document.getElementById("nl-image").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      nlImageData = ev.target.result;
+      document.getElementById("nl-image-preview").innerHTML = '<img src="' + nlImageData + '" style="width:100%;height:100%;object-fit:cover;">';
+    };
+    reader.readAsDataURL(file);
+  });
 
   function getSellerListings(){
-    const base = PS_PRODUCTS.filter(p => p.seller === SELLER_NAME);
-    let extra = [];
-    try { extra = JSON.parse(localStorage.getItem(SELLER_KEY)) || []; } catch(e){ extra = []; }
+    // Catalog items already in PS_PRODUCTS are pre-existing approved listings.
+    const base = PS_PRODUCTS.filter(p => p.seller === SELLER_NAME).map(p => Object.assign({status: "Approved"}, p));
+    const extra = psGetAllSubmittedListings().filter(p => p.seller === SELLER_NAME);
     return base.concat(extra);
   }
 
   function renderStats(){
     const listings = getSellerListings();
+    const approved = listings.filter(l => l.status === "Approved").length;
+    const pending = listings.filter(l => l.status === "Pending Review").length;
     const orders = psGetOrders();
     const cashCollected = orders.reduce((s,o) => s + o.total, 0);
     const stats = [
-      {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/>', val: listings.length, label: "Active Listings"},
+      {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/>', val: approved, label: "Active Listings" + (pending ? " (" + pending + " pending)" : "")},
       {icon:'<path d="M20 7L9 18l-5-5"/>', val: orders.length, label: "Orders This Month"},
       {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/>', val: psFmt(cashCollected), label: "Cash Collected on Delivery"},
       {icon:'<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>', val: "4.8", label: "Buyer Rating"}
@@ -135,12 +156,16 @@
     });
   }
 
+  const listingStatusClass = {"Approved":"delivered","Pending Review":"processing","Rejected":"transit"};
+  const listingStatusLabel = {"Approved":"Approved · Live","Pending Review":"⏳ Pending Review","Rejected":"✕ Rejected"};
+
   function renderListings(){
     const table = document.getElementById("listings-table");
     table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
     getSellerListings().forEach(p => {
       const tr = document.createElement("tr");
-      tr.innerHTML = "<td>" + p.name + "</td><td>" + p.sku + "</td><td>" + p.category + "</td><td>" + psFmt(p.price) + "</td><td><span class=\"status delivered\">Approved · Live</span></td>";
+      const thumb = p.image ? '<img src="' + p.image + '" style="width:34px;height:34px;object-fit:cover;border-radius:6px;">' : '<div style="width:34px;height:34px;border-radius:6px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">' + psIcon(p.category) + '</div>';
+      tr.innerHTML = "<td>" + thumb + "</td><td>" + p.name + "</td><td>" + p.sku + "</td><td>" + p.category + "</td><td>" + psFmt(p.price) + "</td><td><span class=\"status " + (listingStatusClass[p.status]||"processing") + "\">" + (listingStatusLabel[p.status]||p.status) + "</span></td>";
       table.appendChild(tr);
     });
   }
@@ -158,11 +183,12 @@
     const category = catSelect.value;
     const price = Number(document.getElementById("nl-price").value);
     if (!name || !sku || !price) return;
-    let extra = [];
-    try { extra = JSON.parse(localStorage.getItem(SELLER_KEY)) || []; } catch(err){ extra = []; }
-    extra.push({id: "custom-" + Date.now(), name, sku, category, price, brand:"—", seller: SELLER_NAME, rating:0, reviews:0, desc:""});
-    localStorage.setItem(SELLER_KEY, JSON.stringify(extra));
+    const all = psGetAllSubmittedListings();
+    all.push({id: "custom-" + Math.floor(Math.random()*1e9), name, sku, category, price, brand:"—", seller: SELLER_NAME, rating:0, reviews:0, desc:"", image: nlImageData, status: "Pending Review"});
+    localStorage.setItem(PS_LISTINGS_KEY, JSON.stringify(all));
     e.target.reset();
+    nlImageData = null;
+    document.getElementById("nl-image-preview").innerHTML = "📷";
     renderListings();
     renderStats();
   });

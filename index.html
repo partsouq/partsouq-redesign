@@ -44,14 +44,23 @@
   nav .wrap{display:flex;gap:28px;font-size:14px;padding:11px 24px;color:var(--text-secondary);}
   nav a:hover{color:var(--brand-blue);}
 
-  /* hero */
-  .hero{background:var(--bg-alt);padding:48px 0;}
+  /* hero — photographic-style banner behind the "Find parts for your car" widget.
+     (Generated in-house; see the chat note on category images for why this isn't
+     licensed stock photography.) Text switches to light-on-dark for contrast. */
+  .hero{
+    background:
+      linear-gradient(100deg, rgba(7,12,26,.86) 0%, rgba(7,12,26,.6) 42%, rgba(7,12,26,.22) 72%, rgba(7,12,26,.08) 100%),
+      url('images/hero-banner.jpg') center/cover no-repeat;
+    padding:52px 0;
+  }
   .hero .wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;}
-  .hero h1{font-size:34px;line-height:1.2;margin:14px 0 12px;}
-  .hero h1 .accent{color:var(--brand-blue);}
-  .hero p{color:var(--text-secondary);font-size:15px;line-height:1.6;max-width:480px;}
+  .hero h1{font-size:34px;line-height:1.2;margin:14px 0 12px;color:#fff;}
+  .hero h1 .accent{color:#9DBCFF;}
+  .hero p{color:#D9E1F5;font-size:15px;line-height:1.6;max-width:480px;}
+  .hero .pill{background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
   .pill{display:inline-flex;align-items:center;gap:6px;background:var(--brand-blue-light);color:var(--brand-blue-dark);font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;}
   .heroctas{display:flex;gap:12px;margin-top:20px;}
+  .heroctas .btn-outline{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
   .heroart{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#fff;}
 
   .finder{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:0 12px 30px rgba(20,57,155,.06);}
@@ -169,7 +178,12 @@
     nav .wrap{overflow-x:auto;gap:18px;padding:10px 16px;scrollbar-width:none;white-space:nowrap;}
     nav .wrap::-webkit-scrollbar{display:none;}
 
-    .hero{padding:28px 0;}
+    .hero{
+      padding:28px 0;
+      background:
+        linear-gradient(rgba(7,12,26,.78), rgba(7,12,26,.78)),
+        url('images/hero-banner.jpg') center/cover no-repeat;
+    }
     .hero .wrap{grid-template-columns:1fr;gap:22px;}
     .hero h1{font-size:26px;}
     .hero p{max-width:none;}
@@ -494,22 +508,27 @@
       const st = psCatStyle(category);
       const override = (typeof psGetCategoryImageOverrides === "function") ? psGetCategoryImageOverrides()[category] : null;
       const glow = (override && override.glow) || st.glow;
-      let icon;
-      if (override && override.image) {
-        icon = '<img src="' + override.image + '" style="width:100%;height:100%;object-fit:cover;">';
-      } else if (category === "Book Garage") {
+      const defaultImg = (typeof psCategoryDefaultImage === "function") ? psCategoryDefaultImage(category) : null;
+      const image = (override && override.image) || (category !== "Book Garage" ? defaultImg : null);
+      let icon = "";
+      if (category === "Book Garage") {
         icon = '<svg viewBox="0 0 24 24" fill="none" stroke="' + glow + '" stroke-width="1.8"><path d="M14 7l3 3-8 8-4 1 1-4 8-8z"/></svg>';
-      } else if (category === "All Parts") {
-        icon = '<svg viewBox="0 0 24 24" fill="none" stroke="' + glow + '" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M6 6l2.2 2.2M15.8 15.8L18 18M18 6l-2.2 2.2M8.2 15.8L6 18"/></svg>';
-      } else {
+      } else if (!image) {
         icon = psIcon(category).replace("<svg ", '<svg stroke="' + glow + '" ');
       }
       const a = document.createElement("a");
       a.href = href;
       a.className = "cat-card" + (category === "All Parts" ? " active" : "");
-      a.style.background = st.grad;
+      if (image) {
+        a.style.backgroundImage = "linear-gradient(180deg, rgba(6,10,20,.08), rgba(6,10,20,.15))," +
+          "url('" + image + "')";
+        a.style.backgroundSize = "cover";
+        a.style.backgroundPosition = "center";
+      } else {
+        a.style.background = st.grad;
+      }
       a.innerHTML =
-        '<div class="cat-ic">' + icon + '</div>' +
+        (icon ? '<div class="cat-ic">' + icon + '</div>' : '') +
         (category === "Book Garage" ? '<div class="cat-badge">BOOK</div>' : '') +
         '<div class="cat-overlay"><span>' + label + '</span></div>';
       return a;
@@ -589,11 +608,18 @@
     }
 
     const dealsWrap = document.getElementById("deals-wrap");
+    // Photographic-style deal card art (generated in-house — see chat note on
+    // category images above); falls back to the original blue gradients if the
+    // image files are ever missing.
+    const dealImages = ["images/deal-1.jpg", "images/deal-2.jpg", "images/deal-3.jpg"];
     const dealGrads = ["linear-gradient(135deg,#14399B,#1E56D8)","linear-gradient(135deg,#0F2A6B,#2C6BE0)","linear-gradient(135deg,#1B4FC4,#4C7EEA)"];
     content.deals.forEach((d, i) => {
       const div = document.createElement("div");
       div.className = "deal";
-      div.style.background = dealGrads[i % dealGrads.length];
+      div.style.backgroundImage = "linear-gradient(135deg, rgba(15,32,80,.62), rgba(30,86,216,.4)), url('" + dealImages[i % dealImages.length] + "')";
+      div.style.backgroundSize = "cover";
+      div.style.backgroundPosition = "center";
+      div.style.backgroundColor = dealGrads[i % dealGrads.length].match(/#[0-9A-Fa-f]{6}/)[0];
       div.innerHTML = "<b>" + d.title + "</b><span>" + d.subtitle + "</span><br><a href='search-results.html" +
         (d.category ? "?category=" + encodeURIComponent(d.category) : "") + "' class='btn'>" + d.ctaText + "</a>";
       dealsWrap.appendChild(div);

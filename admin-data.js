@@ -246,7 +246,7 @@ const PS_CONTENT_DEFAULTS = {
     title: "Every Part. Every Brand. All in One Place.",
     subtitle: "From engine to electrical — we've got you covered.",
     ctaText: "Browse All Parts →", ctaLink: "search-results.html",
-    image: null
+    image: "images/promo-banner.jpg"
   },
   partnerBanner: {
     title: "Grow your business with PartSouq",

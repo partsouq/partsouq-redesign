@@ -33,6 +33,24 @@ const PS_CAT_STYLE = {
 };
 function psCatStyle(category){ return PS_CAT_STYLE[category] || PS_CAT_STYLE["Engine"]; }
 
+/* Default photographic-style category tile art (generated in-house for this build —
+   see chat note: no licensed stock photography or image-generation API is available
+   in this environment, so these are stylized studio-lit illustrations, not real
+   product photos). Admin > Category Images can still upload a real photo per
+   category at any time, which always takes priority over this default. */
+const PS_CATEGORY_DEFAULT_IMAGES = {
+  "All Parts":      "images/cat-all.jpg",
+  "Engine":         "images/cat-engine.jpg",
+  "Brakes":         "images/cat-brakes.jpg",
+  "Suspension":     "images/cat-suspension.jpg",
+  "Body Parts":     "images/cat-body.jpg",
+  "Electrical":     "images/cat-electrical.jpg",
+  "AC & Cooling":   "images/cat-ac.jpg",
+  "Steering":       "images/cat-steering.jpg",
+  "Tools & Garage": "images/cat-tools.jpg"
+};
+function psCategoryDefaultImage(category){ return PS_CATEGORY_DEFAULT_IMAGES[category] || null; }
+
 const PS_PRODUCTS = [
   {id:"p1",  name:"Toyota Oil Filter",              sku:"90915-YZZE1",   brand:"Toyota", category:"Engine",         price:35,  oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:58,  desc:"OEM-spec oil filter for Toyota 4-cylinder engines. Confirm fitment against your VIN before ordering."},
   {id:"p2",  name:"Bosch Air Filter",                sku:"1457433765",   brand:"Bosch",  category:"Engine",         price:45,  oldPrice:60,   seller:"Al Twal Auto Parts",   rating:4.5, reviews:40,  desc:"High-flow air filter suitable for a range of sedans. Photos and part details were checked before listing."},

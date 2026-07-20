@@ -44,13 +44,14 @@
   nav .wrap{display:flex;gap:28px;font-size:14px;padding:11px 24px;color:var(--text-secondary);}
   nav a:hover{color:var(--brand-blue);}
 
-  /* hero — photographic-style banner behind the "Find parts for your car" widget.
-     (Generated in-house; see the chat note on category images for why this isn't
-     licensed stock photography.) Text switches to light-on-dark for contrast. */
+  /* hero — real photo (car + Dubai skyline + parts) behind the "Find parts for
+     your car" widget, cropped from the reference the user provided. Position is
+     biased left so the car stays in frame across viewport widths; text switches
+     to light-on-dark for contrast. */
   .hero{
     background:
-      linear-gradient(100deg, rgba(7,12,26,.86) 0%, rgba(7,12,26,.6) 42%, rgba(7,12,26,.22) 72%, rgba(7,12,26,.08) 100%),
-      url('images/hero-banner.jpg') center/cover no-repeat;
+      linear-gradient(100deg, rgba(7,12,26,.8) 0%, rgba(7,12,26,.52) 42%, rgba(7,12,26,.2) 72%, rgba(7,12,26,.08) 100%),
+      url('images/hero-banner.jpg') 18% center/cover no-repeat;
     padding:52px 0;
   }
   .hero .wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;}
@@ -82,13 +83,22 @@
 
   /* promo banner — wide card, ~2.4:1, image fills the right column edge-to-edge */
   .promo{padding:44px 0;}
-  .promo-card{background:linear-gradient(120deg,var(--brand-blue-dark),var(--brand-blue));border-radius:16px;color:#fff;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch;gap:0;overflow:hidden;min-height:460px;}
-  .promo-card>.promo-copy{padding:38px;display:flex;flex-direction:column;justify-content:center;}
+  /* Default (no photo): split card, copy left / icon collage right. */
+  .promo-card{background:linear-gradient(120deg,var(--brand-blue-dark),var(--brand-blue));border-radius:16px;color:#fff;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch;gap:0;overflow:hidden;min-height:460px;position:relative;}
+  .promo-card>.promo-copy{padding:38px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;}
   .promo-card h2{font-size:26px;margin:0 0 8px;line-height:1.3;}
   .promo-card p{color:#D7E3FF;font-size:14px;margin:0 0 18px;}
   .promo-card .btn-primary{background:#fff;color:var(--brand-blue-dark);align-self:flex-start;}
   #promo-image{width:100%;height:100%;object-fit:cover;}
   .promo-art{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap;height:100%;padding:20px;}
+  /* With a real photo (photographic banner from the reference): full-bleed wide
+     banner, copy overlaid on a dark scrim over the left of the image — same
+     composition as the reference's own "wide banner" layout. */
+  .promo-card.has-photo{display:flex;align-items:center;min-height:300px;grid-template-columns:none;}
+  .promo-card.has-photo::before{content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(100deg, rgba(7,12,26,.84) 0%, rgba(7,12,26,.56) 40%, rgba(7,12,26,.16) 72%, rgba(7,12,26,.03) 100%);}
+  .promo-card.has-photo>.promo-copy{max-width:480px;padding:40px;}
+  .promo-card.has-photo #promo-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
   .promo-icon{display:flex;flex-direction:column;align-items:center;gap:10px;width:76px;}
   .promo-icon svg{width:34px;height:34px;padding:16px;box-sizing:content-box;border-radius:50%;background:rgba(255,255,255,.15);}
   .promo-icon span{font-size:11px;color:#E3EAFC;text-align:center;line-height:1.3;}
@@ -181,8 +191,8 @@
     .hero{
       padding:28px 0;
       background:
-        linear-gradient(rgba(7,12,26,.78), rgba(7,12,26,.78)),
-        url('images/hero-banner.jpg') center/cover no-repeat;
+        linear-gradient(rgba(7,12,26,.65), rgba(7,12,26,.72)),
+        url('images/hero-banner.jpg') 30% center/cover no-repeat;
     }
     .hero .wrap{grid-template-columns:1fr;gap:22px;}
     .hero h1{font-size:26px;}
@@ -195,6 +205,10 @@
     .promo-card>.promo-copy{padding:24px 22px 4px;}
     .promo-art{justify-content:flex-start;padding:4px 22px 24px;height:auto;}
     #promo-image{height:auto;aspect-ratio:16/9;}
+    .promo-card.has-photo{min-height:260px;}
+    .promo-card.has-photo::before{background:linear-gradient(180deg, rgba(7,12,26,.72) 0%, rgba(7,12,26,.6) 55%, rgba(7,12,26,.78) 100%);}
+    .promo-card.has-photo>.promo-copy{max-width:none;padding:22px;}
+    .promo-card.has-photo #promo-image{aspect-ratio:auto;}
 
     .offer-banner-card{aspect-ratio:16/9;}
     .offer-banner-overlay{max-width:100%;padding:0 20px;background:linear-gradient(0deg,rgba(16,25,46,.78) 0%,rgba(16,25,46,.5) 55%,rgba(16,25,46,.15) 100%);}
@@ -341,7 +355,7 @@
 
   <section class="promo">
     <div class="wrap">
-      <div class="promo-card">
+      <div class="promo-card" id="promo-card">
         <div class="promo-copy">
           <h2 id="promo-title">Every Part. Every Brand.<br>All in One Place.</h2>
           <p id="promo-subtitle">From engine to electrical — we've got you covered.</p>
@@ -590,9 +604,11 @@
       document.getElementById("promo-image").src = content.featuredBanner.image;
       document.getElementById("promo-image").style.display = "block";
       document.getElementById("promo-art").style.display = "none";
+      document.getElementById("promo-card").classList.add("has-photo");
     } else {
       document.getElementById("promo-image").style.display = "none";
       document.getElementById("promo-art").style.display = "flex";
+      document.getElementById("promo-card").classList.remove("has-photo");
     }
 
     // Offer Banner — full-width strip, only shown once an admin uploads an image (Admin > Homepage Banners)

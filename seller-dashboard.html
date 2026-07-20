@@ -12,6 +12,7 @@
     --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
     --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
     --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --danger-red:#D92D20; --danger-red-light:#FEF0EE;
     --radius:12px;
   }
   *{box-sizing:border-box;}
@@ -22,18 +23,18 @@
   .logo{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
   .logo .mark{width:34px;height:34px;border-radius:8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:13px;}
   .logo b{color:#fff;font-size:16px;}
-  .navlink{display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:8px;font-size:13.5px;margin-bottom:3px;}
+  .navlink{display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:8px;font-size:13.5px;margin-bottom:3px;cursor:pointer;}
   .navlink.active{background:var(--brand-blue);color:#fff;font-weight:700;}
   .navlink:not(.active):hover{background:rgba(255,255,255,.06);}
   .navsection{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#647089;margin:18px 0 8px 10px;}
 
   .main{padding:26px 32px;}
-  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
   .topbar h1{font-size:21px;margin:0;}
   .topbar span{font-size:13px;color:var(--text-secondary);}
   .badge{background:var(--success-green-light);color:var(--success-green);font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;}
 
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
   .stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px;}
   .stat .ic{width:36px;height:36px;border-radius:9px;background:var(--brand-blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
   .stat .ic svg{width:18px;height:18px;stroke:var(--brand-blue);}
@@ -41,64 +42,320 @@
   .stat span{font-size:12px;color:var(--text-secondary);}
 
   .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;}
-  .panel h3{font-size:15px;margin:0 0 14px;}
+  .panel h3{font-size:15px;margin:0 0 4px;}
+  .panel .sub{font-size:12.5px;color:var(--text-secondary);margin:0 0 14px;}
   table{width:100%;border-collapse:collapse;font-size:13px;}
   th{text-align:left;color:var(--text-muted);font-weight:600;font-size:11.5px;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border);}
-  td{padding:11px 10px;border-bottom:1px solid var(--border);}
-  .status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
-  .status.delivered{background:var(--success-green-light);color:var(--success-green);}
-  .status.transit{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
-  .status.processing{background:var(--accent-orange-light);color:#B75C10;}
+  td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+  .status.green{background:var(--success-green-light);color:var(--success-green);}
+  .status.orange{background:var(--accent-orange-light);color:#B75C10;}
+  .status.red{background:var(--danger-red-light);color:var(--danger-red);}
+  .status.blue{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
+  .rowbtn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid var(--border);background:#fff;cursor:pointer;margin-right:6px;margin-bottom:4px;}
+  .rowbtn.approve{background:var(--success-green);color:#fff;border:none;}
+  .rowbtn.reject{background:var(--danger-red-light);color:var(--danger-red);}
+  .empty-row{text-align:center;color:var(--text-muted);padding:24px;font-size:13px;}
+  .page{display:none;}
+  .page.active{display:block;}
+  .thumb-cell{width:42px;height:42px;border-radius:7px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .thumb-cell img{width:100%;height:100%;object-fit:cover;}
+  .thumb-cell svg{width:20px;height:20px;stroke:var(--brand-blue);}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  .form-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:5px;}
+  .form-field input, .form-field select, .form-field textarea{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;font-family:inherit;box-sizing:border-box;}
+  .save-btn{background:var(--brand-blue);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:13.5px;cursor:pointer;}
+  .save-confirm{color:var(--success-green);font-size:12.5px;font-weight:600;margin-left:10px;display:none;}
+
+  .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+  .photo-box{border:1.5px dashed var(--border);border-radius:9px;padding:14px 8px;text-align:center;cursor:pointer;font-size:11.5px;color:var(--text-secondary);background:var(--bg-alt);}
+  .photo-box.has-file{border-style:solid;border-color:var(--success-green);background:var(--success-green-light);}
+  .photo-box img{max-height:44px;border-radius:5px;margin-bottom:4px;}
+  .photo-box b{display:block;font-size:12px;margin-bottom:2px;}
+
+  .mulkiya-section{background:var(--brand-blue-light);border-radius:10px;padding:14px;margin:6px 0 16px;font-size:12.5px;color:var(--brand-blue-dark);}
+  .mulkiya-section b{display:block;margin-bottom:8px;font-size:13px;}
+  .policy-box{background:var(--danger-red-light);color:var(--danger-red);border-radius:9px;padding:12px 14px;font-size:12px;margin-bottom:16px;}
+
+  .plancard{background:linear-gradient(120deg,var(--brand-blue-dark),var(--brand-blue));color:#fff;border-radius:12px;padding:20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .plancard .id{font-family:monospace;font-size:15px;font-weight:700;}
+  .plancard small{display:block;color:#C9D9FB;font-size:11px;margin-bottom:2px;}
+  .plancard .progressbar{width:220px;height:6px;background:rgba(255,255,255,.25);border-radius:4px;overflow:hidden;margin-top:8px;}
+  .plancard .progressbar div{height:100%;background:#fff;}
+  .plancard .paidbadge{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:700;}
+
+  .ordercard{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+  .ordercard .head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+  .ordercard .photos{display:flex;gap:14px;margin:8px 0;}
+  .ordercard .photos > div{flex:1;}
+  .ordercard .photos img{width:100%;max-width:100px;border-radius:8px;border:1px solid var(--border);}
+  .ordercard .photos b{display:block;font-size:10.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+  .matchnote{font-size:11.5px;color:var(--text-muted);margin-top:6px;}
+
+  .profilecard{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .avatar{width:52px;height:52px;border-radius:50%;background:var(--success-green);color:#fff;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;}
+
+  #generic-modal{display:none;position:fixed;inset:0;background:rgba(15,20,30,.55);z-index:1500;align-items:center;justify-content:center;padding:20px;}
+  #generic-modal.open{display:flex;}
+  #generic-modal .gm-box{background:#fff;border-radius:14px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;position:relative;}
+  #generic-modal .gm-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);}
+  #generic-modal h3{font-size:16px;margin:0 0 14px;}
+
+  /* mobile topbar + off-canvas sidebar */
+  #mobile-topbar{display:none;}
+  #sidebar-overlay{display:none;}
+  .sidebar-close{display:none;}
+
+  @media (max-width: 900px){
+    .sidebar-close{display:flex;align-items:center;justify-content:center;position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:15px;cursor:pointer;}
+    .app{grid-template-columns:minmax(0,1fr);}
+    .main{min-width:0;}
+    #mobile-topbar{display:flex;align-items:center;gap:12px;background:var(--bg-dark);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:900;}
+    #mobile-topbar button{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:2px 4px;line-height:1;}
+    #mobile-topbar b{font-size:15px;}
+    .sidebar{position:fixed;top:0;left:0;height:100vh;width:250px;max-width:82vw;z-index:1000;transform:translateX(-100%);transition:transform .25s ease;box-shadow:2px 0 18px rgba(0,0,0,.25);overflow-y:auto;}
+    .sidebar.open{transform:translateX(0);}
+    #sidebar-overlay.open{display:block;position:fixed;inset:0;background:rgba(10,14,24,.5);z-index:999;}
+    .main{padding:18px 14px;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+    .topbar{flex-wrap:wrap;gap:8px;}
+    table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;}
+    .ordercard .photos{flex-wrap:wrap;}
+    .plancard{flex-direction:column;align-items:flex-start;}
+    .plancard .progressbar{width:100%;}
+    .profilecard{flex-wrap:wrap;}
+
+    /* modern mobile refresh */
+    body{padding-bottom:80px;}
+    .stat{border-radius:14px;border:none;box-shadow:0 2px 12px rgba(16,25,46,.06);}
+    .panel{border-radius:16px;border:none;box-shadow:0 2px 14px rgba(16,25,46,.06);}
+    .ordercard{border-radius:14px;box-shadow:0 2px 12px rgba(16,25,46,.06);}
+    .plancard{border-radius:16px;}
+    .save-btn, .rowbtn{border-radius:10px;min-height:42px;}
+    .form-field input, .form-field select, .form-field textarea{min-height:42px;border-radius:9px;}
+    .photo-box{border-radius:12px;}
+    #generic-modal .gm-box{border-radius:18px;}
+  }
+
+  /* app-style bottom shortcut bar (mobile only) */
+  .ps-bottom-nav{display:none;}
+  @media (max-width:900px){
+    .ps-bottom-nav{
+      display:flex;position:fixed;left:0;right:0;bottom:0;z-index:800;
+      background:rgba(255,255,255,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border-top:1px solid var(--border);
+      padding:8px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow:0 -6px 24px rgba(16,25,46,.08);
+    }
+    .ps-bottom-nav a{
+      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+      font-size:10.5px;font-weight:700;color:var(--text-muted);padding:5px 2px;border-radius:14px;cursor:pointer;
+    }
+    .ps-bottom-nav a.active{color:var(--brand-blue);}
+    .ps-bottom-nav a .ic{font-size:20px;line-height:1;}
+  }
 </style>
 </head>
 <body>
+<div id="mobile-topbar">
+  <button onclick="toggleSidebar()" aria-label="Menu">☰</button>
+  <b>Partner Portal</b>
+</div>
+<div id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
 <div class="app">
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-close" onclick="toggleSidebar(false)">✕</div>
     <a href="index.html" class="logo"><div class="mark">PS</div><b>Partner Portal</b></a>
-    <a href="seller-dashboard.html" class="navlink active">📊 Dashboard</a>
-    <a href="#listings" class="navlink">📦 My Listings</a>
-    <a href="#orders" class="navlink">🧾 Orders</a>
-    <a href="#bookings" class="navlink">🔧 Bookings</a>
-    <a href="#earnings" class="navlink">💵 Earnings</a>
+    <div class="navlink active" data-page="dashboard">📊 Dashboard</div>
+    <div class="navlink" data-page="listings">📦 My Listings</div>
+    <div class="navlink" data-page="addlisting">➕ Add Listing</div>
+    <div class="navlink" data-page="orders">🧾 Orders</div>
+    <div class="navlink" data-page="statement">💵 Payment Statement</div>
     <div class="navsection">Account</div>
-    <a href="#settings" class="navlink">⚙ Settings</a>
-    <a href="login-register.html" class="navlink">🚪 Logout</a>
+    <div class="navlink" data-page="profile">👤 My Profile</div>
+    <a href="index.html" class="navlink">← Back to Site</a>
   </div>
 
   <div class="main">
-    <div class="topbar">
-      <div><h1>Welcome back, Al Twal Auto Parts</h1><span>Spare Part Supplier · Dubai</span></div>
-      <span class="badge">✓ Verified Seller</span>
-    </div>
 
-    <div class="stats" id="stats-row"></div>
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="topbar">
+        <div><h1 id="db-welcome">Welcome back</h1><span id="db-sub"></span></div>
+        <span class="badge" id="db-badge">✓ Verified Seller</span>
+      </div>
 
-    <div class="panel">
-      <h3>Recent Orders (platform-wide demo feed)</h3>
-      <table id="orders-table">
-        <tr><th>Order</th><th>Items</th><th>Status</th><th>Amount</th></tr>
-      </table>
-    </div>
-
-    <div class="panel">
-      <h3>My Listings <span style="font-weight:400;color:var(--text-secondary);font-size:12.5px;">— Al Twal Auto Parts</span></h3>
-      <table id="listings-table">
-        <tr><th>Image</th><th>Part</th><th>SKU</th><th>Category</th><th>Price</th><th>Status</th></tr>
-      </table>
-      <form id="add-listing-form" style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:flex-end;">
+      <div class="plancard">
         <div>
-          <label style="display:block;font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;margin-bottom:5px;">Photo</label>
-          <label for="nl-image" id="nl-image-preview" style="width:44px;height:44px;border:1.5px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg-alt);font-size:18px;color:var(--text-muted);overflow:hidden;">📷
-            <input id="nl-image" type="file" accept="image/*" style="display:none;">
-          </label>
+          <small>PARTSOUQ ID</small>
+          <div class="id" id="plan-psid">—</div>
         </div>
-        <input id="nl-name" placeholder="Part name" required style="flex:1;min-width:160px;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;">
-        <input id="nl-sku" placeholder="SKU" required style="width:140px;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;">
-        <select id="nl-category" style="padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;"></select>
-        <input id="nl-price" type="number" placeholder="Price (AED)" required style="width:130px;padding:9px;border:1px solid var(--border);border-radius:7px;font-size:13px;">
-        <button type="submit" class="btn" style="background:var(--brand-blue);color:#fff;border:none;padding:9px 18px;border-radius:7px;font-weight:600;font-size:13px;cursor:pointer;">+ Submit for Review</button>
-      </form>
-      <p style="font-size:11.5px;color:var(--text-muted);margin-top:8px;">New listings go to PartSouq for review before they appear in search — track status above.</p>
+        <div>
+          <small id="plan-tier-label">Plan</small>
+          <b id="plan-days-left" style="font-size:15px;"></b>
+          <div class="progressbar"><div id="plan-progress" style="width:0%;"></div></div>
+        </div>
+        <div>
+          <small>Due Date</small>
+          <b id="plan-due" style="font-size:14px;"></b>
+        </div>
+        <span class="paidbadge" id="plan-status">Paid</span>
+      </div>
+
+      <div class="stats" id="stats-row"></div>
+
+      <div class="panel">
+        <h3>Recent Orders</h3>
+        <p class="sub">Real orders matched to your listings — actual buyer &amp; delivery data, not a demo feed.</p>
+        <table id="db-orders-table"><tr><th>Order</th><th>Part</th><th>Amount</th><th>Status</th></tr></table>
+      </div>
+
+      <div class="panel">
+        <h3>Top Listings</h3>
+        <table id="db-toplistings-table"><tr><th>Part</th><th>Orders</th><th>Status</th></tr></table>
+      </div>
+
+      <div class="panel" style="background:var(--success-green-light);border:none;">
+        <h3 style="color:var(--success-green);">💵 Cash on Delivery Reminder</h3>
+        <p style="font-size:13px;color:#0d6b4f;margin:0;">PartSouq will forward approved orders to you with the buyer's Mulkiya and delivery details. Dispatch only after admin approval.</p>
+      </div>
+    </div>
+
+    <!-- MY LISTINGS -->
+    <div class="page" id="page-listings">
+      <div class="topbar"><div><h1>My Listings</h1><span id="listings-sub"></span></div><button class="save-btn" onclick="gotoPage('addlisting')">+ Add Part</button></div>
+      <div class="panel">
+        <table id="listings-table"><tr><th>Image</th><th>Part</th><th>OEM / SKU</th><th>Price</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <!-- ADD LISTING -->
+    <div class="page" id="page-addlisting">
+      <div class="topbar"><div><h1>Add New Part Listing</h1><span>Fill all Mulkiya-match fields so buyers can verify using their vehicle registration card.</span></div></div>
+      <div class="panel">
+        <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:8px;">Part Photos *</label>
+        <div class="photo-grid">
+          <label class="photo-box" id="al-front-label" for="al-front"><div>📷</div><b>Front View</b><input id="al-front" type="file" accept="image/*" style="display:none;"></label>
+          <label class="photo-box" id="al-side-label" for="al-side"><div>📷</div><b>Side View</b><input id="al-side" type="file" accept="image/*" style="display:none;"></label>
+          <label class="photo-box" id="al-top-label" for="al-top"><div>📷</div><b>Top View</b><input id="al-top" type="file" accept="image/*" style="display:none;"></label>
+          <label class="photo-box" id="al-back-label" for="al-back"><div>📷</div><b>Back View</b><input id="al-back" type="file" accept="image/*" style="display:none;"></label>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Part Name *</label>
+            <select id="al-part-select" style="margin-bottom:8px;"><option value="">Select from list, or type below</option></select>
+            <input id="al-part-custom" placeholder="Type the part name">
+          </div>
+          <div class="form-field"><label>OEM / Part Number *</label><input id="al-oem" placeholder="e.g. 04465-0K250"></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Category *</label><select id="al-category"></select></div>
+          <div class="form-field"><label>Condition *</label><select id="al-condition"><option value="">Select</option><option>New</option><option>Used – Excellent</option><option>Used – Good</option><option>Used – Fair</option></select></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Car Brand *</label><input id="al-brand" list="al-brand-list"><datalist id="al-brand-list"></datalist></div>
+          <div class="form-field"><label>Car Model / Car Name *</label><input id="al-model" list="al-model-list" placeholder="e.g. Land Cruiser LC200"><datalist id="al-model-list"></datalist></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Year Range</label><input id="al-yearrange" placeholder="e.g. 2015–2022"></div>
+          <div class="form-field"><label>Car Spec</label><select id="al-carspec"><option value="">Select</option><option>GCC</option><option>American</option><option>Japanese</option><option>European</option></select></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Warranty *</label><div style="display:flex;gap:8px;"><input id="al-warranty" type="number" min="0" placeholder="e.g. 6"><select id="al-warranty-unit" style="max-width:120px;"><option>Day(s)</option><option>Month(s)</option><option>Year(s)</option></select></div></div>
+          <div class="form-field"><label>Estimated Delivery Time *</label><div style="display:flex;gap:8px;"><input id="al-delivery" type="number" min="0" placeholder="e.g. 2"><select id="al-delivery-unit" style="max-width:120px;"><option>Hour(s)</option><option>Day(s)</option></select></div></div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Discount % (optional)</label><input id="al-discount" type="number" min="0" max="90" placeholder="e.g. 10"></div>
+
+        <div class="mulkiya-section">
+          <b>🪪 Mulkiya Match Fields — helps buyer verify using their vehicle registration</b>
+          <div class="form-grid" style="margin-bottom:10px;">
+            <div class="form-field"><label>Chassis No. / Type</label><input id="al-chassis" placeholder="e.g. FJA200, VDJ200, Y62"></div>
+            <div class="form-field"><label>Engine No. / Code</label><input id="al-engine" placeholder="e.g. 1VD-FTV, VK56VD"></div>
+          </div>
+          <div class="form-grid" style="margin-bottom:0;">
+            <div class="form-field"><label>Part Serial / Batch No.</label><input id="al-serial" placeholder="e.g. SN-2024-XXXX"></div>
+            <div class="form-field"><label>Price (AED) *</label><input id="al-price" type="number" placeholder="e.g. 220"></div>
+          </div>
+        </div>
+
+        <div class="form-field" style="margin-bottom:14px;"><label>Description</label><textarea id="al-desc" rows="3" placeholder="Part details, brand info, what cars it fits..."></textarea></div>
+
+        <div class="policy-box">⚠ Policy: Only genuine, functional, good-condition parts. Damaged or misrepresented parts = immediate suspension. Buyers pay cash on receipt — part must match listing exactly.</div>
+
+        <button class="save-btn" onclick="submitNewListing()">Submit for Review</button>
+        <span class="save-confirm" id="al-confirm">✓ Submitted — awaiting PartSouq review</span>
+        <p style="font-size:11.5px;color:var(--text-muted);margin-top:10px;">New listings go to PartSouq for review before they appear in search.</p>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="page" id="page-orders">
+      <div class="topbar"><div><h1>Orders Received</h1><span>Only shows orders PartSouq has approved and forwarded to you</span></div></div>
+      <div id="orders-list"></div>
+    </div>
+
+    <!-- PAYMENT STATEMENT -->
+    <div class="page" id="page-statement">
+      <div class="topbar"><div><h1>Payment Statement</h1><span>A running record of every payment PartSouq has confirmed receiving from you — like a bank statement.</span></div></div>
+      <div class="panel">
+        <div style="background:var(--bg-dark);color:#fff;border-radius:10px;padding:20px;text-align:center;margin-bottom:18px;">
+          <small style="color:var(--text-muted);text-transform:uppercase;font-size:11px;">Total Paid to Date</small>
+          <div style="font-size:26px;font-weight:800;margin-top:4px;" id="stmt-total">AED 0</div>
+        </div>
+        <div id="statement-list"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="topbar"><div><h1>My Profile</h1></div></div>
+      <div class="panel">
+        <div class="profilecard">
+          <div class="avatar" id="pf-avatar">D</div>
+          <div>
+            <b id="pf-name" style="font-size:16px;display:block;"></b>
+            <span style="font-size:12.5px;color:var(--text-secondary);">Seller Partner · <span id="pf-psid" style="color:var(--success-green);font-weight:700;"></span></span>
+            <div><span class="badge" style="margin-top:6px;display:inline-block;">Verified Partner</span></div>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Email</label><input id="pf-email"></div>
+        <div class="form-field" style="margin-bottom:14px;"><label>WhatsApp *</label><input id="pf-whatsapp"></div>
+        <div class="form-field" style="margin-bottom:16px;"><label>Address</label><input id="pf-address" placeholder="e.g. Warehouse address, Emirate"></div>
+        <div style="display:flex;gap:10px;">
+          <button class="save-btn" style="flex:1;" onclick="saveProfile()">Save Changes</button>
+          <button class="rowbtn reject" style="flex:none;" onclick="location.href='index.html'">Sign Out</button>
+        </div>
+        <span class="save-confirm" id="pf-confirm">✓ Saved</span>
+        <div class="form-grid" style="margin-top:20px;">
+          <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Listings Status</div><div id="pf-listings-status" style="font-size:13px;margin-top:4px;"></div></div>
+          <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Orders Status</div><div id="pf-orders-status" style="font-size:13px;margin-top:4px;"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<nav class="ps-bottom-nav">
+  <a data-page="dashboard" class="active"><span class="ic">📊</span>Dashboard</a>
+  <a data-page="listings"><span class="ic">📦</span>Listings</a>
+  <a data-page="orders"><span class="ic">🧾</span>Orders</a>
+  <a onclick="toggleSidebar(true)"><span class="ic">☰</span>Menu</a>
+</nav>
+
+<div id="generic-modal">
+  <div class="gm-box">
+    <button class="gm-close" onclick="closeGenericModal()">✕</button>
+    <h3 id="gm-title">Edit</h3>
+    <div id="gm-body"></div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="rowbtn" style="flex:1;text-align:center;" onclick="closeGenericModal()">Cancel</button>
+      <button class="save-btn" style="flex:1;" id="gm-save">Save</button>
     </div>
   </div>
 </div>
@@ -107,95 +364,339 @@
 <script src="cart.js"></script>
 <script src="admin-data.js"></script>
 <script>
+  /* Demo-only identity: this dashboard always represents one fixed seller
+     (no real login system exists — see the standing disclosure in chat).
+     Everything below reads/writes the SAME localStorage the storefront and
+     the admin portal use, so it's real data, not a mock feed. */
   const SELLER_NAME = "Al Twal Auto Parts";
-  let nlImageData = null;
+  function getSeller(){ return psGetSellers().find(s => s.name === SELLER_NAME) || {id:"s1", name:SELLER_NAME, type:"Spare Part Supplier", emirate:"Dubai", idStatus:"Verified", listings:0}; }
 
-  document.getElementById("nl-image").addEventListener("change", e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      nlImageData = ev.target.result;
-      document.getElementById("nl-image-preview").innerHTML = '<img src="' + nlImageData + '" style="width:100%;height:100%;object-fit:cover;">';
-    };
-    reader.readAsDataURL(file);
+  /* ---------- Navigation ---------- */
+  document.querySelectorAll(".navlink[data-page]").forEach(el => {
+    el.addEventListener("click", () => gotoPage(el.dataset.page));
   });
-
-  function getSellerListings(){
-    // Catalog items already in PS_PRODUCTS are pre-existing approved listings.
-    const base = PS_PRODUCTS.filter(p => p.seller === SELLER_NAME).map(p => Object.assign({status: "Approved"}, p));
-    const extra = psGetAllSubmittedListings().filter(p => p.seller === SELLER_NAME);
-    return base.concat(extra);
+  document.querySelectorAll(".ps-bottom-nav a[data-page]").forEach(el => {
+    el.addEventListener("click", () => gotoPage(el.dataset.page));
+  });
+  function gotoPage(name){
+    document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === "page-" + name));
+    document.querySelectorAll(".navlink[data-page]").forEach(el => el.classList.toggle("active", el.dataset.page === name));
+    document.querySelectorAll(".ps-bottom-nav a[data-page]").forEach(el => el.classList.toggle("active", el.dataset.page === name));
+    window.scrollTo({top:0});
+    if (window.innerWidth <= 900) toggleSidebar(false);
   }
 
-  function renderStats(){
+  /* ---------- Mobile off-canvas sidebar ---------- */
+  function toggleSidebar(force){
+    const sb = document.getElementById("sidebar");
+    const ov = document.getElementById("sidebar-overlay");
+    const open = typeof force === "boolean" ? force : !sb.classList.contains("open");
+    sb.classList.toggle("open", open);
+    ov.classList.toggle("open", open);
+  }
+
+  /* ---------- Listings (seed catalog rows for this seller + their own submissions) ---------- */
+  function getSellerListings(){
+    const base = PS_PRODUCTS.filter(p => p.seller === SELLER_NAME).map(p => {
+      const overrides = psGetProductOverrides();
+      return Object.assign({status: "Approved"}, p, overrides[p.id] || {});
+    });
+    const extra = psGetAllSubmittedListings().filter(p => p.seller === SELLER_NAME);
+    return base.concat(extra).filter(p => p.status !== "Removed");
+  }
+
+  /* ---------- Dashboard ---------- */
+  function renderDashboard(){
+    const seller = getSeller();
+    document.getElementById("db-welcome").textContent = "Welcome back, " + seller.name;
+    document.getElementById("db-sub").textContent = seller.type + " · " + seller.emirate;
+    const badge = document.getElementById("db-badge");
+    badge.textContent = seller.idStatus === "Verified" ? "✓ Verified Seller" : seller.idStatus;
+    badge.className = "badge" + (seller.idStatus !== "Verified" ? " " : "");
+    badge.style.background = seller.idStatus === "Verified" ? "" : "var(--accent-orange-light)";
+    badge.style.color = seller.idStatus === "Verified" ? "" : "#B75C10";
+
+    const psId = psSellerPsId(seller.id);
+    const plan = psGetSellerPlan(seller.id);
+    const daysLeft = psSellerPlanDaysLeft(seller.id);
+    const due = psSellerPlanDueDate(seller.id);
+    document.getElementById("plan-psid").textContent = psId;
+    document.getElementById("plan-tier-label").textContent = plan.tier + " Plan" + (plan.price ? " — AED " + plan.price + "/" + plan.cycle.replace("ly","").toLowerCase() : " (Free)");
+    document.getElementById("plan-days-left").textContent = daysLeft + " days left in your " + plan.cycle.toLowerCase() + " (" + (plan.daysTotal||30) + " days) plan";
+    document.getElementById("plan-progress").style.width = Math.max(2, Math.round((daysLeft / (plan.daysTotal||30)) * 100)) + "%";
+    document.getElementById("plan-due").textContent = due.toLocaleDateString("en-GB", {day:"2-digit", month:"short", year:"numeric"});
+    document.getElementById("plan-status").textContent = plan.status || "Paid";
+
     const listings = getSellerListings();
-    const approved = listings.filter(l => l.status === "Approved").length;
-    const pending = listings.filter(l => l.status === "Pending Review").length;
-    const orders = psGetOrders();
-    const cashCollected = orders.reduce((s,o) => s + o.total, 0);
+    const orders = psGetOrdersForSeller(SELLER_NAME);
+    const delivered = orders.filter(o => o.status === "Delivered");
+    const revenue = delivered.reduce((s,o) => s + o.total, 0);
     const stats = [
-      {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/>', val: approved, label: "Active Listings" + (pending ? " (" + pending + " pending)" : "")},
-      {icon:'<path d="M20 7L9 18l-5-5"/>', val: orders.length, label: "Orders This Month"},
-      {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/>', val: psFmt(cashCollected), label: "Cash Collected on Delivery"},
-      {icon:'<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>', val: "4.8", label: "Buyer Rating"}
+      {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/>', val: listings.filter(l=>l.status==="Approved").length, label: "Active Listings" + (listings.some(l=>l.status==="Pending Review") ? " (" + listings.filter(l=>l.status==="Pending Review").length + " pending review)" : "")},
+      {icon:'<path d="M20 7L9 18l-5-5"/>', val: orders.length, label: "Orders Received" + (orders.filter(o=>o.status==="Delivered").length ? " (" + delivered.length + " delivered, " + (orders.length-delivered.length) + " pending)" : "")},
+      {icon:'<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/>', val: psFmt(revenue), label: "Total Revenue — from delivered orders"}
     ];
     document.getElementById("stats-row").innerHTML = stats.map(s =>
       '<div class="stat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">' + s.icon + '</svg></div><b>' + s.val + '</b><span>' + s.label + '</span></div>'
     ).join("");
-  }
 
-  function renderOrders(){
-    const table = document.getElementById("orders-table");
-    const statusClass = {"Delivered":"delivered","Out for Delivery":"transit","Processing":"processing"};
-    psGetOrders().forEach(o => {
+    const ordersTable = document.getElementById("db-orders-table");
+    ordersTable.querySelectorAll("tr:not(:first-child)").forEach(r=>r.remove());
+    if (!orders.length) ordersTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>No orders yet.</td></tr>");
+    orders.slice(0,5).forEach(o => {
+      const cls = o.status === "Delivered" ? "green" : o.status === "Cancelled" ? "red" : o.status === "Pending Admin Review" ? "orange" : "blue";
       const tr = document.createElement("tr");
-      const itemNames = o.items.map(i => i.name).join(", ");
-      tr.innerHTML = "<td>#" + o.id + "</td><td>" + itemNames + "</td><td><span class=\"status " + (statusClass[o.status]||"processing") + "\">" + o.status + "</span></td><td>" + psFmt(o.total) + "</td>";
-      table.appendChild(tr);
+      tr.innerHTML = "<td>#" + o.id + "</td><td>" + o.items.map(i=>i.name).join(", ") + "</td><td>" + psFmt(o.total) + "</td><td><span class='status " + cls + "'>" + o.status + "</span></td>";
+      ordersTable.appendChild(tr);
+    });
+
+    const topTable = document.getElementById("db-toplistings-table");
+    topTable.querySelectorAll("tr:not(:first-child)").forEach(r=>r.remove());
+    const countByName = {};
+    orders.forEach(o => o.items.forEach(i => { countByName[i.name] = (countByName[i.name]||0) + (i.qty||1); }));
+    const top = listings.map(l => ({l, count: countByName[l.name] || 0})).sort((a,b)=>b.count-a.count).slice(0,5);
+    if (!top.length) topTable.insertAdjacentHTML("beforeend", "<tr><td colspan='3' class='empty-row'>No listings yet.</td></tr>");
+    top.forEach(t => {
+      const tr = document.createElement("tr");
+      const cls = t.l.status === "Approved" ? "green" : t.l.status === "Pending Review" ? "orange" : "red";
+      tr.innerHTML = "<td>" + t.l.name + "</td><td>" + t.count + " orders</td><td><span class='status " + cls + "'>" + t.l.status + "</span></td>";
+      topTable.appendChild(tr);
     });
   }
 
-  const listingStatusClass = {"Approved":"delivered","Pending Review":"processing","Rejected":"transit"};
-  const listingStatusLabel = {"Approved":"Approved · Live","Pending Review":"⏳ Pending Review","Rejected":"✕ Rejected"};
-
+  /* ---------- My Listings ---------- */
   function renderListings(){
+    document.getElementById("listings-sub").textContent = SELLER_NAME + " — " + getSellerListings().length + " listing(s)";
     const table = document.getElementById("listings-table");
-    table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
-    getSellerListings().forEach(p => {
+    table.querySelectorAll("tr:not(:first-child)").forEach(r=>r.remove());
+    const listings = getSellerListings();
+    if (!listings.length) table.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No listings yet — add your first part.</td></tr>");
+    listings.forEach(p => {
       const tr = document.createElement("tr");
-      const thumb = p.image ? '<img src="' + p.image + '" style="width:34px;height:34px;object-fit:cover;border-radius:6px;">' : '<div style="width:34px;height:34px;border-radius:6px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">' + psIcon(p.category) + '</div>';
-      tr.innerHTML = "<td>" + thumb + "</td><td>" + p.name + "</td><td>" + p.sku + "</td><td>" + p.category + "</td><td>" + psFmt(p.price) + "</td><td><span class=\"status " + (listingStatusClass[p.status]||"processing") + "\">" + (listingStatusLabel[p.status]||p.status) + "</span></td>";
+      const thumb = p.image ? '<img src="' + p.image + '">' : psIcon(p.category);
+      const cls = p.status === "Approved" ? "green" : p.status === "Pending Review" ? "orange" : "red";
+      const oem = p.oem || p.sku || "—";
+      const discountTag = p.discountPct ? " (" + p.discountPct + "% off)" : "";
+      tr.innerHTML = "<td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + discountTag + "</td><td>" + oem + "</td><td>" + psFmt(p.price) + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      const editBtn = document.createElement("button");
+      editBtn.className = "rowbtn"; editBtn.textContent = "Edit";
+      editBtn.onclick = () => openEditListingModal(p.id);
+      actionTd.appendChild(editBtn);
+      const delBtn = document.createElement("button");
+      delBtn.className = "rowbtn reject"; delBtn.textContent = "Request Deletion";
+      delBtn.onclick = () => {
+        if (confirm("Send PartSouq a request to remove \"" + p.name + "\" from the live catalog?")){
+          psRequestListingDeletion(p.id, p.name, SELLER_NAME);
+          alert("Deletion request sent — an admin will review it.");
+        }
+      };
+      actionTd.appendChild(delBtn);
       table.appendChild(tr);
     });
   }
+  function openEditListingModal(id){
+    const p = getSellerListings().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById("gm-title").textContent = "Edit — " + p.name;
+    document.getElementById("gm-body").innerHTML =
+      "<div class='form-field' style='margin-bottom:12px;'><label>Price (AED)</label><input id='gm-price' type='number'></div>" +
+      "<div class='form-field' style='margin-bottom:12px;'><label>Discount %</label><input id='gm-discount' type='number' min='0' max='90'></div>" +
+      "<div class='form-field'><label>Description</label><textarea id='gm-desc' rows='3'></textarea></div>";
+    document.getElementById("gm-price").value = p.price;
+    document.getElementById("gm-discount").value = p.discountPct || "";
+    document.getElementById("gm-desc").value = p.desc || "";
+    document.getElementById("gm-save").onclick = () => {
+      psOverrideListing(id, {
+        price: Number(document.getElementById("gm-price").value) || p.price,
+        discountPct: Number(document.getElementById("gm-discount").value) || null,
+        desc: document.getElementById("gm-desc").value
+      });
+      closeGenericModal();
+      renderAll();
+    };
+    document.getElementById("generic-modal").classList.add("open");
+  }
+  function closeGenericModal(){ document.getElementById("generic-modal").classList.remove("open"); }
 
-  const catSelect = document.getElementById("nl-category");
-  PS_CATEGORIES.forEach(c => {
-    const o = document.createElement("option"); o.value = c; o.textContent = c;
-    catSelect.appendChild(o);
+  /* ---------- Add Listing ---------- */
+  let alPhotos = {front:null, side:null, top:null, back:null};
+  const alPhotoInputs = {}; // captured refs — reused on reset so we never re-query an id that innerHTML just destroyed
+  function wirePhoto(key){
+    const input = document.getElementById("al-" + key);
+    const label = document.getElementById("al-" + key + "-label");
+    alPhotoInputs[key] = input;
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        alPhotos[key] = e.target.result;
+        label.classList.add("has-file");
+        label.innerHTML = '<img src="' + e.target.result + '"><b>' + key[0].toUpperCase()+key.slice(1) + ' ✓</b>';
+        label.appendChild(input);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  ["front","side","top","back"].forEach(wirePhoto);
+
+  function fillAddListingForm(){
+    const catSel = document.getElementById("al-category");
+    if (!catSel.options.length) PS_CATEGORIES.forEach(c => { const o = document.createElement("option"); o.value=c; o.textContent=c; catSel.appendChild(o); });
+    const partSel = document.getElementById("al-part-select");
+    if (partSel.options.length <= 1) [...new Set(PS_PRODUCTS.map(p=>p.name))].forEach(n => { const o = document.createElement("option"); o.value=n; o.textContent=n; partSel.appendChild(o); });
+    const brandList = document.getElementById("al-brand-list");
+    if (!brandList.options.length) Object.keys(CAR_DB).forEach(b => { const o = document.createElement("option"); o.value=b; brandList.appendChild(o); });
+  }
+  document.getElementById("al-brand").addEventListener("input", e => {
+    const modelList = document.getElementById("al-model-list");
+    modelList.innerHTML = "";
+    (CAR_DB[e.target.value] || []).forEach(m => { const o = document.createElement("option"); o.value=m; modelList.appendChild(o); });
   });
 
-  document.getElementById("add-listing-form").addEventListener("submit", e => {
-    e.preventDefault();
-    const name = document.getElementById("nl-name").value.trim();
-    const sku = document.getElementById("nl-sku").value.trim();
-    const category = catSelect.value;
-    const price = Number(document.getElementById("nl-price").value);
-    if (!name || !sku || !price) return;
+  function submitNewListing(){
+    const name = document.getElementById("al-part-select").value || document.getElementById("al-part-custom").value.trim();
+    const oem = document.getElementById("al-oem").value.trim();
+    const category = document.getElementById("al-category").value;
+    const condition = document.getElementById("al-condition").value;
+    const brand = document.getElementById("al-brand").value.trim();
+    const price = Number(document.getElementById("al-price").value);
+    if (!name || !oem || !category || !condition || !brand || !price){
+      alert("Please fill in part name, OEM/part number, category, condition, car brand and price — all marked *.");
+      return;
+    }
     const all = psGetAllSubmittedListings();
-    all.push({id: "custom-" + Math.floor(Math.random()*1e9), name, sku, category, price, brand:"—", seller: SELLER_NAME, rating:0, reviews:0, desc:"", image: nlImageData, status: "Pending Review"});
+    all.push({
+      id: "seller-" + Math.floor(1000 + Math.random()*89999),
+      name: name, oem: oem, sku: oem, category: category, condition: condition,
+      brand: brand, model: document.getElementById("al-model").value.trim(),
+      yearRange: document.getElementById("al-yearrange").value.trim(),
+      carSpec: document.getElementById("al-carspec").value,
+      warranty: document.getElementById("al-warranty").value, warrantyUnit: document.getElementById("al-warranty-unit").value,
+      estDelivery: document.getElementById("al-delivery").value, estDeliveryUnit: document.getElementById("al-delivery-unit").value,
+      discountPct: Number(document.getElementById("al-discount").value) || null,
+      chassis: document.getElementById("al-chassis").value.trim(),
+      engineCode: document.getElementById("al-engine").value.trim(),
+      serial: document.getElementById("al-serial").value.trim(),
+      price: price, desc: document.getElementById("al-desc").value.trim(),
+      image: alPhotos.front || alPhotos.side || alPhotos.top || alPhotos.back,
+      photos: Object.assign({}, alPhotos),
+      seller: SELLER_NAME, rating: 0, reviews: 0, status: "Pending Review"
+    });
     localStorage.setItem(PS_LISTINGS_KEY, JSON.stringify(all));
-    e.target.reset();
-    nlImageData = null;
-    document.getElementById("nl-image-preview").innerHTML = "📷";
-    renderListings();
-    renderStats();
-  });
+    flashConfirm("al-confirm");
+    renderAll();
+    document.querySelectorAll("#page-addlisting input, #page-addlisting select, #page-addlisting textarea").forEach(el => { if (el.type !== "button") el.value = ""; });
+    alPhotos = {front:null, side:null, top:null, back:null};
+    ["front","side","top","back"].forEach(k => {
+      const label = document.getElementById("al-" + k + "-label");
+      const input = alPhotoInputs[k]; // reuse the captured reference — do NOT re-query by id, innerHTML below destroys it
+      label.classList.remove("has-file");
+      label.innerHTML = "<div>📷</div><b>" + k[0].toUpperCase()+k.slice(1) + " View</b>";
+      label.appendChild(input);
+    });
+  }
 
-  renderStats();
-  renderOrders();
-  renderListings();
+  /* ---------- Orders ---------- */
+  function renderOrders(){
+    const wrap = document.getElementById("orders-list");
+    wrap.innerHTML = "";
+    const orders = psGetOrdersForSeller(SELLER_NAME).filter(o => o.status !== "Pending Admin Review");
+    if (!orders.length){
+      wrap.innerHTML = "<div class='panel'><p class='empty-row'>No approved orders yet. Orders appear here once PartSouq verifies the buyer's Mulkiya.</p></div>";
+      return;
+    }
+    const ORDER_FLOW = ["Processing","Out for Delivery","Delivered"];
+    orders.forEach(o => {
+      const b = o.buyer || {};
+      const card = document.createElement("div");
+      card.className = "ordercard";
+      const cls = o.status === "Delivered" ? "green" : o.status === "Cancelled" ? "red" : "blue";
+      card.innerHTML =
+        "<div class='head'><div><b>" + o.items.map(i=>i.name).join(", ") + "</b><div style='font-size:12px;color:var(--text-secondary);'>#" + o.id + " · " + (b.name||"—") + " · " + (b.emirate||"—") + "</div></div><span class='status " + cls + "'>" + o.status + "</span></div>" +
+        "<div style='font-size:12.5px;color:var(--text-secondary);'>📞 " + (b.phone||"—") + " · Amount: " + psFmt(o.total) + "</div>" +
+        "<div class='photos'>" +
+          "<div><b>Mulkiya</b>" + (o.mulkiya ? "<img src='"+o.mulkiya+"'>" : "<span style='font-size:11.5px;color:var(--text-muted);'>Not provided</span>") + "</div>" +
+          "<div><b>Old Part</b>" + (o.oldPartPhoto ? "<img src='"+o.oldPartPhoto+"'>" : "<span style='font-size:11.5px;color:var(--text-muted);'>Not provided</span>") + "</div>" +
+        "</div>" +
+        "<div class='matchnote'>Match these against your listing before dispatching.</div>" +
+        "<div style='margin-top:10px;' id='order-actions-" + o.id + "'></div>";
+      wrap.appendChild(card);
+      const actions = card.querySelector("#order-actions-" + o.id);
+      const idx = ORDER_FLOW.indexOf(o.status);
+      if (idx > -1 && idx < ORDER_FLOW.length - 1){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve"; btn.textContent = "Mark " + ORDER_FLOW[idx+1];
+        btn.onclick = () => { psSetOrderStatus(o.id, ORDER_FLOW[idx+1]); renderAll(); };
+        actions.appendChild(btn);
+      }
+      if (o.status !== "Delivered" && o.status !== "Cancelled"){
+        const cancelBtn = document.createElement("button");
+        cancelBtn.className = "rowbtn reject"; cancelBtn.textContent = "Cancel Order";
+        cancelBtn.onclick = () => { if (confirm("Cancel order #" + o.id + "?")){ psSetOrderStatus(o.id, "Cancelled"); renderAll(); } };
+        actions.appendChild(cancelBtn);
+      }
+    });
+  }
+
+  /* ---------- Payment Statement ---------- */
+  function renderStatement(){
+    const entries = psGetPaymentStatements(SELLER_NAME);
+    const total = entries.reduce((s,e) => s + Number(e.amount||0), 0);
+    document.getElementById("stmt-total").textContent = psFmt(total);
+    const wrap = document.getElementById("statement-list");
+    wrap.innerHTML = "";
+    if (!entries.length){
+      wrap.innerHTML = "<p class='empty-row'>No payments confirmed yet.</p>";
+      return;
+    }
+    entries.forEach(e => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);";
+      row.innerHTML = "<div><b style='font-size:13.5px;'>Payment Confirmed" + (e.note ? " — " + e.note : "") + "</b><div style='font-size:11.5px;color:var(--text-muted);'>" + e.at + "</div></div><b style='color:var(--success-green);'>+" + psFmt(e.amount) + "</b>";
+      wrap.appendChild(row);
+    });
+  }
+
+  /* ---------- Profile ---------- */
+  function renderProfile(){
+    const seller = getSeller();
+    document.getElementById("pf-avatar").textContent = seller.name[0];
+    document.getElementById("pf-name").textContent = seller.name;
+    document.getElementById("pf-psid").textContent = psSellerPsId(seller.id);
+    document.getElementById("pf-email").value = seller.email || "";
+    document.getElementById("pf-whatsapp").value = seller.whatsapp || "+971 50 000 0000";
+    document.getElementById("pf-address").value = seller.address || "";
+    const listings = getSellerListings();
+    document.getElementById("pf-listings-status").textContent = listings.length ? listings.length + " listing(s) — " + listings.filter(l=>l.status==="Approved").length + " live" : "No listings yet";
+    const orders = psGetOrdersForSeller(SELLER_NAME);
+    document.getElementById("pf-orders-status").textContent = orders.length ? orders.length + " order(s) total" : "No orders yet";
+  }
+  function saveProfile(){
+    psEditSeller(getSeller().id, {
+      email: document.getElementById("pf-email").value.trim(),
+      whatsapp: document.getElementById("pf-whatsapp").value.trim(),
+      address: document.getElementById("pf-address").value.trim()
+    });
+    flashConfirm("pf-confirm");
+  }
+
+  function flashConfirm(id){
+    const el = document.getElementById(id);
+    el.style.display = "inline";
+    setTimeout(() => el.style.display = "none", 2200);
+  }
+
+  function renderAll(){
+    renderDashboard();
+    renderListings();
+    fillAddListingForm();
+    renderOrders();
+    renderStatement();
+    renderProfile();
+  }
+  renderAll();
 </script>
 </body>
 </html>

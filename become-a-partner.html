@@ -112,11 +112,60 @@
   #apply-modal .apply-success .ok{width:56px;height:56px;border-radius:50%;background:var(--success-green-light);color:var(--success-green);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;}
   #apply-modal .apply-upload{border:1.5px dashed var(--border);border-radius:9px;padding:12px 8px;text-align:center;cursor:pointer;font-size:11.5px;color:var(--text-secondary);}
   #apply-modal .apply-upload.has-file{border-style:solid;border-color:var(--success-green);background:var(--success-green-light);}
+
+  @media (max-width: 760px){
+    .wrap{padding:0 16px;}
+    .hero{padding:40px 0 30px;}
+    .hero h1{font-size:27px;}
+    .pathbtns{flex-wrap:wrap;}
+    .cardgrid{grid-template-columns:1fr;}
+    .protgrid{grid-template-columns:repeat(2,1fr);}
+    .steps{flex-wrap:wrap;gap:22px 14px;}
+    .steps:before{display:none;}
+    .step{flex:0 0 40%;}
+    .appsoon .wrap{grid-template-columns:1fr;text-align:center;}
+    .appsoon p{margin:0 auto 16px;}
+    .storebtns{justify-content:center;}
+    .phonemock{margin-top:20px;}
+    #apply-modal .apply-row{grid-template-columns:1fr;}
+    footer .wrap{justify-content:center;text-align:center;}
+  }
+  @media (max-width: 420px){
+    .protgrid{grid-template-columns:1fr;}
+    .step{flex:0 0 100%;}
+  }
+
+  @media (max-width: 760px){
+    /* modern mobile refresh */
+    body{padding-bottom:78px;}
+    #topbar{position:sticky;top:0;z-index:400;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
+    .btn{border-radius:12px;min-height:44px;}
+    .regcard{border-radius:16px;border:none;box-shadow:0 3px 16px rgba(16,25,46,.07);}
+  }
+
+  /* app-style bottom tab bar (mobile only) */
+  .ps-bottom-nav{display:none;}
+  @media (max-width:760px){
+    .ps-bottom-nav{
+      display:flex;position:fixed;left:0;right:0;bottom:0;z-index:600;
+      background:rgba(255,255,255,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border-top:1px solid var(--border);
+      padding:8px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow:0 -6px 24px rgba(16,25,46,.08);
+    }
+    .ps-bottom-nav a{
+      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+      font-size:10.5px;font-weight:700;color:var(--text-muted);padding:5px 2px;border-radius:14px;
+    }
+    .ps-bottom-nav a.active{color:var(--brand-blue);}
+    .ps-bottom-nav a .ic{font-size:21px;line-height:1;}
+    .ps-bottom-nav a .nav-badge{position:absolute;top:-2px;right:20%;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:9px;font-weight:700;min-width:15px;height:15px;display:none;align-items:center;justify-content:center;padding:0 3px;}
+  }
 </style>
 </head>
 <body>
 
-  <div style="border-bottom:1px solid var(--border);padding:14px 0;">
+  <div id="topbar" style="border-bottom:1px solid var(--border);padding:14px 0;background:#fff;">
     <div class="wrap"><a href="index.html" style="display:inline-flex;align-items:center;gap:10px;"><div class="mark" style="width:34px;height:34px;border-radius:8px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:13px;">PS</div><b style="font-size:17px;">PartSouq</b></a></div>
   </div>
 
@@ -233,6 +282,13 @@
     </div>
   </footer>
 
+  <nav class="ps-bottom-nav">
+    <a href="index.html"><span class="ic">🏠</span>Home</a>
+    <a href="search-results.html"><span class="ic">🔍</span>Shop</a>
+    <a href="cart-checkout.html"><span class="ic">🛒</span>Cart<span class="ps-cart-badge nav-badge">0</span></a>
+    <a href="my-account.html"><span class="ic">👤</span>Account</a>
+  </nav>
+
   <div id="apply-modal">
     <div class="apply-box">
       <button class="apply-close" onclick="closeApplyModal()">✕</button>
@@ -270,6 +326,8 @@
     </div>
   </div>
 
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
   <script src="admin-data.js"></script>
   <script>
     const __pb = psGetSiteContent().partnerBanner;

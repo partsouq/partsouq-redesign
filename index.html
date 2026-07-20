@@ -71,16 +71,27 @@
   .trustitem b{display:block;font-size:13.5px;}
   .trustitem span{font-size:12px;color:var(--text-secondary);}
 
-  /* promo banner */
+  /* promo banner — wide card, ~2.4:1, image fills the right column edge-to-edge */
   .promo{padding:44px 0;}
-  .promo-card{background:linear-gradient(120deg,var(--brand-blue-dark),var(--brand-blue));border-radius:16px;padding:38px;color:#fff;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px;overflow:hidden;}
-  .promo-card h2{font-size:24px;margin:0 0 8px;line-height:1.3;}
+  .promo-card{background:linear-gradient(120deg,var(--brand-blue-dark),var(--brand-blue));border-radius:16px;color:#fff;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch;gap:0;overflow:hidden;min-height:460px;}
+  .promo-card>.promo-copy{padding:38px;display:flex;flex-direction:column;justify-content:center;}
+  .promo-card h2{font-size:26px;margin:0 0 8px;line-height:1.3;}
   .promo-card p{color:#D7E3FF;font-size:14px;margin:0 0 18px;}
-  .promo-card .btn-primary{background:#fff;color:var(--brand-blue-dark);}
-  .promo-art{display:flex;gap:22px;justify-content:flex-end;flex-wrap:wrap;}
+  .promo-card .btn-primary{background:#fff;color:var(--brand-blue-dark);align-self:flex-start;}
+  #promo-image{width:100%;height:100%;object-fit:cover;}
+  .promo-art{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap;height:100%;padding:20px;}
   .promo-icon{display:flex;flex-direction:column;align-items:center;gap:10px;width:76px;}
   .promo-icon svg{width:34px;height:34px;padding:16px;box-sizing:content-box;border-radius:50%;background:rgba(255,255,255,.15);}
   .promo-icon span{font-size:11px;color:#E3EAFC;text-align:center;line-height:1.3;}
+
+  /* offer banner — full-width strip, ~4:1, admin-uploaded image with text overlay */
+  .offer-banner{padding:0 0 8px;}
+  .offer-banner-card{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/1;min-height:100px;background:var(--bg-alt);}
+  .offer-banner-card img{width:100%;height:100%;object-fit:cover;display:block;}
+  .offer-banner-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 5%;max-width:60%;background:linear-gradient(90deg,rgba(16,25,46,.72) 0%,rgba(16,25,46,.4) 60%,rgba(16,25,46,0) 100%);color:#fff;}
+  .offer-banner-overlay h3{font-size:clamp(15px,2.2vw,22px);margin:0 0 6px;line-height:1.25;}
+  .offer-banner-overlay p{font-size:clamp(11px,1.3vw,13.5px);margin:0 0 12px;color:#EDEFF5;}
+  .offer-banner-overlay a{background:#fff;color:var(--brand-blue-dark);align-self:flex-start;padding:8px 16px;font-size:clamp(11px,1.2vw,13px);}
 
   section.section{padding:36px 0;}
   .section h2.sectitle{font-size:20px;margin:0 0 18px;display:flex;align-items:center;justify-content:space-between;}
@@ -143,6 +154,89 @@
   footer a{display:block;font-size:12.5px;color:#AEB9CF;margin-bottom:9px;}
   footer .logo .word b, footer .logo .word small{color:#fff;}
   .bottom{border-top:1px solid #24304A;margin-top:26px;padding-top:16px;font-size:11.5px;color:#7F8CA6;display:flex;justify-content:space-between;}
+
+  /* ===== Mobile (phones) ===== */
+  @media (max-width: 760px){
+    .wrap{padding:0 16px;}
+    .utility .wrap{gap:6px 16px;font-size:11px;}
+    header .wrap{flex-wrap:wrap;gap:12px;}
+    header .wrap > .logo{order:1;}
+    header .wrap > .headerlinks{order:2;margin-left:auto;gap:14px;}
+    header .wrap > .searchbar{order:3;flex-basis:100%;}
+    .searchbar select{display:none;}
+    .headerlinks a span{display:none;}
+    .headerlinks{gap:16px;}
+    nav .wrap{overflow-x:auto;gap:18px;padding:10px 16px;scrollbar-width:none;white-space:nowrap;}
+    nav .wrap::-webkit-scrollbar{display:none;}
+
+    .hero{padding:28px 0;}
+    .hero .wrap{grid-template-columns:1fr;gap:22px;}
+    .hero h1{font-size:26px;}
+    .hero p{max-width:none;}
+    .finder .row{grid-template-columns:1fr 1fr;}
+
+    .trustbar .wrap{grid-template-columns:repeat(2,1fr);gap:16px;}
+
+    .promo-card{grid-template-columns:minmax(0,1fr);min-height:0;text-align:left;}
+    .promo-card>.promo-copy{padding:24px 22px 4px;}
+    .promo-art{justify-content:flex-start;padding:4px 22px 24px;height:auto;}
+    #promo-image{height:auto;aspect-ratio:16/9;}
+
+    .offer-banner-card{aspect-ratio:16/9;}
+    .offer-banner-overlay{max-width:100%;padding:0 20px;background:linear-gradient(0deg,rgba(16,25,46,.78) 0%,rgba(16,25,46,.5) 55%,rgba(16,25,46,.15) 100%);}
+    .offer-banner-overlay h3{font-size:16px;}
+    .offer-banner-overlay p{font-size:11.5px;}
+
+    .garages{grid-template-columns:1fr;}
+    .deals{grid-template-columns:1fr;}
+    .products{grid-template-columns:repeat(2,1fr);}
+
+    footer .cols{grid-template-columns:1fr 1fr;gap:22px 16px;}
+    .bottom{flex-direction:column;gap:8px;text-align:center;}
+    .ct-row{grid-template-columns:1fr !important;}
+    .finder-row-3{grid-template-columns:1fr 1fr !important;}
+
+    /* ---- modern mobile refresh: softer depth, rounder shapes, bigger tap targets ---- */
+    body{padding-bottom:78px;}
+    header{position:sticky;top:0;z-index:400;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
+    .btn{border-radius:12px;min-height:46px;font-weight:700;}
+    .searchbar{border-radius:12px;box-shadow:0 2px 10px rgba(16,25,46,.05);}
+    .searchbar input{min-height:44px;}
+    input, select, textarea{border-radius:10px;}
+    .cat-card{border-radius:16px;}
+    .garage-card{border-radius:18px;border:none;box-shadow:0 3px 16px rgba(16,25,46,.08);}
+    .deal{border-radius:18px;}
+    .product{border-radius:14px;border:none;box-shadow:0 2px 12px rgba(16,25,46,.07);}
+    .promo-card{border-radius:20px;}
+    .offer-banner-card{border-radius:20px;}
+    #contact-form-wrap{border-radius:18px !important;box-shadow:0 3px 16px rgba(16,25,46,.06);}
+  }
+  @media (max-width: 420px){
+    .finder-row-3{grid-template-columns:1fr !important;}
+  }
+  @media (max-width: 420px){
+    .products{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .cat-card{flex-basis:108px;}
+  }
+
+  /* ---- app-style bottom tab bar (mobile only) ---- */
+  .ps-bottom-nav{display:none;}
+  @media (max-width:760px){
+    .ps-bottom-nav{
+      display:flex;position:fixed;left:0;right:0;bottom:0;z-index:600;
+      background:rgba(255,255,255,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border-top:1px solid var(--border);
+      padding:8px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow:0 -6px 24px rgba(16,25,46,.08);
+    }
+    .ps-bottom-nav a{
+      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+      font-size:10.5px;font-weight:700;color:var(--text-muted);padding:5px 2px;border-radius:14px;
+    }
+    .ps-bottom-nav a.active{color:var(--brand-blue);}
+    .ps-bottom-nav a .ic{font-size:21px;line-height:1;}
+    .ps-bottom-nav a .nav-badge{position:absolute;top:-2px;right:20%;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:9px;font-weight:700;min-width:15px;height:15px;display:none;align-items:center;justify-content:center;padding:0 3px;}
+  }
 </style>
 </head>
 <body>
@@ -205,7 +299,7 @@
         <div class="row" style="grid-template-columns:1fr;">
           <div><label>Part Name</label><input id="f-part" list="part-list" placeholder="e.g. Brake, Filter, Radiator..."><datalist id="part-list"></datalist></div>
         </div>
-        <div class="row" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="row finder-row-3" style="grid-template-columns:1fr 1fr 1fr;">
           <div><label>Year</label><input id="f-year" type="number" min="1990" max="2026" placeholder="e.g. 2020"></div>
           <div><label>Spec</label><select id="f-spec"><option value="">Any</option><option>GCC</option><option>American</option><option>Japanese</option><option>European</option></select></div>
           <div><label>Category</label><select id="f-cat"><option value="">All parts</option></select></div>
@@ -234,16 +328,30 @@
   <section class="promo">
     <div class="wrap">
       <div class="promo-card">
-        <div>
+        <div class="promo-copy">
           <h2 id="promo-title">Every Part. Every Brand.<br>All in One Place.</h2>
           <p id="promo-subtitle">From engine to electrical — we've got you covered.</p>
           <a href="search-results.html" id="promo-cta" class="btn btn-primary">Browse All Parts →</a>
         </div>
-        <div class="promo-art">
+        <img id="promo-image" style="display:none;" alt="">
+        <div class="promo-art" id="promo-art">
           <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v5M12 15.5v5M3.5 12h5M15.5 12h5M6 6l3.5 3.5M14.5 14.5L18 18M18 6l-3.5 3.5M9.5 14.5L6 18"/></svg><span>Tires &amp; Wheels</span></div>
           <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Engine Parts</span></div>
           <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><rect x="4" y="8" width="16" height="12" rx="1.5"/><path d="M9 8V6a1 1 0 011-1h4a1 1 0 011 1v2"/><path d="M9.5 14h2M12 12v4"/></svg><span>Electrical</span></div>
           <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg><span>Tools &amp; Garage</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="offer-banner" id="offer-banner-section" style="display:none;">
+    <div class="wrap">
+      <div class="offer-banner-card">
+        <img id="offer-banner-image" alt="">
+        <div class="offer-banner-overlay">
+          <h3 id="offer-banner-title"></h3>
+          <p id="offer-banner-subtitle"></p>
+          <a href="#" id="offer-banner-cta" class="btn"></a>
         </div>
       </div>
     </div>
@@ -286,13 +394,25 @@
       <h2 class="sectitle" style="justify-content:flex-start;gap:10px;">Contact Us</h2>
       <p style="color:var(--text-secondary);font-size:13.5px;margin:-8px 0 18px;">Questions about an order, a listing, or partnering with us — send a message and our team will reply by email.</p>
       <div id="contact-form-wrap" style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Full Name *</label><input id="ct-name" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;"></div>
-          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Email *</label><input id="ct-email" type="email" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;"></div>
+        <div class="ct-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Full Name</label><input id="ct-name" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;" placeholder="Your name"></div>
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">I am a</label><select id="ct-role" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;"><option>Buyer</option><option>Seller</option><option>Garage</option></select></div>
         </div>
-        <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Message *</label><textarea id="ct-message" rows="3" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;font-family:inherit;"></textarea></div>
-        <button type="button" class="btn btn-primary" onclick="submitContactForm()">Send Message</button>
-        <p id="ct-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:12px 0 0;">✓ Thanks — your message was sent. We'll reply to your email soon.</p>
+        <div class="ct-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Phone / WhatsApp *</label><input id="ct-phone" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;" placeholder="+971 50 000 0000"></div>
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Reason for Contact *</label><select id="ct-reason" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;"><option value="">Select a reason</option><option>Help finding a part</option><option>Order issue</option><option>Seller / Garage application</option><option>Billing question</option><option>Report a problem</option><option>Other</option></select></div>
+        </div>
+        <div class="ct-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Part Needed (optional)</label><input id="ct-part" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;" placeholder="e.g. Front Brake Pads"></div>
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Car Brand &amp; Model (optional)</label><input id="ct-car" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;" placeholder="e.g. Toyota Land Cruiser 2019"></div>
+        </div>
+        <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Description</label><textarea id="ct-message" rows="3" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;font-family:inherit;" placeholder="Tell us more about your issue or request..."></textarea></div>
+        <div style="margin-bottom:16px;">
+          <label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Photo *</label>
+          <label class="upload-box" id="ct-photo-label" for="ct-photo" style="display:block;border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;font-size:12.5px;color:var(--success-green);font-weight:600;">📎 Choose Photo<input id="ct-photo" type="file" accept="image/*" style="display:none;"></label>
+        </div>
+        <button type="button" class="btn btn-primary" style="background:var(--success-green);width:100%;justify-content:center;" onclick="submitContactForm()">Submit</button>
+        <p id="ct-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:12px 0 0;">✓ Thanks — your message was sent. Our team will reach back out on WhatsApp or email.</p>
       </div>
     </div>
   </section>
@@ -305,7 +425,7 @@
           <p style="font-size:12.5px;margin-top:12px;line-height:1.6;">Quality car parts and trusted garage services — verified, secured and coordinated through one platform.</p>
         </div>
         <div><h4>Shop</h4><a href="search-results.html">All Parts</a><a href="search-results.html">Today's Deals</a><a href="search-results.html">Brakes &amp; Discs</a><a href="search-results.html">Engine Parts</a><a href="search-results.html">Suspension</a></div>
-        <div><h4>Services</h4><a href="become-a-partner.html">Book a Garage</a><a href="become-a-partner.html#how">How It Works</a><a href="my-account.html">Track Order</a><a href="become-a-partner.html">Request a Part</a></div>
+        <div><h4>Services</h4><a href="become-a-partner.html">Book a Garage</a><a href="become-a-partner.html#how">How It Works</a><a href="my-account.html">Track Order</a><a href="#" onclick="openRequestPartModal();return false;">Request a Part</a></div>
         <div><h4>Partner Network</h4><a href="become-a-partner.html">Sell Your Parts</a><a href="become-a-partner.html">Register Garage</a><a href="become-a-partner.html">Partner Terms</a></div>
         <div><h4>Help &amp; Legal</h4><a href="#contact">Contact Us</a><a href="#terms">Policies &amp; Terms</a></div>
       </div>
@@ -315,6 +435,13 @@
       </div>
     </div>
   </footer>
+
+  <nav class="ps-bottom-nav">
+    <a href="index.html" class="active"><span class="ic">🏠</span>Home</a>
+    <a href="search-results.html"><span class="ic">🔍</span>Shop</a>
+    <a href="cart-checkout.html"><span class="ic">🛒</span>Cart<span class="ps-cart-badge nav-badge">0</span></a>
+    <a href="my-account.html"><span class="ic">👤</span>Account</a>
+  </nav>
 
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
@@ -440,6 +567,26 @@
     document.getElementById("promo-subtitle").textContent = content.featuredBanner.subtitle;
     document.getElementById("promo-cta").textContent = content.featuredBanner.ctaText;
     document.getElementById("promo-cta").href = content.featuredBanner.ctaLink;
+    if (content.featuredBanner.image) {
+      document.getElementById("promo-image").src = content.featuredBanner.image;
+      document.getElementById("promo-image").style.display = "block";
+      document.getElementById("promo-art").style.display = "none";
+    } else {
+      document.getElementById("promo-image").style.display = "none";
+      document.getElementById("promo-art").style.display = "flex";
+    }
+
+    // Offer Banner — full-width strip, only shown once an admin uploads an image (Admin > Homepage Banners)
+    if (content.offerBanner && content.offerBanner.image) {
+      document.getElementById("offer-banner-section").style.display = "block";
+      document.getElementById("offer-banner-image").src = content.offerBanner.image;
+      document.getElementById("offer-banner-title").textContent = content.offerBanner.title;
+      document.getElementById("offer-banner-subtitle").textContent = content.offerBanner.subtitle;
+      document.getElementById("offer-banner-cta").textContent = content.offerBanner.ctaText;
+      document.getElementById("offer-banner-cta").href = content.offerBanner.ctaLink;
+    } else {
+      document.getElementById("offer-banner-section").style.display = "none";
+    }
 
     const dealsWrap = document.getElementById("deals-wrap");
     const dealGrads = ["linear-gradient(135deg,#14399B,#1E56D8)","linear-gradient(135deg,#0F2A6B,#2C6BE0)","linear-gradient(135deg,#1B4FC4,#4C7EEA)"];
@@ -470,18 +617,55 @@
       newly.appendChild(a);
     });
 
+    let ctPhotoData = null;
+    let ctPhotoInput = null; // captured once here and reused everywhere — never re-queried by id after innerHTML destroys it
+    document.addEventListener("DOMContentLoaded", () => {
+      ctPhotoInput = document.getElementById("ct-photo");
+      ctPhotoInput.addEventListener("change", () => {
+        const file = ctPhotoInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          ctPhotoData = e.target.result;
+          const label = document.getElementById("ct-photo-label");
+          label.style.color = "var(--success-green)";
+          label.style.borderStyle = "solid";
+          label.innerHTML = "✓ " + file.name + " selected";
+          label.appendChild(ctPhotoInput);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
     function submitContactForm(){
       const name = document.getElementById("ct-name").value.trim();
-      const email = document.getElementById("ct-email").value.trim();
+      const phone = document.getElementById("ct-phone").value.trim();
+      const reason = document.getElementById("ct-reason").value;
       const message = document.getElementById("ct-message").value.trim();
-      if (!name || !email || !message){
-        alert("Please fill in your name, email, and message.");
+      if (!phone || !reason){
+        alert("Please fill in your phone/WhatsApp number and select a reason for contact.");
         return;
       }
-      psSubmitContactMessage({name: name, email: email, message: message});
+      if (!ctPhotoData){
+        alert("Please attach a photo — it helps our team understand your request faster.");
+        return;
+      }
+      psSubmitContactMessage({
+        name: name, role: document.getElementById("ct-role").value, phone: phone, reason: reason,
+        part: document.getElementById("ct-part").value.trim(), car: document.getElementById("ct-car").value.trim(),
+        message: message, photo: ctPhotoData
+      });
       document.getElementById("ct-name").value = "";
-      document.getElementById("ct-email").value = "";
+      document.getElementById("ct-phone").value = "";
+      document.getElementById("ct-reason").value = "";
+      document.getElementById("ct-part").value = "";
+      document.getElementById("ct-car").value = "";
       document.getElementById("ct-message").value = "";
+      ctPhotoData = null;
+      const label = document.getElementById("ct-photo-label");
+      label.style.borderStyle = "";
+      label.innerHTML = "📎 Choose Photo";
+      label.appendChild(ctPhotoInput);
       document.getElementById("ct-confirm").style.display = "block";
     }
   </script>

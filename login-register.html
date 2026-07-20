@@ -22,7 +22,7 @@
   .logo .word b{font-size:20px;}
   .logo .word small{display:block;font-size:9px;letter-spacing:.08em;color:var(--text-muted);font-weight:700;}
 
-  .card{width:400px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:30px;box-shadow:0 20px 40px rgba(20,57,155,.06);}
+  .card{width:400px;max-width:100%;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:30px;box-shadow:0 20px 40px rgba(20,57,155,.06);}
   .segtabs{display:flex;background:var(--bg-alt);border-radius:9px;padding:4px;margin-bottom:22px;}
   .segtabs div{flex:1;text-align:center;padding:9px;border-radius:7px;font-size:13px;font-weight:700;color:var(--text-secondary);cursor:pointer;}
   .segtabs div.active{background:#fff;color:var(--brand-blue-dark);box-shadow:0 2px 6px rgba(0,0,0,.06);}
@@ -40,6 +40,14 @@
   .btn{width:100%;padding:12px;border-radius:9px;background:var(--brand-blue);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;margin-top:4px;}
   .fineprint{font-size:12px;color:var(--text-muted);text-align:center;margin-top:16px;}
   .fineprint a{color:var(--brand-blue);font-weight:600;}
+
+  @media (max-width: 500px){
+    body{padding:24px 16px;}
+    .card{border-radius:20px;box-shadow:0 12px 32px rgba(20,57,155,.08);padding:24px 20px;}
+    input{min-height:46px;}
+    .btn{min-height:48px;border-radius:12px;}
+    .accttype div{padding:12px 8px;}
+  }
 </style>
 </head>
 <body>

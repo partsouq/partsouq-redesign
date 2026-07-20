@@ -97,10 +97,22 @@ function psGetSellers(){
   const base = PS_SELLERS_SEED.concat(psGetAddedSellers());
   return base.map(s => Object.assign({}, s, overrides[s.id] || {}));
 }
-function psSetSellerIdStatus(id, status){
+function psSetSellerIdStatus(id, status, comment){
   let overrides = {};
   try { overrides = JSON.parse(localStorage.getItem(PS_SELLERS_KEY)) || {}; } catch(e){ overrides = {}; }
-  overrides[id] = Object.assign({}, overrides[id], {idStatus: status});
+  const prev = overrides[id] || {};
+  const history = (prev.history || []).slice();
+  history.unshift({status: status, comment: comment || "", at: new Date().toLocaleString()});
+  overrides[id] = Object.assign({}, prev, {idStatus: status, lastComment: comment || "", history: history});
+  localStorage.setItem(PS_SELLERS_KEY, JSON.stringify(overrides));
+}
+/* Generic seller field edit (name/type/emirate/listings etc) — separate from
+   ID-status so an admin can fix a seller's directory details without it
+   looking like a re-review of their verification. */
+function psEditSeller(id, fields){
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(PS_SELLERS_KEY)) || {}; } catch(e){ overrides = {}; }
+  overrides[id] = Object.assign({}, overrides[id], fields);
   localStorage.setItem(PS_SELLERS_KEY, JSON.stringify(overrides));
 }
 
@@ -233,11 +245,18 @@ const PS_CONTENT_DEFAULTS = {
   featuredBanner: {
     title: "Every Part. Every Brand. All in One Place.",
     subtitle: "From engine to electrical — we've got you covered.",
-    ctaText: "Browse All Parts →", ctaLink: "search-results.html"
+    ctaText: "Browse All Parts →", ctaLink: "search-results.html",
+    image: null
   },
   partnerBanner: {
     title: "Grow your business with PartSouq",
     subtitle: "Join 250+ verified sellers and garages already earning through the platform."
+  },
+  offerBanner: {
+    title: "Mega Deals This Week",
+    subtitle: "Up to 30% off on selected brands — limited time offer.",
+    ctaText: "Shop the Offer →", ctaLink: "search-results.html",
+    image: null
   },
   deals: [
     {title:"Up to 40% Off Brake Systems", subtitle:"Pads, discs, calipers • Verified only", ctaText:"Shop Brakes →", category:"Brakes"},
@@ -252,6 +271,7 @@ function psGetSiteContent(){
     hero: Object.assign({}, PS_CONTENT_DEFAULTS.hero, stored.hero || {}),
     featuredBanner: Object.assign({}, PS_CONTENT_DEFAULTS.featuredBanner, stored.featuredBanner || {}),
     partnerBanner: Object.assign({}, PS_CONTENT_DEFAULTS.partnerBanner, stored.partnerBanner || {}),
+    offerBanner: Object.assign({}, PS_CONTENT_DEFAULTS.offerBanner, stored.offerBanner || {}),
     deals: (stored.deals && stored.deals.length) ? stored.deals : PS_CONTENT_DEFAULTS.deals
   });
 }
@@ -383,6 +403,94 @@ function psComputePartnerBilling(){
   }));
   rows.sort((a,b) => b.salesValue - a.salesValue);
   return {rows: rows, unattributedUnits: unattributed, commissionPct: commissionPct};
+}
+
+/* ---------- Seller PartSouq ID + Subscription Plan ----------
+   Every seller gets a stable PartSouq ID (PSS-00001 style, based on their
+   position in the directory so it never changes across reloads) and a
+   subscription plan record. This drives the Seller Dashboard's Dashboard
+   and Profile pages, and is what the admin's Subscriptions & Payments /
+   Partner Billing pages report against. */
+const PS_SELLER_PLAN_KEY = "ps_seller_plans";
+function psSellerPsId(sellerId){
+  const all = psGetSellers();
+  const idx = all.findIndex(s => s.id === sellerId);
+  const n = idx > -1 ? idx + 1 : ((Math.abs(String(sellerId).split("").reduce((a,c)=>a+c.charCodeAt(0),0)) % 99999) + 1);
+  return "PSS-" + String(n).padStart(5, "0");
+}
+function psGetAllSellerPlans(){
+  try { return JSON.parse(localStorage.getItem(PS_SELLER_PLAN_KEY)) || {}; } catch(e){ return {}; }
+}
+function psGetSellerPlan(sellerId){
+  const plans = psGetAllSellerPlans();
+  if (plans[sellerId]) return plans[sellerId];
+  const rec = {tier: "Basic", cycle: "Monthly", price: 49, startedAt: new Date().toISOString(), daysTotal: 30, status: "Paid"};
+  plans[sellerId] = rec;
+  localStorage.setItem(PS_SELLER_PLAN_KEY, JSON.stringify(plans));
+  return rec;
+}
+function psSetSellerPlan(sellerId, fields){
+  const plans = psGetAllSellerPlans();
+  const current = psGetSellerPlan(sellerId);
+  const resetCycle = (fields.tier && fields.tier !== current.tier) || (fields.cycle && fields.cycle !== current.cycle);
+  plans[sellerId] = Object.assign({}, current, fields, resetCycle ? {startedAt: new Date().toISOString()} : {});
+  localStorage.setItem(PS_SELLER_PLAN_KEY, JSON.stringify(plans));
+}
+function psSellerPlanDaysLeft(sellerId){
+  const plan = psGetSellerPlan(sellerId);
+  const elapsed = Math.floor((new Date() - new Date(plan.startedAt)) / 86400000);
+  return Math.max(0, (plan.daysTotal || 30) - elapsed);
+}
+function psSellerPlanDueDate(sellerId){
+  const plan = psGetSellerPlan(sellerId);
+  return new Date(new Date(plan.startedAt).getTime() + (plan.daysTotal || 30) * 86400000);
+}
+
+/* ---------- Listing Deletion Requests ----------
+   A seller can't unilaterally delete a live listing — they request it and
+   an admin actions the request (Approved = pulled from the live catalog;
+   Rejected = stays up). */
+const PS_LISTING_DELETIONS_KEY = "ps_listing_deletion_requests";
+function psGetListingDeletionRequests(){
+  try { return JSON.parse(localStorage.getItem(PS_LISTING_DELETIONS_KEY)) || []; } catch(e){ return []; }
+}
+function psRequestListingDeletion(listingId, listingName, sellerName){
+  const list = psGetListingDeletionRequests();
+  list.unshift({id: "DEL-" + Math.floor(1000 + Math.random() * 8999), listingId: listingId, listingName: listingName, sellerName: sellerName, status: "Pending", at: new Date().toLocaleString()});
+  localStorage.setItem(PS_LISTING_DELETIONS_KEY, JSON.stringify(list));
+  return list[0];
+}
+function psSetListingDeletionStatus(id, status){
+  const list = psGetListingDeletionRequests();
+  const rec = list.find(r => r.id === id);
+  if (!rec) return;
+  rec.status = status;
+  localStorage.setItem(PS_LISTING_DELETIONS_KEY, JSON.stringify(list));
+  if (status === "Approved") psOverrideListing(rec.listingId, {status: "Removed"});
+}
+
+/* ---------- Payment Statements (admin-confirmed payments made to a seller) ---------- */
+const PS_PAYMENT_STATEMENTS_KEY = "ps_payment_statements";
+function psGetAllPaymentStatements(){
+  try { return JSON.parse(localStorage.getItem(PS_PAYMENT_STATEMENTS_KEY)) || []; } catch(e){ return []; }
+}
+function psGetPaymentStatements(sellerName){
+  return psGetAllPaymentStatements().filter(s => s.sellerName === sellerName);
+}
+function psConfirmPayment(sellerName, amount, note){
+  const all = psGetAllPaymentStatements();
+  all.unshift({id: "PMT-" + Math.floor(1000 + Math.random() * 8999), sellerName: sellerName, amount: amount, note: note || "", at: new Date().toLocaleString()});
+  localStorage.setItem(PS_PAYMENT_STATEMENTS_KEY, JSON.stringify(all));
+}
+
+/* ---------- Orders belonging to a given seller ----------
+   Same product/order matching logic psComputePartnerBilling() uses — a real
+   join, not a guess — powering the Seller Dashboard's Orders page. */
+function psGetOrdersForSeller(sellerName){
+  return psGetOrders().filter(order => (order.items || []).some(item => {
+    const product = item.id ? psFindProduct(item.id) : psFindProductByName(item.name);
+    return product && product.seller === sellerName;
+  }));
 }
 
 /* ---------- Admin session (demo-only gate — no real backend auth exists) ---------- */

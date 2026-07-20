@@ -43,6 +43,9 @@ function psUpdateCartBadge(){
     el.style.display = n > 0 ? "inline-flex" : "none";
   });
 }
+// Make sure the badge reflects the cart's real (persisted) count on every
+// fresh page load too — not just after an in-session add/remove.
+document.addEventListener("DOMContentLoaded", psUpdateCartBadge);
 
 const PS_SEED_ORDERS = [
   {id:"PS-10234", items:[{name:"Bosch Alternator — 12V 120A", id:"p14", qty:1},{name:"Bosch Brake Pad Set — Front", id:"p5", qty:2}], total:760, status:"Delivered"},
@@ -67,16 +70,26 @@ function psSetOrderStatus(id, status){
   overrides[id] = status;
   localStorage.setItem(PS_ORDER_STATUS_OVERRIDES_KEY, JSON.stringify(overrides));
 }
-function psPlaceOrder(){
+/* details (optional) = {buyer:{name,phone,address,emirate,area}, oldPartPhoto, mulkiya}
+   Orders now start life as "Pending Admin Review" — PartSouq checks the buyer's
+   Mulkiya against the order before it's ever forwarded to a seller for dispatch,
+   matching the real verified-fitment workflow (not a fake status). */
+function psPlaceOrder(details){
   const lines = psCartLines();
   if (!lines.length) return null;
   const subtotal = psCartSubtotal();
-  const total = subtotal + 20;
+  const fee = 20;
+  const total = subtotal + fee;
   const order = {
     id: "PS-" + Math.floor(10000 + Math.random() * 89999),
     items: lines.map(l => ({name: l.product.name, id: l.product.id, qty: l.qty})),
     total: total,
-    status: "Processing"
+    deliveryFee: fee,
+    status: "Pending Admin Review",
+    buyer: (details && details.buyer) || {},
+    oldPartPhoto: (details && details.oldPartPhoto) || null,
+    mulkiya: (details && details.mulkiya) || null,
+    placedAt: new Date().toLocaleString()
   };
   let stored = [];
   try { stored = JSON.parse(localStorage.getItem(PS_ORDERS_KEY)) || []; } catch(e){ stored = []; }
@@ -85,5 +98,3 @@ function psPlaceOrder(){
   psSaveCart([]);
   return order;
 }
-
-document.addEventListener("DOMContentLoaded", psUpdateCartBadge);

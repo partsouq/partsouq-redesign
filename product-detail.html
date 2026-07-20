@@ -12,6 +12,7 @@
     --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
     --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
     --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --danger-red:#D92D20; --danger-red-light:#FEF0EE;
     --radius:12px;
   }
   *{box-sizing:border-box;}
@@ -39,12 +40,29 @@
   .crumbs a:hover{color:var(--brand-blue);}
 
   .pdp{display:grid;grid-template-columns:0.9fr 1.1fr;gap:40px;padding:10px 0 40px;}
-  .gallery .main{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);height:340px;display:flex;align-items:center;justify-content:center;}
+  .gallery .main{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);height:340px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:zoom-in;position:relative;}
   .gallery .main svg{width:120px;height:120px;stroke:var(--brand-blue);}
+  .gallery .main img{width:100%;height:100%;object-fit:cover;}
+  .gallery .main .zoomtag{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:4px 9px;border-radius:20px;}
   .thumbs{display:flex;gap:10px;margin-top:10px;}
-  .thumbs div{width:60px;height:60px;border-radius:8px;background:var(--bg-alt);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
-  .thumbs div.active{border-color:var(--brand-blue);}
+  .thumbs div{width:60px;height:60px;border-radius:8px;background:var(--bg-alt);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;}
+  .thumbs div.active{border-color:var(--brand-blue);border-width:2px;}
   .thumbs svg{width:26px;height:26px;stroke:var(--brand-blue);}
+  .thumbs img{width:100%;height:100%;object-fit:cover;}
+  .thumbs .tlabel{position:absolute;bottom:0;left:0;right:0;background:rgba(16,25,46,.72);color:#fff;font-size:8.5px;text-align:center;padding:1px 0;text-transform:uppercase;letter-spacing:.03em;}
+  .lightbox{display:none;position:fixed;inset:0;background:rgba(8,12,22,.92);z-index:2000;align-items:center;justify-content:center;flex-direction:column;padding:30px;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:90vw;max-height:75vh;border-radius:10px;background:#fff;}
+  .lightbox .lb-counter{color:#fff;font-size:13px;margin-bottom:14px;}
+  .lightbox .lb-close{position:absolute;top:20px;right:26px;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;}
+  .lightbox .lb-thumbs{display:flex;gap:10px;margin-top:16px;}
+  .lightbox .lb-thumbs div{width:56px;height:56px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;opacity:.6;}
+  .lightbox .lb-thumbs div.active{border-color:var(--brand-blue);opacity:1;}
+  .lightbox .lb-thumbs img{width:100%;height:100%;object-fit:cover;}
+  .mulkiyanote{display:flex;gap:8px;align-items:flex-start;background:var(--success-green-light);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#0d6b4f;margin-bottom:18px;}
+  .mulkiyanote b{color:var(--success-green);}
+  .discountpill{background:var(--danger-red-light);color:var(--danger-red);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+  .pricebox .delivery-line{font-size:12.5px;color:var(--text-secondary);margin:2px 0 10px;}
 
   .info .tagrow{display:flex;gap:8px;margin-bottom:10px;}
   .badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
@@ -92,6 +110,58 @@
   .product .price{font-size:14px;margin-top:6px;}
 
   footer{background:var(--bg-dark);color:#AEB9CF;padding:30px 0 16px;font-size:12.5px;text-align:center;}
+
+  @media (max-width: 760px){
+    .wrap{padding:0 16px;}
+    .utility .wrap{flex-wrap:wrap;gap:6px 16px;font-size:11px;}
+    header .wrap{flex-wrap:wrap;gap:10px;}
+    header .wrap .logo{order:1;}
+    header .wrap .headerlinks{order:2;margin-left:auto;gap:14px;}
+    header .wrap .searchbar{order:3;flex-basis:100%;}
+    nav .wrap{overflow-x:auto;white-space:nowrap;gap:18px;scrollbar-width:none;}
+    nav .wrap::-webkit-scrollbar{display:none;}
+    .pdp{grid-template-columns:minmax(0,1fr);gap:22px;}
+    .pdp>*{min-width:0;}
+    .gallery .main{height:260px;}
+    .tabs{flex-wrap:wrap;gap:14px;}
+    .specs td:first-child{width:130px;}
+    .products{grid-template-columns:repeat(2,1fr);}
+    .sellercard{flex-wrap:wrap;}
+    .buybox{flex-wrap:wrap;}
+    .buybox .btn{flex:1 1 45%;}
+    .fitcheck .row{flex-wrap:wrap;}
+    .fitcheck select{flex:1 1 100%;min-width:0;}
+
+    /* modern mobile refresh */
+    body{padding-bottom:78px;}
+    header{position:sticky;top:0;z-index:400;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
+    .btn{border-radius:12px;min-height:44px;font-weight:700;}
+    .gallery .main{border-radius:16px;}
+    .thumbs div{border-radius:10px;}
+    .fitcheck{border-radius:14px;border:none;box-shadow:0 2px 12px rgba(16,25,46,.06);}
+    .sellercard{border-radius:14px;box-shadow:0 2px 12px rgba(16,25,46,.06);}
+    .codnote, .mulkiyanote{border-radius:12px;}
+    .product{border-radius:14px;border:none;box-shadow:0 2px 12px rgba(16,25,46,.07);}
+  }
+
+  /* app-style bottom tab bar (mobile only) */
+  .ps-bottom-nav{display:none;}
+  @media (max-width:760px){
+    .ps-bottom-nav{
+      display:flex;position:fixed;left:0;right:0;bottom:0;z-index:600;
+      background:rgba(255,255,255,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border-top:1px solid var(--border);
+      padding:8px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow:0 -6px 24px rgba(16,25,46,.08);
+    }
+    .ps-bottom-nav a{
+      position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+      font-size:10.5px;font-weight:700;color:var(--text-muted);padding:5px 2px;border-radius:14px;
+    }
+    .ps-bottom-nav a.active{color:var(--brand-blue);}
+    .ps-bottom-nav a .ic{font-size:21px;line-height:1;}
+    .ps-bottom-nav a .nav-badge{position:absolute;top:-2px;right:20%;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:9px;font-weight:700;min-width:15px;height:15px;display:none;align-items:center;justify-content:center;padding:0 3px;}
+  }
 </style>
 </head>
 <body>
@@ -111,14 +181,19 @@
 
   <div class="wrap pdp">
     <div class="gallery">
-      <div class="main" id="gallery-main"></div>
+      <div class="main" id="gallery-main" onclick="openLightbox()"><span class="zoomtag">🔍 Tap to enlarge</span></div>
+      <div class="thumbs" id="gallery-thumbs"></div>
     </div>
     <div class="info">
-      <div class="tagrow"><span class="badge seller">✓ Verified Seller</span><span class="badge stock">In Stock</span></div>
+      <div class="tagrow"><span class="badge seller">✓ Verified Seller</span><span class="badge stock" id="stock-badge">In Stock</span><span class="discountpill" id="discount-pill" style="display:none;"></span></div>
       <h1 id="p-name">Loading…</h1>
       <div class="sku" id="p-sku"></div>
-      <div class="price" id="p-price"></div>
+      <div class="pricebox">
+        <div class="price" id="p-price"></div>
+        <div class="delivery-line" id="p-delivery-line"></div>
+      </div>
       <div class="rating" id="p-rating"></div>
+      <div class="mulkiyanote"><span>🪪</span><div><b>Mulkiya Verified:</b> OEM, chassis and engine code checked before dispatch.</div></div>
 
       <div class="fitcheck">
         <b>✓ Confirm this fits your car</b>
@@ -165,6 +240,20 @@
 
   <footer>© 2026 PartSouq — <a href="index.html" style="color:inherit;">partsouq.co</a> — All rights reserved. Dubai, UAE. · <a href="admin-portal.html" style="color:inherit;">🛡 Admin Sign In</a></footer>
 
+  <nav class="ps-bottom-nav">
+    <a href="index.html"><span class="ic">🏠</span>Home</a>
+    <a href="search-results.html" class="active"><span class="ic">🔍</span>Shop</a>
+    <a href="cart-checkout.html"><span class="ic">🛒</span>Cart<span class="ps-cart-badge nav-badge">0</span></a>
+    <a href="my-account.html"><span class="ic">👤</span>Account</a>
+  </nav>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <div class="lb-counter" id="lb-counter"></div>
+    <img id="lb-img">
+    <div class="lb-thumbs" id="lb-thumbs"></div>
+  </div>
+
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
   <script src="admin-data.js"></script>
@@ -177,10 +266,67 @@
     document.getElementById("crumb-cat").textContent = product.category;
     document.getElementById("crumb-cat").href = "search-results.html?category=" + encodeURIComponent(product.category);
     document.getElementById("crumb-name").textContent = product.name;
-    document.getElementById("gallery-main").innerHTML = product.image ? '<img src="' + product.image + '" style="width:100%;height:100%;object-fit:cover;">' : psIcon(product.category);
     document.getElementById("p-name").textContent = product.name;
-    document.getElementById("p-sku").textContent = "OEM / Part No: " + product.sku + "  •  Brand: " + product.brand;
-    document.getElementById("p-price").innerHTML = psFmt(product.price) + ' <small>incl. VAT</small>' + (product.oldPrice ? ' <small style="text-decoration:line-through;">' + psFmt(product.oldPrice) + '</small>' : "");
+    document.getElementById("p-sku").textContent = "OEM / Part No: " + (product.oem || product.sku) + "  •  Brand: " + product.brand;
+
+    /* Gallery: seller-submitted listings carry labeled Front/Side/Top/Back photos;
+       seed catalog items just have one `image` (or fall back to the icon art). */
+    const galleryShots = [];
+    if (product.photos) {
+      ["front","side","top","back"].forEach(k => { if (product.photos[k]) galleryShots.push({label: k === "front" ? "Main" : k[0].toUpperCase()+k.slice(1), src: product.photos[k]}); });
+    }
+    if (!galleryShots.length && product.image) galleryShots.push({label: "Main", src: product.image});
+    let activeShot = 0;
+    function renderGalleryMain(){
+      const wrap = document.getElementById("gallery-main");
+      wrap.innerHTML = '<span class="zoomtag">🔍 Tap to enlarge</span>' + (galleryShots.length ? '<img src="' + galleryShots[activeShot].src + '">' : psIcon(product.category));
+    }
+    function renderThumbs(){
+      const wrap = document.getElementById("gallery-thumbs");
+      wrap.innerHTML = "";
+      galleryShots.forEach((shot, i) => {
+        const div = document.createElement("div");
+        div.className = i === activeShot ? "active" : "";
+        div.innerHTML = '<img src="' + shot.src + '"><span class="tlabel">' + shot.label + '</span>';
+        div.onclick = () => { activeShot = i; renderGalleryMain(); renderThumbs(); };
+        wrap.appendChild(div);
+      });
+    }
+    renderGalleryMain();
+    renderThumbs();
+
+    window.openLightbox = function(){
+      if (!galleryShots.length) return;
+      document.getElementById("lightbox").classList.add("open");
+      renderLightbox();
+    };
+    window.closeLightbox = function(){ document.getElementById("lightbox").classList.remove("open"); };
+    function renderLightbox(){
+      document.getElementById("lb-img").src = galleryShots[activeShot].src;
+      document.getElementById("lb-counter").textContent = galleryShots[activeShot].label + " (" + (activeShot+1) + " of " + galleryShots.length + ")";
+      const lbThumbs = document.getElementById("lb-thumbs");
+      lbThumbs.innerHTML = "";
+      galleryShots.forEach((shot, i) => {
+        const div = document.createElement("div");
+        div.className = i === activeShot ? "active" : "";
+        div.innerHTML = '<img src="' + shot.src + '">';
+        div.onclick = () => { activeShot = i; renderLightbox(); renderThumbs(); renderGalleryMain(); };
+        lbThumbs.appendChild(div);
+      });
+    }
+
+    const discountPct = product.discountPct || (product.oldPrice ? Math.round((1 - product.price/product.oldPrice) * 100) : 0);
+    const oldPriceVal = product.oldPrice || (product.discountPct ? Math.round(product.price / (1 - product.discountPct/100)) : 0);
+    document.getElementById("p-price").innerHTML = psFmt(product.price) + ' <small>incl. VAT</small>' + (oldPriceVal ? ' <small style="text-decoration:line-through;">' + psFmt(oldPriceVal) + '</small>' : "");
+    if (discountPct){
+      const pill = document.getElementById("discount-pill");
+      pill.style.display = "inline-block";
+      pill.textContent = "-" + discountPct + "%";
+    }
+    if (product.status === "Out of Stock") document.getElementById("stock-badge").textContent = "Out of Stock";
+    const deliveryFee = product.deliveryFee || 20;
+    const deliveryTime = (product.estDelivery && product.estDeliveryUnit) ? (product.estDelivery + " " + product.estDeliveryUnit) : "Same day / next day";
+    document.getElementById("p-delivery-line").textContent = "Delivery charge: " + psFmt(deliveryFee) + " · Estimated delivery: " + deliveryTime;
     document.getElementById("p-rating").innerHTML = "★★★★★ <b>" + product.rating + "</b> (" + product.reviews + " reviews)";
     document.getElementById("tab-reviews").textContent = "Reviews (" + product.reviews + ")";
     document.getElementById("p-seller-initials").textContent = product.seller.split(" ").map(w => w[0]).slice(0,2).join("");
@@ -188,7 +334,17 @@
     document.getElementById("p-desc").textContent = product.desc;
 
     const specsTable = document.getElementById("p-specs");
-    const specRows = [["Brand", product.brand], ["Category", product.category], ["Condition", "New"], ["Warranty", "6 months seller warranty"]];
+    const specRows = [
+      ["Brand", product.brand],
+      ["Category", product.category],
+      ["Condition", product.condition || "New"],
+      ["Compatible Car", [product.brand, product.model].filter(Boolean).join(" ") || "—"],
+      ["Chassis No.", product.chassis || "—"],
+      ["Engine Code", product.engineCode || "—"],
+      ["Car Spec", product.carSpec || "—"],
+      ["Warranty", (product.warranty && product.warrantyUnit) ? (product.warranty + " " + product.warrantyUnit) : "6 months seller warranty"],
+      ["Delivery", deliveryTime]
+    ];
     specRows.forEach(r => {
       const tr = document.createElement("tr");
       tr.innerHTML = "<td>" + r[0] + "</td><td>" + r[1] + "</td>";

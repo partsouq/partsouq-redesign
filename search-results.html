@@ -70,58 +70,155 @@
   <header>
     <div class="wrap">
       <a href="index.html" class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
-      <form class="searchbar" action="search-results.html"><input value="brake pads"><button type="submit">🔍</button></form>
-      <div class="headerlinks"><a href="my-account.html">♡ Wishlist</a><a href="cart-checkout.html">🛒 Cart</a><a href="my-account.html">👤 Account</a></div>
+      <form class="searchbar" action="search-results.html" method="get" id="header-search"><input name="q" id="q-input" placeholder="Search part name, OEM number or car model..."><button type="submit">🔍</button></form>
+      <div class="headerlinks"><a href="my-account.html">♡ Wishlist</a><a href="cart-checkout.html" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><a href="my-account.html">👤 Account</a></div>
     </div>
   </header>
 
-  <div class="wrap crumbs"><a href="index.html">Home</a> / <a href="search-results.html">Brakes</a> / <span>Brake Pads</span></div>
+  <div class="wrap crumbs"><a href="index.html">Home</a> / <span id="crumb-cat">All Parts</span></div>
 
   <div class="wrap layout">
     <aside class="filters">
       <h3>Filters</h3>
-      <div class="fgroup"><b>Category</b>
-        <label><input type="checkbox" checked> Brake Pads</label>
-        <label><input type="checkbox"> Brake Discs</label>
-        <label><input type="checkbox"> Calipers</label>
-      </div>
-      <div class="fgroup"><b>Brand</b>
-        <label><input type="checkbox"> Bosch</label>
-        <label><input type="checkbox"> Brembo</label>
-        <label><input type="checkbox"> ATE</label>
-      </div>
-      <div class="fgroup"><b>Condition</b>
-        <label><input type="checkbox" checked> New</label>
-        <label><input type="checkbox"> Used — Inspected</label>
-      </div>
+      <div class="fgroup"><b>Category</b><div id="f-category"></div></div>
+      <div class="fgroup"><b>Brand</b><div id="f-brand"></div></div>
       <div class="fgroup"><b>Price Range (AED)</b>
-        <div class="pricebox"><input placeholder="Min"><input placeholder="Max"></div>
+        <div class="pricebox"><input id="f-min" placeholder="Min" type="number"><input id="f-max" placeholder="Max" type="number"></div>
       </div>
       <div class="fgroup"><b>Seller Rating</b>
-        <label><input type="checkbox"> ★★★★ &amp; up</label>
+        <label><input type="checkbox" id="f-rating"> ★★★★ &amp; up</label>
       </div>
-      <a class="btn btn-primary" style="width:100%;justify-content:center;">Apply Filters</a>
+      <a class="btn btn-primary" style="width:100%;justify-content:center;" onclick="renderResults();return false;" href="#">Apply Filters</a>
+      <a class="btn" style="width:100%;justify-content:center;margin-top:8px;" onclick="clearFilters();return false;" href="#">Clear All</a>
     </aside>
 
     <div>
       <div class="resultsbar">
-        <span>128 results for "brake pads"</span>
-        <select><option>Sort: Best Match</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Top Rated</option></select>
+        <span id="results-count"></span>
+        <select id="sort-select">
+          <option value="best">Sort: Best Match</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
       </div>
-      <div class="grid">
-        <div class="card"><div class="thumb"><span class="badge">-40%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">Bosch Brake Pad Set — Front</a><div class="sku">0986TB2170</div><div class="price">AED 145<span class="old">AED 240</span></div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">Brembo Brake Pad Set — Rear</a><div class="sku">P85020</div><div class="price">AED 210</div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><span class="badge">-25%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">ATE Ceramic Brake Pads</a><div class="sku">13.0460-7181</div><div class="price">AED 165<span class="old">AED 220</span></div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">Honda Genuine Brake Pad Set</a><div class="sku">45022-TLA-A00</div><div class="price">AED 120</div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">Toyota OEM Brake Pad Set</a><div class="sku">04465-YZZE1</div><div class="price">AED 130</div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">Nissan Brake Pad Set — Front</a><div class="sku">D1060-3JA0A</div><div class="price">AED 110</div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">Ferodo Racing Brake Pads</a><div class="sku">FDS1234</div><div class="price">AED 280</div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-        <div class="card"><div class="thumb"><span class="badge">-15%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><a href="product-detail.html" class="name">TRW Brake Pad Set</a><div class="sku">GDB1330</div><div class="price">AED 155<span class="old">AED 180</span></div><div class="tag">✓ Verified Seller</div><a href="cart-checkout.html" class="btn addbtn">Add to Cart</a></div>
-      </div>
-      <div class="pagination"><span>‹</span><span class="active">1</span><span>2</span><span>3</span><span>…</span><span>16</span><span>›</span></div>
+      <div class="grid" id="results-grid"></div>
+      <p id="no-results" style="display:none;color:var(--text-secondary);font-size:14px;padding:30px 0;text-align:center;">No parts matched your search. Try clearing some filters.</p>
     </div>
   </div>
 
-  <footer>© 2026 PartSouq — partsouq.co — All rights reserved. Dubai, UAE.</footer>
+  <footer>© 2026 PartSouq — <a href="index.html" style="color:inherit;">partsouq.co</a> — All rights reserved. Dubai, UAE.</footer>
+
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const state = {
+      q: params.get("q") || "",
+      category: params.get("category") || "",
+      brands: new Set(),
+      min: null, max: null, ratingOnly: false,
+      sort: "best"
+    };
+    document.getElementById("q-input").value = state.q;
+
+    // Build category filter checkboxes
+    const fCat = document.getElementById("f-category");
+    PS_CATEGORIES.forEach(c => {
+      const label = document.createElement("label");
+      label.innerHTML = '<input type="checkbox" value="' + c + '" ' + (state.category === c ? "checked" : "") + '> ' + c;
+      label.querySelector("input").addEventListener("change", e => {
+        state.category = e.target.checked ? c : "";
+        // uncheck the others (single-select behavior driven from tiles/links)
+        fCat.querySelectorAll("input").forEach(i => { if (i !== e.target) i.checked = false; });
+        renderResults();
+      });
+      fCat.appendChild(label);
+    });
+
+    // Build brand filter checkboxes from the dataset
+    const brands = [...new Set(PS_PRODUCTS.map(p => p.brand))].sort();
+    const fBrand = document.getElementById("f-brand");
+    brands.forEach(b => {
+      const label = document.createElement("label");
+      label.innerHTML = '<input type="checkbox" value="' + b + '"> ' + b;
+      label.querySelector("input").addEventListener("change", e => {
+        if (e.target.checked) state.brands.add(b); else state.brands.delete(b);
+        renderResults();
+      });
+      fBrand.appendChild(label);
+    });
+
+    document.getElementById("f-min").addEventListener("input", e => { state.min = e.target.value ? Number(e.target.value) : null; renderResults(); });
+    document.getElementById("f-max").addEventListener("input", e => { state.max = e.target.value ? Number(e.target.value) : null; renderResults(); });
+    document.getElementById("f-rating").addEventListener("change", e => { state.ratingOnly = e.target.checked; renderResults(); });
+    document.getElementById("sort-select").addEventListener("change", e => { state.sort = e.target.value; renderResults(); });
+    document.getElementById("header-search").addEventListener("submit", e => {
+      e.preventDefault();
+      state.q = document.getElementById("q-input").value;
+      renderResults();
+    });
+
+    function clearFilters(){
+      state.category = ""; state.brands = new Set(); state.min = null; state.max = null; state.ratingOnly = false;
+      fCat.querySelectorAll("input").forEach(i => i.checked = false);
+      fBrand.querySelectorAll("input").forEach(i => i.checked = false);
+      document.getElementById("f-min").value = "";
+      document.getElementById("f-max").value = "";
+      document.getElementById("f-rating").checked = false;
+      renderResults();
+    }
+
+    function matches(p){
+      if (state.category && p.category !== state.category) return false;
+      if (state.brands.size && !state.brands.has(p.brand)) return false;
+      if (state.min !== null && p.price < state.min) return false;
+      if (state.max !== null && p.price > state.max) return false;
+      if (state.ratingOnly && p.rating < 4.5) return false;
+      if (state.q) {
+        const q = state.q.toLowerCase();
+        const hay = (p.name + " " + p.sku + " " + p.brand + " " + p.category).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    }
+
+    function renderResults(){
+      let list = PS_PRODUCTS.filter(matches);
+      if (state.sort === "low") list = list.slice().sort((a,b) => a.price - b.price);
+      else if (state.sort === "high") list = list.slice().sort((a,b) => b.price - a.price);
+      else if (state.sort === "rating") list = list.slice().sort((a,b) => b.rating - a.rating);
+
+      document.getElementById("crumb-cat").textContent = state.category || "All Parts";
+      document.getElementById("results-count").textContent =
+        list.length + " result" + (list.length === 1 ? "" : "s") + (state.q ? ' for "' + state.q + '"' : "");
+
+      const grid = document.getElementById("results-grid");
+      grid.innerHTML = "";
+      document.getElementById("no-results").style.display = list.length ? "none" : "block";
+
+      list.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card";
+        const discount = p.oldPrice ? Math.round(100 - (p.price / p.oldPrice) * 100) : null;
+        card.innerHTML =
+          '<div class="thumb">' + (discount ? '<span class="badge">-' + discount + '%</span>' : "") + psIcon(p.category) + '</div>' +
+          '<a href="product-detail.html?id=' + p.id + '" class="name">' + p.name + '</a>' +
+          '<div class="sku">' + p.sku + '</div>' +
+          '<div class="price">' + psFmt(p.price) + (p.oldPrice ? '<span class="old">' + psFmt(p.oldPrice) + '</span>' : "") + '</div>' +
+          '<div class="tag">✓ Verified Seller · ' + p.seller + '</div>' +
+          '<a href="#" class="btn addbtn" data-id="' + p.id + '">Add to Cart</a>';
+        card.querySelector(".addbtn").addEventListener("click", e => {
+          e.preventDefault();
+          psAddToCart(p.id, 1);
+          e.target.textContent = "Added ✓";
+          setTimeout(() => { e.target.textContent = "Add to Cart"; }, 1200);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    renderResults();
+  </script>
 </body>
 </html>

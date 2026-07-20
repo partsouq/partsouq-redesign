@@ -49,7 +49,7 @@
 </head>
 <body>
 
-  <header><div class="wrap"><a href="index.html" class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a><a href="cart-checkout.html" class="btn">🛒 Cart</a></div></header>
+  <header><div class="wrap"><a href="index.html" class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a><a href="cart-checkout.html" class="btn" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a></div></header>
 
   <div class="wrap layout">
     <aside class="side">
@@ -64,27 +64,31 @@
 
     <div class="content">
       <h2>My Orders</h2>
-
-      <div class="ordercard">
-        <div><div class="oid">Order #PS-10234 · 3 items</div><div class="name">Bosch Alternator + Brake Pad Set</div></div>
-        <span class="status delivered">✓ Delivered</span>
-        <div class="price">AED 760.00</div>
-        <a href="product-detail.html" class="btn">View Details</a>
-      </div>
-      <div class="ordercard">
-        <div><div class="oid">Order #PS-10256 · 1 item</div><div class="name">NGK Spark Plug Set</div></div>
-        <span class="status transit">🚚 Out for Delivery</span>
-        <div class="price">AED 100.00</div>
-        <a href="product-detail.html" class="btn">Track Order</a>
-      </div>
-      <div class="ordercard">
-        <div><div class="oid">Order #PS-10261 · 2 items</div><div class="name">AC Compressor + Filter Kit</div></div>
-        <span class="status processing">⏳ Processing</span>
-        <div class="price">AED 720.00</div>
-        <a href="product-detail.html" class="btn">View Details</a>
-      </div>
+      <div id="orders-list"></div>
     </div>
   </div>
 
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    const statusClass = {"Delivered":"delivered","Out for Delivery":"transit","Processing":"processing"};
+    const statusLabel = {"Delivered":"✓ Delivered","Out for Delivery":"🚚 Out for Delivery","Processing":"⏳ Processing"};
+    const wrap = document.getElementById("orders-list");
+    psGetOrders().forEach(order => {
+      const itemNames = order.items.map(i => i.name).join(" + ");
+      const itemCount = order.items.reduce((n,i) => n + i.qty, 0);
+      const div = document.createElement("div");
+      div.className = "ordercard";
+      div.innerHTML =
+        '<div><div class="oid">Order #' + order.id + ' · ' + itemCount + ' item' + (itemCount === 1 ? "" : "s") + '</div><div class="name">' + itemNames + '</div></div>' +
+        '<span class="status ' + (statusClass[order.status] || "processing") + '">' + (statusLabel[order.status] || order.status) + '</span>' +
+        '<div class="price">' + psFmt(order.total) + '</div>' +
+        '<a href="search-results.html" class="btn">View Details</a>';
+      wrap.appendChild(div);
+    });
+    if (!psGetOrders().length){
+      wrap.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;">No orders yet. <a href="search-results.html" style="color:var(--brand-blue);font-weight:600;">Start shopping →</a></p>';
+    }
+  </script>
 </body>
 </html>

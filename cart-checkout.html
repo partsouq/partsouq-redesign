@@ -76,18 +76,8 @@
 
   <div class="wrap layout">
     <div>
-      <div class="cartitem">
-        <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/></svg></div>
-        <div style="flex:1;"><div class="name">Bosch Alternator — 12V 120A</div><div class="seller">✓ Al Twal Auto Parts</div></div>
-        <div class="qty"><button>−</button><span>1</span><button>+</button></div>
-        <div class="price">AED 450.00</div>
-      </div>
-      <div class="cartitem">
-        <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <div style="flex:1;"><div class="name">Bosch Brake Pad Set — Front</div><div class="seller">✓ Gulf Auto Spares</div></div>
-        <div class="qty"><button>−</button><span>2</span><button>+</button></div>
-        <div class="price">AED 290.00</div>
-      </div>
+      <div id="cart-items"></div>
+      <p id="empty-cart" style="display:none;color:var(--text-secondary);font-size:14px;border:1px dashed var(--border);border-radius:10px;padding:24px;text-align:center;">Your cart is empty. <a href="search-results.html" style="color:var(--brand-blue);font-weight:600;">Browse parts →</a></p>
 
       <div class="formbox">
         <h3>Delivery Address</h3>
@@ -99,14 +89,60 @@
 
     <div class="summary">
       <h3>Order Summary</h3>
-      <div class="sumrow"><span>Subtotal (3 items)</span><span>AED 740.00</span></div>
-      <div class="sumrow"><span>Delivery Fee</span><span>AED 20.00</span></div>
-      <div class="sumrow total"><span>Total (Cash on Delivery)</span><span>AED 760.00</span></div>
-      <div class="codbox">🔒 Pay AED 760.00 in cash to the delivery agent once you've confirmed every part is correct. No online payment needed.</div>
-      <a href="my-account.html" class="btn btn-primary">Confirm Order →</a>
+      <div class="sumrow"><span id="sum-count">Subtotal (0 items)</span><span id="sum-subtotal">AED 0.00</span></div>
+      <div class="sumrow"><span>Delivery Fee</span><span id="sum-fee">AED 20.00</span></div>
+      <div class="sumrow total"><span>Total (Cash on Delivery)</span><span id="sum-total">AED 0.00</span></div>
+      <div class="codbox">🔒 <span id="cod-text">Pay in cash to the delivery agent once you've confirmed every part is correct. No online payment needed.</span></div>
+      <a href="#" id="confirm-btn" class="btn btn-primary">Confirm Order →</a>
     </div>
   </div>
 
   <footer>© 2026 PartSouq — <a href="index.html" style="color:inherit;">partsouq.co</a> — All rights reserved. Dubai, UAE.</footer>
+
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    function renderCart(){
+      const lines = psCartLines();
+      const wrap = document.getElementById("cart-items");
+      wrap.innerHTML = "";
+      document.getElementById("empty-cart").style.display = lines.length ? "none" : "block";
+
+      lines.forEach(l => {
+        const div = document.createElement("div");
+        div.className = "cartitem";
+        div.innerHTML =
+          '<div class="thumb">' + psIcon(l.product.category) + '</div>' +
+          '<div style="flex:1;"><div class="name">' + l.product.name + '</div><div class="seller">✓ ' + l.product.seller + '</div></div>' +
+          '<div class="qty"><button data-d="-1">−</button><span>' + l.qty + '</span><button data-d="1">+</button></div>' +
+          '<div class="price">' + psFmt(l.product.price * l.qty) + '</div>';
+        div.querySelectorAll(".qty button").forEach(btn => {
+          btn.addEventListener("click", () => {
+            psSetQty(l.product.id, l.qty + Number(btn.dataset.d));
+            renderCart();
+          });
+        });
+        wrap.appendChild(div);
+      });
+
+      const subtotal = psCartSubtotal();
+      const fee = lines.length ? 20 : 0;
+      const total = subtotal + fee;
+      document.getElementById("sum-count").textContent = "Subtotal (" + lines.reduce((n,l)=>n+l.qty,0) + " items)";
+      document.getElementById("sum-subtotal").textContent = psFmt(subtotal);
+      document.getElementById("sum-fee").textContent = psFmt(fee);
+      document.getElementById("sum-total").textContent = psFmt(total);
+      document.getElementById("cod-text").textContent = "Pay " + psFmt(total) + " in cash to the delivery agent once you've confirmed every part is correct. No online payment needed.";
+    }
+
+    document.getElementById("confirm-btn").addEventListener("click", e => {
+      e.preventDefault();
+      const order = psPlaceOrder();
+      if (!order) { alert("Your cart is empty — add a part before checking out."); return; }
+      location.href = "my-account.html";
+    });
+
+    renderCart();
+  </script>
 </body>
 </html>

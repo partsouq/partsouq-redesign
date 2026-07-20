@@ -68,6 +68,8 @@
       document.getElementById('acct-partner').classList.toggle('active', type === 'partner');
       document.getElementById('login-btn').setAttribute('href', type === 'buyer' ? 'my-account.html' : 'seller-dashboard.html');
     }
+    const preselect = new URLSearchParams(location.search).get('type');
+    if (preselect === 'partner') selectAcct('partner');
   </script>
 </body>
 </html>

@@ -101,30 +101,24 @@
   <header>
     <div class="wrap">
       <a href="index.html" class="logo"><div class="mark">PS</div><div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
-      <form class="searchbar" action="search-results.html"><input placeholder="Search part name, OEM number or car model..."><button type="submit">🔍</button></form>
-      <div class="headerlinks"><a href="my-account.html">♡ Wishlist</a><a href="cart-checkout.html">🛒 Cart</a><a href="my-account.html">👤 Account</a></div>
+      <form class="searchbar" action="search-results.html" method="get"><input name="q" placeholder="Search part name, OEM number or car model..."><button type="submit">🔍</button></form>
+      <div class="headerlinks"><a href="my-account.html">♡ Wishlist</a><a href="cart-checkout.html" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><a href="my-account.html">👤 Account</a></div>
     </div>
   </header>
   <nav><div class="wrap"><a href="index.html">Home</a><a href="search-results.html">Shop Parts</a><a href="search-results.html">Today's Deals</a><a href="become-a-partner.html">Book a Garage</a><a href="become-a-partner.html">Become a Partner</a></div></nav>
 
-  <div class="wrap crumbs"><a href="index.html">Home</a> / <a href="search-results.html">Electrical</a> / <a href="search-results.html">Alternators</a> / <span>Bosch Alternator</span></div>
+  <div class="wrap crumbs"><a href="index.html">Home</a> / <a href="search-results.html" id="crumb-cat">Electrical</a> / <span id="crumb-name">Part</span></div>
 
   <div class="wrap pdp">
     <div class="gallery">
-      <div class="main"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><path d="M12 5v14"/></svg></div>
-      <div class="thumbs">
-        <div class="active"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/></svg></div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="5" width="14" height="14"/></svg></div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16"/></svg></div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 4v16"/></svg></div>
-      </div>
+      <div class="main" id="gallery-main"></div>
     </div>
     <div class="info">
       <div class="tagrow"><span class="badge seller">✓ Verified Seller</span><span class="badge stock">In Stock</span></div>
-      <h1>Bosch Alternator — 12V 120A</h1>
-      <div class="sku">OEM / Part No: 0986041230 &nbsp;•&nbsp; Brand: Bosch</div>
-      <div class="price">AED 450.00 <small>incl. VAT</small></div>
-      <div class="rating">★★★★★ <b>4.8</b> (126 reviews) · 340 sold</div>
+      <h1 id="p-name">Loading…</h1>
+      <div class="sku" id="p-sku"></div>
+      <div class="price" id="p-price"></div>
+      <div class="rating" id="p-rating"></div>
 
       <div class="fitcheck">
         <b>✓ Confirm this fits your car</b>
@@ -136,16 +130,16 @@
       </div>
 
       <div class="buybox">
-        <div class="qty"><button>−</button><span>1</span><button>+</button></div>
-        <a href="cart-checkout.html" class="btn btn-primary">🛒 Add to Cart</a>
+        <div class="qty"><button onclick="changeQty(-1)">−</button><span id="qty-val">1</span><button onclick="changeQty(1)">+</button></div>
+        <a href="#" class="btn btn-primary" id="add-cart-btn">🛒 Add to Cart</a>
         <a href="my-account.html" class="btn btn-outline">♡</a>
       </div>
 
       <div class="codnote">🔒 <div><b>Cash on Delivery.</b> Pay only after the part arrives and you confirm it's correct — no online payment required.</div></div>
 
       <div class="sellercard">
-        <div class="av">AT</div>
-        <div style="flex:1;"><b>Al Twal Auto Parts</b><span>Verified seller · Dubai · 98% positive rating</span></div>
+        <div class="av" id="p-seller-initials">AT</div>
+        <div style="flex:1;"><b id="p-seller-name">Seller</b><span>Verified seller · UAE · 98% positive rating</span></div>
         <a href="search-results.html" class="btn btn-outline">View Store</a>
       </div>
     </div>
@@ -156,30 +150,72 @@
       <div class="tab active">Description</div>
       <div class="tab">Specifications</div>
       <div class="tab">Compatible Vehicles</div>
-      <div class="tab">Reviews (126)</div>
+      <div class="tab" id="tab-reviews">Reviews</div>
     </div>
     <div class="tabcontent">
-      <p>Genuine-fit Bosch alternator suitable for a range of sedans and SUVs. Listing details, photos and compatibility were checked by PartSouq before publishing. Confirm exact fitment using the checker above before ordering.</p>
-      <table class="specs">
-        <tr><td>Brand</td><td>Bosch</td></tr>
-        <tr><td>Output</td><td>12V / 120A</td></tr>
-        <tr><td>Condition</td><td>New</td></tr>
-        <tr><td>Warranty</td><td>6 months seller warranty</td></tr>
-      </table>
+      <p id="p-desc"></p>
+      <table class="specs" id="p-specs"></table>
     </div>
   </div>
 
   <div class="wrap related">
     <h2>Related Parts</h2>
-    <div class="products">
-      <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg></div><div class="name">Serpentine Belt</div><div class="price">AED 60.00</div></a>
-      <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="5" width="14" height="14"/></svg></div><div class="name">Battery Terminal</div><div class="price">AED 35.00</div></a>
-      <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/></svg></div><div class="name">Voltage Regulator</div><div class="price">AED 90.00</div></a>
-      <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16"/></svg></div><div class="name">Alternator Pulley</div><div class="price">AED 75.00</div></a>
-      <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 4v16"/></svg></div><div class="name">Wiring Harness Clip</div><div class="price">AED 15.00</div></a>
-    </div>
+    <div class="products" id="related-products"></div>
   </div>
 
   <footer>© 2026 PartSouq — <a href="index.html" style="color:inherit;">partsouq.co</a> — All rights reserved. Dubai, UAE.</footer>
+
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const product = psFindProduct(params.get("id")) || PS_PRODUCTS.find(p => p.id === "p14");
+    let qty = 1;
+
+    document.title = "PartSouq — " + product.name;
+    document.getElementById("crumb-cat").textContent = product.category;
+    document.getElementById("crumb-cat").href = "search-results.html?category=" + encodeURIComponent(product.category);
+    document.getElementById("crumb-name").textContent = product.name;
+    document.getElementById("gallery-main").innerHTML = psIcon(product.category);
+    document.getElementById("p-name").textContent = product.name;
+    document.getElementById("p-sku").textContent = "OEM / Part No: " + product.sku + "  •  Brand: " + product.brand;
+    document.getElementById("p-price").innerHTML = psFmt(product.price) + ' <small>incl. VAT</small>' + (product.oldPrice ? ' <small style="text-decoration:line-through;">' + psFmt(product.oldPrice) + '</small>' : "");
+    document.getElementById("p-rating").innerHTML = "★★★★★ <b>" + product.rating + "</b> (" + product.reviews + " reviews)";
+    document.getElementById("tab-reviews").textContent = "Reviews (" + product.reviews + ")";
+    document.getElementById("p-seller-initials").textContent = product.seller.split(" ").map(w => w[0]).slice(0,2).join("");
+    document.getElementById("p-seller-name").textContent = product.seller;
+    document.getElementById("p-desc").textContent = product.desc;
+
+    const specsTable = document.getElementById("p-specs");
+    const specRows = [["Brand", product.brand], ["Category", product.category], ["Condition", "New"], ["Warranty", "6 months seller warranty"]];
+    specRows.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + r[0] + "</td><td>" + r[1] + "</td>";
+      specsTable.appendChild(tr);
+    });
+
+    function changeQty(delta){
+      qty = Math.max(1, qty + delta);
+      document.getElementById("qty-val").textContent = qty;
+    }
+    document.getElementById("add-cart-btn").addEventListener("click", e => {
+      e.preventDefault();
+      psAddToCart(product.id, qty);
+      e.target.textContent = "Added ✓";
+      setTimeout(() => { e.target.textContent = "🛒 Add to Cart"; }, 1200);
+    });
+
+    const relatedWrap = document.getElementById("related-products");
+    psRelated(product).forEach(rp => {
+      const a = document.createElement("a");
+      a.href = "product-detail.html?id=" + rp.id;
+      a.className = "product";
+      a.innerHTML = '<div class="thumb">' + psIcon(rp.category) + '</div><div class="name">' + rp.name + '</div><div class="price">' + psFmt(rp.price) + '</div>';
+      relatedWrap.appendChild(a);
+    });
+    if (!psRelated(product).length){
+      relatedWrap.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No other listings in this category yet.</p>';
+    }
+  </script>
 </body>
 </html>

@@ -77,7 +77,10 @@
   .promo-card h2{font-size:24px;margin:0 0 8px;line-height:1.3;}
   .promo-card p{color:#D7E3FF;font-size:14px;margin:0 0 18px;}
   .promo-card .btn-primary{background:#fff;color:var(--brand-blue-dark);}
-  .promo-art{opacity:.9;}
+  .promo-art{display:flex;gap:22px;justify-content:flex-end;flex-wrap:wrap;}
+  .promo-icon{display:flex;flex-direction:column;align-items:center;gap:10px;width:76px;}
+  .promo-icon svg{width:34px;height:34px;padding:16px;box-sizing:content-box;border-radius:50%;background:rgba(255,255,255,.15);}
+  .promo-icon span{font-size:11px;color:#E3EAFC;text-align:center;line-height:1.3;}
 
   section.section{padding:36px 0;}
   .section h2.sectitle{font-size:20px;margin:0 0 18px;display:flex;align-items:center;justify-content:space-between;}
@@ -136,16 +139,16 @@
         <div class="mark">PS</div>
         <div class="word"><b>PartSouq</b><small>AUTO PARTS MARKETPLACE</small></div>
       </a>
-      <form class="searchbar" action="search-results.html">
-        <select><option>All Categories</option></select>
-        <input placeholder="Search part name, OEM number or car model...">
+      <form class="searchbar" action="search-results.html" method="get">
+        <select name="category" id="cat-select"><option value="">All Categories</option></select>
+        <input name="q" placeholder="Search part name, OEM number or car model...">
         <button type="submit">🔍</button>
       </form>
       <div class="headerlinks">
         <a href="become-a-partner.html">🎧<span>Support</span></a>
         <a href="become-a-partner.html">🔧<span>Sell</span></a>
         <a href="my-account.html">♡<span>Wishlist</span></a>
-        <a href="cart-checkout.html">🛒<span>Cart</span></a>
+        <a href="cart-checkout.html" style="position:relative;">🛒<span>Cart</span><span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-10px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a>
         <a href="my-account.html">👤<span>My Account</span></a>
       </div>
     </div>
@@ -209,14 +212,10 @@
           <a href="search-results.html" class="btn btn-primary">Browse All Parts →</a>
         </div>
         <div class="promo-art">
-          <svg viewBox="0 0 200 140" width="100%" height="140">
-            <circle cx="40" cy="70" r="30" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="6"/>
-            <circle cx="40" cy="70" r="10" fill="#ffffff" fill-opacity=".7"/>
-            <rect x="90" y="40" width="20" height="60" rx="4" fill="#ffffff" fill-opacity=".35"/>
-            <rect x="118" y="30" width="20" height="70" rx="4" fill="#ffffff" fill-opacity=".5"/>
-            <rect x="146" y="50" width="20" height="50" rx="4" fill="#ffffff" fill-opacity=".35"/>
-            <circle cx="170" cy="45" r="16" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="5"/>
-          </svg>
+          <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v5M12 15.5v5M3.5 12h5M15.5 12h5M6 6l3.5 3.5M14.5 14.5L18 18M18 6l-3.5 3.5M9.5 14.5L6 18"/></svg><span>Tires &amp; Wheels</span></div>
+          <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Engine Parts</span></div>
+          <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><rect x="4" y="8" width="16" height="12" rx="1.5"/><path d="M9 8V6a1 1 0 011-1h4a1 1 0 011 1v2"/><path d="M9.5 14h2M12 12v4"/></svg><span>Electrical</span></div>
+          <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg><span>Tools &amp; Garage</span></div>
         </div>
       </div>
     </div>
@@ -225,17 +224,7 @@
   <section class="section">
     <div class="wrap">
       <h2 class="sectitle">Shop by Category <a href="search-results.html">View all categories →</a></h2>
-      <div class="cats">
-        <a href="search-results.html" class="cat active"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><span>All Parts</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M9 6V4h6v2"/></svg></div><span>Engine</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div><span>Brakes</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 20V10l6-6 6 6v10"/></svg></div><span>Suspension</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="9" width="18" height="7" rx="2"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/></svg></div><span>Body Parts</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="6" y="5" width="12" height="14" rx="2"/><path d="M9 9h6M9 13h6"/></svg></div><span>Electrical</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2"/></svg></div><span>AC &amp; Cooling</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4v4M12 16v4M4 12h4M16 12h4"/></svg></div><span>Steering</span></a>
-        <a href="search-results.html" class="cat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 7l3 3-8 8-4 1 1-4 8-8z"/></svg></div><span>Tools &amp; Garage</span></a>
-      </div>
+      <div class="cats" id="cat-tiles"></div>
     </div>
   </section>
 
@@ -243,9 +232,9 @@
     <div class="wrap">
       <h2 class="sectitle">Today's Deals <a href="search-results.html">All deals →</a></h2>
       <div class="deals">
-        <div class="deal d1"><b>Up to 40% Off Brake Systems</b><span>Pads, discs, calipers • Verified only</span><br><a href="search-results.html" class="btn">Shop Brakes →</a></div>
-        <div class="deal d2"><b>Engine &amp; Filter Parts — Save 35%</b><span>Genuine fitment • Major UAE brands</span><br><a href="search-results.html" class="btn">Shop Engine →</a></div>
-        <div class="deal d3"><b>Suspension Deals — Save 25%</b><span>Shock absorbers, struts, control arms</span><br><a href="search-results.html" class="btn">Shop Now →</a></div>
+        <div class="deal d1"><b>Up to 40% Off Brake Systems</b><span>Pads, discs, calipers • Verified only</span><br><a href="search-results.html?category=Brakes" class="btn">Shop Brakes →</a></div>
+        <div class="deal d2"><b>Engine &amp; Filter Parts — Save 35%</b><span>Genuine fitment • Major UAE brands</span><br><a href="search-results.html?category=Engine" class="btn">Shop Engine →</a></div>
+        <div class="deal d3"><b>Suspension Deals — Save 25%</b><span>Shock absorbers, struts, control arms</span><br><a href="search-results.html?category=Suspension" class="btn">Shop Now →</a></div>
       </div>
     </div>
   </section>
@@ -253,13 +242,7 @@
   <section class="section">
     <div class="wrap">
       <h2 class="sectitle">Newly Listed Parts <a href="search-results.html">See all →</a></h2>
-      <div class="products">
-        <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg></div><div class="name">Toyota Oil Filter</div><div class="sku">90915-YZZE1</div><div class="price">AED 35.00</div><div class="tag">✓ Verified Seller</div></a>
-        <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div><div class="name">Honda Brake Pad Set</div><div class="sku">45022-TLA-A00</div><div class="price">AED 120.00</div><div class="tag">✓ Verified Seller</div></a>
-        <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 5v14"/></svg></div><div class="name">Bosch Alternator</div><div class="sku">0986041230</div><div class="price">AED 450.00</div><div class="tag">✓ Verified Seller</div></a>
-        <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3v10M8 9l4 4 4-4"/></svg></div><div class="name">NGK Spark Plug</div><div class="sku">ILFR6A11</div><div class="price">AED 25.00</div><div class="tag">✓ Verified Seller</div></a>
-        <a href="product-detail.html" class="product"><div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="3"/></svg></div><div class="name">AC Compressor Denso</div><div class="sku">10S17C</div><div class="price">AED 650.00</div><div class="tag">✓ Verified Seller</div></a>
-      </div>
+      <div class="products" id="newly-listed"></div>
     </div>
   </section>
 
@@ -282,5 +265,46 @@
     </div>
   </footer>
 
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    // Populate the category select in the header search bar
+    const catSelect = document.getElementById("cat-select");
+    PS_CATEGORIES.forEach(c => {
+      const o = document.createElement("option");
+      o.value = c; o.textContent = c;
+      catSelect.appendChild(o);
+    });
+
+    // Render category tiles (All Parts + each real category)
+    const catTiles = document.getElementById("cat-tiles");
+    const allTile = document.createElement("a");
+    allTile.href = "search-results.html";
+    allTile.className = "cat active";
+    allTile.innerHTML = '<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><span>All Parts</span>';
+    catTiles.appendChild(allTile);
+    PS_CATEGORIES.forEach(c => {
+      const a = document.createElement("a");
+      a.href = "search-results.html?category=" + encodeURIComponent(c);
+      a.className = "cat";
+      a.innerHTML = '<div class="ic">' + psIcon(c) + '</div><span>' + c + '</span>';
+      catTiles.appendChild(a);
+    });
+
+    // Render Newly Listed Parts from the shared product data (last 5 added)
+    const newly = document.getElementById("newly-listed");
+    PS_PRODUCTS.slice(-5).reverse().forEach(p => {
+      const a = document.createElement("a");
+      a.href = "product-detail.html?id=" + p.id;
+      a.className = "product";
+      a.innerHTML =
+        '<div class="thumb">' + psIcon(p.category) + '</div>' +
+        '<div class="name">' + p.name + '</div>' +
+        '<div class="sku">' + p.sku + '</div>' +
+        '<div class="price">' + psFmt(p.price) + '</div>' +
+        '<div class="tag">✓ Verified Seller</div>';
+      newly.appendChild(a);
+    });
+  </script>
 </body>
 </html>

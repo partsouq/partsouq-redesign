@@ -45,6 +45,20 @@
   .status.transit{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
   .status.processing{background:var(--accent-orange-light);color:#B75C10;}
   .ordercard .price{font-weight:700;color:var(--brand-blue-dark);margin-right:16px;}
+  .page{display:none;}
+  .page.active{display:block;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:5px;}
+  .field input, .field select, .field textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;font-family:inherit;box-sizing:border-box;}
+  .ticketcard{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+  .ticketcard .tid{font-size:12px;color:var(--text-muted);margin-bottom:4px;}
+  .ticketcard .subj{font-size:13.5px;font-weight:600;margin-bottom:6px;}
+
+  /* small modal used for Report an Issue */
+  #disp-modal{display:none;position:fixed;inset:0;background:rgba(15,20,30,.55);z-index:999;align-items:center;justify-content:center;padding:20px;}
+  #disp-modal.open{display:flex;}
+  #disp-modal .disp-box{background:#fff;border-radius:14px;max-width:420px;width:100%;padding:24px;position:relative;}
+  #disp-modal .disp-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted);}
 </style>
 </head>
 <body>
@@ -54,7 +68,8 @@
   <div class="wrap layout">
     <aside class="side">
       <div class="who"><div class="av">IR</div><div style="display:flex;flex-direction:column;"><b>Irfan A.</b><span>irfan.aidigital@gmail.com</span></div></div>
-      <a href="my-account.html" class="active">📦 My Orders</a>
+      <a href="#" class="active" data-page="orders" onclick="showPage('orders');return false;">📦 My Orders</a>
+      <a href="#" data-page="support" onclick="showPage('support');return false;">🎫 Support</a>
       <a href="#addresses">📍 Addresses</a>
       <a href="#wishlist">♡ Wishlist</a>
       <a href="#profile">👤 Profile</a>
@@ -63,31 +78,146 @@
     </aside>
 
     <div class="content">
-      <h2>My Orders</h2>
-      <div id="orders-list"></div>
+      <div class="page active" id="page-orders">
+        <h2>My Orders</h2>
+        <div id="orders-list"></div>
+      </div>
+
+      <div class="page" id="page-support">
+        <h2>Support</h2>
+        <div style="border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:22px;">
+          <h3 style="font-size:15px;margin:0 0 4px;">Raise a Support Ticket</h3>
+          <p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 14px;">Need help with anything else — an account issue, a listing question, a general query? Our team replies within 24 hours.</p>
+          <div class="field"><label>Related Order (optional)</label><select id="tk-order"><option value="">Not order-related</option></select></div>
+          <div class="field"><label>Subject *</label><input id="tk-subject" placeholder="e.g. Can't update my delivery address"></div>
+          <div class="field"><label>Message *</label><textarea id="tk-message" rows="3" placeholder="Describe what you need help with"></textarea></div>
+          <button class="btn btn-primary" onclick="submitTicket()">Submit Ticket</button>
+          <p id="tk-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:10px 0 0;">✓ Ticket submitted — reference <b id="tk-ref"></b>.</p>
+        </div>
+        <h3 style="font-size:15px;margin:0 0 12px;">Your Tickets</h3>
+        <div id="tickets-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="disp-modal">
+    <div class="disp-box">
+      <button class="disp-close" onclick="closeDisputeModal()">✕</button>
+      <h3 style="font-size:16px;margin:0 0 4px;">Report an Issue</h3>
+      <p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 14px;" id="disp-order-label"></p>
+      <div class="field"><label>What went wrong? *</label>
+        <select id="disp-reason">
+          <option>Wrong item received</option>
+          <option>Item damaged</option>
+          <option>Item not as described</option>
+          <option>Order never arrived</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Details</label><textarea id="disp-details" rows="3" placeholder="Tell us more so we can help resolve this quickly"></textarea></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitDispute()">Submit Report</button>
     </div>
   </div>
 
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
+  <script src="admin-data.js"></script>
   <script>
+    function showPage(name){
+      document.querySelectorAll(".side a[data-page]").forEach(a => a.classList.toggle("active", a.dataset.page === name));
+      document.querySelectorAll(".content .page").forEach(p => p.classList.remove("active"));
+      document.getElementById("page-" + name).classList.add("active");
+      if (name === "support") renderTickets();
+    }
+
     const statusClass = {"Delivered":"delivered","Out for Delivery":"transit","Processing":"processing"};
     const statusLabel = {"Delivered":"✓ Delivered","Out for Delivery":"🚚 Out for Delivery","Processing":"⏳ Processing"};
     const wrap = document.getElementById("orders-list");
-    psGetOrders().forEach(order => {
-      const itemNames = order.items.map(i => i.name).join(" + ");
-      const itemCount = order.items.reduce((n,i) => n + i.qty, 0);
-      const div = document.createElement("div");
-      div.className = "ordercard";
-      div.innerHTML =
-        '<div><div class="oid">Order #' + order.id + ' · ' + itemCount + ' item' + (itemCount === 1 ? "" : "s") + '</div><div class="name">' + itemNames + '</div></div>' +
-        '<span class="status ' + (statusClass[order.status] || "processing") + '">' + (statusLabel[order.status] || order.status) + '</span>' +
-        '<div class="price">' + psFmt(order.total) + '</div>' +
-        '<a href="search-results.html" class="btn">View Details</a>';
-      wrap.appendChild(div);
-    });
-    if (!psGetOrders().length){
-      wrap.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;">No orders yet. <a href="search-results.html" style="color:var(--brand-blue);font-weight:600;">Start shopping →</a></p>';
+    let currentDisputeOrder = null;
+
+    function renderOrders(){
+      wrap.innerHTML = "";
+      const orders = psGetOrders();
+      orders.forEach(order => {
+        const itemNames = order.items.map(i => i.name).join(" + ");
+        const itemCount = order.items.reduce((n,i) => n + i.qty, 0);
+        const div = document.createElement("div");
+        div.className = "ordercard";
+        div.innerHTML =
+          '<div><div class="oid">Order #' + order.id + ' · ' + itemCount + ' item' + (itemCount === 1 ? "" : "s") + '</div><div class="name">' + itemNames + '</div></div>' +
+          '<span class="status ' + (statusClass[order.status] || "processing") + '">' + (statusLabel[order.status] || order.status) + '</span>' +
+          '<div class="price">' + psFmt(order.total) + '</div>' +
+          '<a href="search-results.html" class="btn">View Details</a>' +
+          '<a href="#" class="btn" style="border-color:var(--accent-orange);color:#B75C10;" onclick="openDisputeModal(\'' + order.id + '\');return false;">⚠ Report an Issue</a>';
+        wrap.appendChild(div);
+
+        const opt = document.createElement("option");
+        opt.value = order.id; opt.textContent = "Order #" + order.id + " — " + itemNames;
+        document.getElementById("tk-order").appendChild(opt);
+      });
+      if (!orders.length){
+        wrap.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;">No orders yet. <a href="search-results.html" style="color:var(--brand-blue);font-weight:600;">Start shopping →</a></p>';
+      }
+    }
+    renderOrders();
+
+    function openDisputeModal(orderId){
+      currentDisputeOrder = orderId;
+      document.getElementById("disp-order-label").textContent = "Order #" + orderId;
+      document.getElementById("disp-modal").classList.add("open");
+    }
+    function closeDisputeModal(){
+      document.getElementById("disp-modal").classList.remove("open");
+    }
+    function submitDispute(){
+      const reason = document.getElementById("disp-reason").value;
+      const details = document.getElementById("disp-details").value.trim();
+      const dispute = psFileDispute({
+        orderId: currentDisputeOrder, reason: reason, details: details,
+        name: "Irfan A.", email: "irfan.aidigital@gmail.com"
+      });
+      closeDisputeModal();
+      alert("Your issue was reported (reference " + dispute.id + "). Our team will review it and reach out.");
+      document.getElementById("disp-details").value = "";
+    }
+
+    function renderTickets(){
+      const list = document.getElementById("tickets-list");
+      list.innerHTML = "";
+      const tickets = psGetSupportTickets();
+      const statCls = {"Open":"processing","In Progress":"transit","Resolved":"delivered"};
+      const statLbl = {"Open":"🟠 Open","In Progress":"🔵 In Progress","Resolved":"✓ Resolved"};
+      tickets.forEach(t => {
+        const div = document.createElement("div");
+        div.className = "ticketcard";
+        div.innerHTML =
+          '<div class="tid">' + t.id + (t.orderId ? " · Order #" + t.orderId : "") + '</div>' +
+          '<div class="subj">' + t.subject + '</div>' +
+          '<span class="status ' + (statCls[t.status]||"processing") + '">' + (statLbl[t.status]||t.status) + '</span>';
+        list.appendChild(div);
+      });
+      if (!tickets.length){
+        list.innerHTML = '<p style="color:var(--text-secondary);font-size:13.5px;">No support tickets yet.</p>';
+      }
+    }
+
+    function submitTicket(){
+      const subject = document.getElementById("tk-subject").value.trim();
+      const message = document.getElementById("tk-message").value.trim();
+      if (!subject || !message){
+        alert("Please fill in a subject and message.");
+        return;
+      }
+      const ticket = psSubmitSupportTicket({
+        subject: subject, message: message,
+        orderId: document.getElementById("tk-order").value || null,
+        name: "Irfan A.", email: "irfan.aidigital@gmail.com"
+      });
+      document.getElementById("tk-subject").value = "";
+      document.getElementById("tk-message").value = "";
+      document.getElementById("tk-confirm").style.display = "block";
+      document.getElementById("tk-ref").textContent = ticket.id;
+      renderTickets();
     }
   </script>
 </body>

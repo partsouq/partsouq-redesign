@@ -86,13 +86,35 @@
   .section h2.sectitle{font-size:20px;margin:0 0 18px;display:flex;align-items:center;justify-content:space-between;}
   .sectitle a{font-size:13px;color:var(--brand-blue);font-weight:600;}
 
-  /* categories */
-  .cats{display:grid;grid-template-columns:repeat(9,1fr);gap:12px;}
-  .cat{text-align:center;border:1px solid var(--border);border-radius:10px;padding:14px 6px;background:#fff;}
-  .cat.active{border-color:var(--brand-blue);background:var(--brand-blue-light);}
-  .cat .ic{width:44px;height:44px;margin:0 auto 8px;border-radius:9px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;}
-  .cat .ic svg{width:22px;height:22px;stroke:var(--brand-blue);}
-  .cat span{font-size:11.5px;color:var(--text-secondary);}
+  /* categories — horizontal photo-style carousel */
+  .cats-wrap{position:relative;}
+  .cats{display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:6px;scrollbar-width:none;}
+  .cats::-webkit-scrollbar{display:none;}
+  .cat-card{flex:0 0 128px;height:150px;border-radius:14px;position:relative;overflow:hidden;box-shadow:0 6px 16px rgba(16,25,46,.18);transition:transform .15s;}
+  .cat-card:hover{transform:translateY(-3px);}
+  .cat-card.active{outline:2.5px solid var(--brand-blue);outline-offset:2px;}
+  .cat-card .cat-ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  .cat-card .cat-ic svg{width:44px;height:44px;}
+  .cat-card .cat-overlay{position:absolute;left:0;right:0;bottom:0;padding:9px 10px 10px;background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,0));}
+  .cat-card .cat-overlay span{color:#fff;font-size:11.5px;font-weight:700;line-height:1.25;display:block;}
+  .cat-card .cat-badge{position:absolute;top:8px;right:8px;background:var(--accent-orange);color:#fff;font-size:9px;font-weight:800;letter-spacing:.03em;padding:3px 7px;border-radius:5px;}
+  .cats-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid var(--border);box-shadow:0 4px 10px rgba(16,25,46,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text);z-index:2;}
+  .cats-arrow.left{left:-14px;}
+  .cats-arrow.right{right:-14px;}
+
+  /* garages */
+  .garages{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .garage-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;}
+  .garage-photo{height:120px;position:relative;display:flex;align-items:center;justify-content:center;}
+  .garage-photo svg{width:46px;height:46px;}
+  .garage-verified{position:absolute;top:10px;left:10px;background:var(--success-green-light);color:var(--success-green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;}
+  .garage-body{padding:16px;}
+  .garage-loc{font-size:12px;color:var(--text-secondary);margin-bottom:4px;}
+  .garage-name{font-size:16px;font-weight:700;margin-bottom:8px;}
+  .garage-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .garage-tags span{background:var(--success-green-light);color:var(--success-green);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
+  .garage-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:14px;}
+  .garage-meta b{color:var(--text);}
 
   /* deals */
   .deals{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
@@ -124,6 +146,8 @@
 </style>
 </head>
 <body>
+
+  <div id="maintenance-banner" style="display:none;background:var(--accent-orange);color:#fff;text-align:center;font-size:12.5px;font-weight:700;padding:8px;">⚠ PartSouq is currently in maintenance mode — some features may be temporarily unavailable.</div>
 
   <div class="utility">
     <div class="wrap">
@@ -164,8 +188,8 @@
     <div class="wrap">
       <div>
         <span class="pill">✓ UAE's Trusted Auto Parts Marketplace</span>
-        <h1>Quality Parts.<br>Verified Sellers.<br><span class="accent">Right for Your Car.</span></h1>
-        <p>The platform connecting UAE drivers with verified sellers for quality auto parts — reliable, affordable, and delivered to your doorstep.</p>
+        <h1 id="hero-title">Quality Parts.<br>Verified Sellers.<br><span class="accent">Right for Your Car.</span></h1>
+        <p id="hero-subtitle">The platform connecting UAE drivers with verified sellers for quality auto parts — reliable, affordable, and delivered to your doorstep.</p>
         <div class="heroctas">
           <a href="search-results.html" class="btn btn-primary">Shop Now</a>
           <a href="become-a-partner.html#how" class="btn btn-outline">▶ How It Works</a>
@@ -185,6 +209,10 @@
           <div><label>Year</label><input id="f-year" type="number" min="1990" max="2026" placeholder="e.g. 2020"></div>
           <div><label>Spec</label><select id="f-spec"><option value="">Any</option><option>GCC</option><option>American</option><option>Japanese</option><option>European</option></select></div>
           <div><label>Category</label><select id="f-cat"><option value="">All parts</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>Chassis No. / VIN No.</label><input id="f-chassis" placeholder="e.g. JTMHE3FJ8MD..."></div>
+          <div><label>Engine No.</label><input id="f-engine" placeholder="e.g. 1VD-FTV"></div>
         </div>
         <div class="actions">
           <button type="submit" class="btn btn-primary">🔍 Search Parts</button>
@@ -207,9 +235,9 @@
     <div class="wrap">
       <div class="promo-card">
         <div>
-          <h2>Every Part. Every Brand.<br>All in One Place.</h2>
-          <p>From engine to electrical — we've got you covered.</p>
-          <a href="search-results.html" class="btn btn-primary">Browse All Parts →</a>
+          <h2 id="promo-title">Every Part. Every Brand.<br>All in One Place.</h2>
+          <p id="promo-subtitle">From engine to electrical — we've got you covered.</p>
+          <a href="search-results.html" id="promo-cta" class="btn btn-primary">Browse All Parts →</a>
         </div>
         <div class="promo-art">
           <div class="promo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v5M12 15.5v5M3.5 12h5M15.5 12h5M6 6l3.5 3.5M14.5 14.5L18 18M18 6l-3.5 3.5M9.5 14.5L6 18"/></svg><span>Tires &amp; Wheels</span></div>
@@ -224,18 +252,25 @@
   <section class="section">
     <div class="wrap">
       <h2 class="sectitle">Shop by Category <a href="search-results.html">View all categories →</a></h2>
-      <div class="cats" id="cat-tiles"></div>
+      <div class="cats-wrap">
+        <div class="cats-arrow left" id="cats-prev">‹</div>
+        <div class="cats" id="cat-tiles"></div>
+        <div class="cats-arrow right" id="cats-next">›</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-alt);" id="book-garage">
+    <div class="wrap">
+      <h2 class="sectitle"><span>Book a Verified Garage <span class="pill" style="font-size:11px;vertical-align:middle;">Dubai · Sharjah · Ajman</span></span> <a href="become-a-partner.html">All garages →</a></h2>
+      <div class="garages" id="garage-cards"></div>
     </div>
   </section>
 
   <section class="section" style="background:var(--bg-alt);">
     <div class="wrap">
       <h2 class="sectitle">Today's Deals <a href="search-results.html">All deals →</a></h2>
-      <div class="deals">
-        <div class="deal d1"><b>Up to 40% Off Brake Systems</b><span>Pads, discs, calipers • Verified only</span><br><a href="search-results.html?category=Brakes" class="btn">Shop Brakes →</a></div>
-        <div class="deal d2"><b>Engine &amp; Filter Parts — Save 35%</b><span>Genuine fitment • Major UAE brands</span><br><a href="search-results.html?category=Engine" class="btn">Shop Engine →</a></div>
-        <div class="deal d3"><b>Suspension Deals — Save 25%</b><span>Shock absorbers, struts, control arms</span><br><a href="search-results.html?category=Suspension" class="btn">Shop Now →</a></div>
-      </div>
+      <div class="deals" id="deals-wrap"></div>
     </div>
   </section>
 
@@ -243,6 +278,22 @@
     <div class="wrap">
       <h2 class="sectitle">Newly Listed Parts <a href="search-results.html">See all →</a></h2>
       <div class="products" id="newly-listed"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-alt);" id="contact">
+    <div class="wrap" style="max-width:640px;">
+      <h2 class="sectitle" style="justify-content:flex-start;gap:10px;">Contact Us</h2>
+      <p style="color:var(--text-secondary);font-size:13.5px;margin:-8px 0 18px;">Questions about an order, a listing, or partnering with us — send a message and our team will reply by email.</p>
+      <div id="contact-form-wrap" style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Full Name *</label><input id="ct-name" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;"></div>
+          <div><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Email *</label><input id="ct-email" type="email" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;"></div>
+        </div>
+        <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Message *</label><textarea id="ct-message" rows="3" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;font-family:inherit;"></textarea></div>
+        <button type="button" class="btn btn-primary" onclick="submitContactForm()">Send Message</button>
+        <p id="ct-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:12px 0 0;">✓ Thanks — your message was sent. We'll reply to your email soon.</p>
+      </div>
     </div>
   </section>
 
@@ -269,6 +320,7 @@
   <script src="cart.js"></script>
   <script src="admin-data.js"></script>
   <script src="request-part.js"></script>
+  <script src="garage-booking.js"></script>
   <script>
     // Populate the category select in the header search bar
     const catSelect = document.getElementById("cat-select");
@@ -309,35 +361,129 @@
       openRequestPartModal(document.getElementById("f-part").value.trim());
     });
 
-    // Render category tiles (All Parts + each real category)
-    const catTiles = document.getElementById("cat-tiles");
-    const allTile = document.createElement("a");
-    allTile.href = "search-results.html";
-    allTile.className = "cat active";
-    allTile.innerHTML = '<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><span>All Parts</span>';
-    catTiles.appendChild(allTile);
-    PS_CATEGORIES.forEach(c => {
+    // Render category tiles as photo-style cards (All Parts + each real category + Book Garage).
+    // Category art can be overridden by Admin > Category Images (image or glow color).
+    function catCard(category, label, href){
+      const st = psCatStyle(category);
+      const override = (typeof psGetCategoryImageOverrides === "function") ? psGetCategoryImageOverrides()[category] : null;
+      const glow = (override && override.glow) || st.glow;
+      let icon;
+      if (override && override.image) {
+        icon = '<img src="' + override.image + '" style="width:100%;height:100%;object-fit:cover;">';
+      } else if (category === "Book Garage") {
+        icon = '<svg viewBox="0 0 24 24" fill="none" stroke="' + glow + '" stroke-width="1.8"><path d="M14 7l3 3-8 8-4 1 1-4 8-8z"/></svg>';
+      } else if (category === "All Parts") {
+        icon = '<svg viewBox="0 0 24 24" fill="none" stroke="' + glow + '" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M6 6l2.2 2.2M15.8 15.8L18 18M18 6l-2.2 2.2M8.2 15.8L6 18"/></svg>';
+      } else {
+        icon = psIcon(category).replace("<svg ", '<svg stroke="' + glow + '" ');
+      }
       const a = document.createElement("a");
-      a.href = "search-results.html?category=" + encodeURIComponent(c);
-      a.className = "cat";
-      a.innerHTML = '<div class="ic">' + psIcon(c) + '</div><span>' + c + '</span>';
-      catTiles.appendChild(a);
+      a.href = href;
+      a.className = "cat-card" + (category === "All Parts" ? " active" : "");
+      a.style.background = st.grad;
+      a.innerHTML =
+        '<div class="cat-ic">' + icon + '</div>' +
+        (category === "Book Garage" ? '<div class="cat-badge">BOOK</div>' : '') +
+        '<div class="cat-overlay"><span>' + label + '</span></div>';
+      return a;
+    }
+    const catTiles = document.getElementById("cat-tiles");
+    catTiles.appendChild(catCard("All Parts", "All Parts", "search-results.html"));
+    PS_CATEGORIES.forEach(c => {
+      catTiles.appendChild(catCard(c, c, "search-results.html?category=" + encodeURIComponent(c)));
+    });
+    catTiles.appendChild(catCard("Book Garage", "Book a Garage", "#book-garage"));
+
+    document.getElementById("cats-prev").addEventListener("click", () => catTiles.scrollBy({left:-300, behavior:"smooth"}));
+    document.getElementById("cats-next").addEventListener("click", () => catTiles.scrollBy({left:300, behavior:"smooth"}));
+
+    // Render "Book a Verified Garage" cards — from the admin-managed garage directory
+    // (Admin > Garages), so adding/removing/deactivating a garage there changes this live.
+    const garageWrap = document.getElementById("garage-cards");
+    psGetGarages().forEach(g => {
+      const card = document.createElement("div");
+      card.className = "garage-card";
+      const priceRange = "AED " + g.priceMin + "–" + g.priceMax;
+      card.innerHTML =
+        '<div class="garage-photo" style="background:' + psCatStyle("Tools & Garage").grad + ';">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="#FFA24A" stroke-width="1.6"><path d="M14 7l3 3-8 8-4 1 1-4 8-8z"/></svg>' +
+          '<div class="garage-verified">✓ Verified</div>' +
+        '</div>' +
+        '<div class="garage-body">' +
+          '<div class="garage-loc">📍 ' + g.area + ', ' + g.emirate + '</div>' +
+          '<div class="garage-name">' + g.name + '</div>' +
+          '<div class="garage-tags">' + (g.specialties||[]).map(s => '<span>' + s + '</span>').join("") + '</div>' +
+          '<div class="garage-meta"><span>⭐ <b>' + g.rating + '</b> · ' + g.jobs + ' jobs</span><span>⏱ ' + g.etaMin + '–' + g.etaMax + ' min ETA</span></div>' +
+          '<div class="garage-meta" style="margin-bottom:14px;"><span>🏷 <b>' + priceRange + '</b></span></div>' +
+          '<button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="openGarageBookingModal(\'' + g.id + '\')">📅 Book This Garage</button>' +
+        '</div>';
+      garageWrap.appendChild(card);
+    });
+    if (!psGetGarages().length) {
+      garageWrap.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No verified garages listed yet.</p>';
+    }
+
+    // Hero, promo banner and deals — all rendered from the admin-editable site content
+    // store (Admin > Featured Banner Management / Hero Banners / Discounts & Deals).
+    if (typeof psGetSettings === "function" && psGetSettings().maintenanceMode) {
+      document.getElementById("maintenance-banner").style.display = "block";
+    }
+
+    const content = psGetSiteContent();
+    // Only re-render the hero title if an admin has actually edited it — otherwise
+    // keep the nicely line-broken/accented default markup already in the HTML.
+    if (content.hero.title !== PS_CONTENT_DEFAULTS.hero.title) {
+      document.getElementById("hero-title").textContent = content.hero.title;
+    }
+    document.getElementById("hero-subtitle").textContent = content.hero.subtitle;
+    document.getElementById("promo-title").textContent = content.featuredBanner.title;
+    document.getElementById("promo-subtitle").textContent = content.featuredBanner.subtitle;
+    document.getElementById("promo-cta").textContent = content.featuredBanner.ctaText;
+    document.getElementById("promo-cta").href = content.featuredBanner.ctaLink;
+
+    const dealsWrap = document.getElementById("deals-wrap");
+    const dealGrads = ["linear-gradient(135deg,#14399B,#1E56D8)","linear-gradient(135deg,#0F2A6B,#2C6BE0)","linear-gradient(135deg,#1B4FC4,#4C7EEA)"];
+    content.deals.forEach((d, i) => {
+      const div = document.createElement("div");
+      div.className = "deal";
+      div.style.background = dealGrads[i % dealGrads.length];
+      div.innerHTML = "<b>" + d.title + "</b><span>" + d.subtitle + "</span><br><a href='search-results.html" +
+        (d.category ? "?category=" + encodeURIComponent(d.category) : "") + "' class='btn'>" + d.ctaText + "</a>";
+      dealsWrap.appendChild(div);
     });
 
-    // Render Newly Listed Parts from the shared product data (last 5 added)
+    // Render Newly Listed Parts from the unified LIVE catalog (seed catalog + every
+    // Approved seller/admin listing, with admin price/status overrides applied) —
+    // so an admin edit in Listing/Service Overrides or Add Listing shows up here.
     const newly = document.getElementById("newly-listed");
-    PS_PRODUCTS.slice(-5).reverse().forEach(p => {
+    psGetLiveListings().slice(-5).reverse().forEach(p => {
       const a = document.createElement("a");
       a.href = "product-detail.html?id=" + p.id;
       a.className = "product";
+      const thumb = p.image ? '<img src="' + p.image + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">' : psIcon(p.category);
       a.innerHTML =
-        '<div class="thumb">' + psIcon(p.category) + '</div>' +
+        '<div class="thumb">' + thumb + '</div>' +
         '<div class="name">' + p.name + '</div>' +
         '<div class="sku">' + p.sku + '</div>' +
         '<div class="price">' + psFmt(p.price) + '</div>' +
         '<div class="tag">✓ Verified Seller</div>';
       newly.appendChild(a);
     });
+
+    function submitContactForm(){
+      const name = document.getElementById("ct-name").value.trim();
+      const email = document.getElementById("ct-email").value.trim();
+      const message = document.getElementById("ct-message").value.trim();
+      if (!name || !email || !message){
+        alert("Please fill in your name, email, and message.");
+        return;
+      }
+      psSubmitContactMessage({name: name, email: email, message: message});
+      document.getElementById("ct-name").value = "";
+      document.getElementById("ct-email").value = "";
+      document.getElementById("ct-message").value = "";
+      document.getElementById("ct-confirm").style.display = "block";
+    }
   </script>
 </body>
 </html>

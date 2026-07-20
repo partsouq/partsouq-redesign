@@ -93,6 +93,25 @@
   .flogo{display:flex;align-items:center;gap:10px;}
   .flogo .mark{width:32px;height:32px;border-radius:8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:13px;}
   .flogo b{color:#fff;}
+
+  /* Apply Now modal */
+  #apply-modal{display:none;position:fixed;inset:0;background:rgba(15,20,30,.55);z-index:999;align-items:center;justify-content:center;padding:20px;}
+  #apply-modal.open{display:flex;}
+  #apply-modal .apply-box{background:#fff;border-radius:14px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;padding:26px;position:relative;text-align:left;}
+  #apply-modal h3{font-size:18px;margin:0 0 4px;}
+  #apply-modal p.apply-sub{font-size:13px;color:var(--text-secondary);margin:0 0 18px;}
+  #apply-modal label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:5px;}
+  #apply-modal .apply-field{margin-bottom:14px;}
+  #apply-modal input, #apply-modal select{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;font-family:inherit;box-sizing:border-box;}
+  #apply-modal .apply-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  #apply-modal .apply-actions{display:flex;gap:10px;margin-top:18px;}
+  #apply-modal .apply-btn{flex:1;padding:11px;border-radius:8px;font-weight:700;font-size:14px;border:1px solid var(--border);background:#fff;cursor:pointer;text-align:center;}
+  #apply-modal .apply-btn.primary{background:var(--brand-blue);color:#fff;border:none;}
+  #apply-modal .apply-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);}
+  #apply-modal .apply-success{display:none;text-align:center;padding:20px 0;}
+  #apply-modal .apply-success .ok{width:56px;height:56px;border-radius:50%;background:var(--success-green-light);color:var(--success-green);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;}
+  #apply-modal .apply-upload{border:1.5px dashed var(--border);border-radius:9px;padding:12px 8px;text-align:center;cursor:pointer;font-size:11.5px;color:var(--text-secondary);}
+  #apply-modal .apply-upload.has-file{border-style:solid;border-color:var(--success-green);background:var(--success-green-light);}
 </style>
 </head>
 <body>
@@ -106,10 +125,15 @@
       <span class="pill">🤝 CHANNEL PARTNER PORTAL</span>
       <h1>Become a <span>Partner</span></h1>
       <p>Two registration paths — choose the one that fits your business. Everything managed in one place.</p>
-      <div class="pathbtns">
-        <a href="login-register.html?type=partner" class="pathbtn orange">📦 Spare Part Supplier</a>
-        <a href="login-register.html?type=partner" class="pathbtn blue">🔧 Garage / Workshop</a>
+      <div id="partner-banner" style="max-width:520px;margin:0 auto 22px;background:var(--brand-blue-light);color:var(--brand-blue-dark);border-radius:10px;padding:12px 16px;font-size:13px;">
+        <b id="partner-banner-title" style="display:block;font-size:14px;margin-bottom:2px;"></b>
+        <span id="partner-banner-subtitle"></span>
       </div>
+      <div class="pathbtns">
+        <a href="#" class="pathbtn orange" onclick="openApplyModal('Spare Part Supplier');return false;">📦 Spare Part Supplier</a>
+        <a href="#" class="pathbtn blue" onclick="openApplyModal('Garage / Workshop');return false;">🔧 Garage / Workshop</a>
+      </div>
+      <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;">Already approved? <a href="login-register.html?type=partner" style="color:var(--brand-blue);font-weight:600;">Sign in to your partner dashboard →</a></p>
     </div>
   </section>
 
@@ -120,14 +144,14 @@
           <div class="tag blue">📦 SPARE PART SUPPLIER</div>
           <h3>List Your Parts. We Bring the Buyers.</h3>
           <p>List your spare parts. Buyers search by their exact car — your listing appears when it matches. Payment is cash on delivery, collected upon receipt. As the seller, you confirm each part matches the buyer's vehicle before dispatch to help the right part reach the right car.</p>
-          <a href="login-register.html?type=partner" class="btn btn-orange">＋ Register as Spare Part Supplier</a>
+          <a href="#" class="btn btn-orange" onclick="openApplyModal('Spare Part Supplier');return false;">＋ Register as Spare Part Supplier</a>
         </div>
         <div class="regcard">
           <div class="tag green">🔧 GARAGE / WORKSHOP</div>
           <h3>Take Bookings. We Handle the Service.</h3>
           <p>Receive customer bookings directly from PartSouq. You focus on the repair work — customers pay you cash on delivery after the service is complete and confirmed. Pickup &amp; drop service coordination available.</p>
           <div class="noticebox"><b>⚠ PartSouq operates on Cash on Delivery only.</b> Collect cash directly from the customer after service completion and their confirmation. No online payments, no bank transfers from the buyer.</div>
-          <a href="login-register.html?type=partner" class="btn" style="background:var(--brand-blue);color:#fff;">🔧 Register Your Garage</a>
+          <a href="#" class="btn" style="background:var(--brand-blue);color:#fff;" onclick="openApplyModal('Garage / Workshop');return false;">🔧 Register Your Garage</a>
         </div>
       </div>
     </div>
@@ -209,5 +233,102 @@
     </div>
   </footer>
 
+  <div id="apply-modal">
+    <div class="apply-box">
+      <button class="apply-close" onclick="closeApplyModal()">✕</button>
+      <div id="apply-form-wrap">
+        <h3>Apply to Partner with PartSouq</h3>
+        <p class="apply-sub" id="apply-sub">Tell us about your business. Our team reviews every application — including your trade license — before you go live.</p>
+        <div class="apply-field"><label>Business Name *</label><input id="ap-name" placeholder="Your business name"></div>
+        <div class="apply-row">
+          <div class="apply-field"><label>Business Type</label><select id="ap-type"><option>Spare Part Supplier</option><option>Garage / Workshop</option></select></div>
+          <div class="apply-field"><label>Emirate *</label><select id="ap-emirate"><option value="">Select emirate</option><option>Dubai</option><option>Sharjah</option><option>Abu Dhabi</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option></select></div>
+        </div>
+        <div class="apply-row">
+          <div class="apply-field"><label>Contact Name *</label><input id="ap-contact" placeholder="Owner / manager name"></div>
+          <div class="apply-field"><label>Phone (WhatsApp) *</label><input id="ap-phone" placeholder="+971 50 000 0000"></div>
+        </div>
+        <div class="apply-field"><label>Email *</label><input id="ap-email" type="email" placeholder="you@business.com"></div>
+        <div class="apply-field">
+          <label>Trade License *</label>
+          <label class="apply-upload" id="ap-license-label" for="ap-license">
+            📄 Upload your trade license (image or PDF)
+            <input id="ap-license" type="file" accept="image/*,.pdf" style="display:none;">
+          </label>
+        </div>
+        <div class="apply-actions">
+          <button class="apply-btn" onclick="closeApplyModal()">Cancel</button>
+          <button class="apply-btn primary" onclick="submitApplication()">Submit Application</button>
+        </div>
+      </div>
+      <div class="apply-success" id="apply-success">
+        <div class="ok">✓</div>
+        <h3 style="margin-bottom:6px;">Application Submitted</h3>
+        <p class="apply-sub">Our team reviews new applications within 24–48 hours. Reference: <b id="ap-ref"></b>. Once approved, sign in from the link above to access your dashboard.</p>
+        <div class="apply-actions"><button class="apply-btn primary" style="flex:none;margin:0 auto;" onclick="closeApplyModal()">Done</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin-data.js"></script>
+  <script>
+    const __pb = psGetSiteContent().partnerBanner;
+    document.getElementById("partner-banner-title").textContent = __pb.title;
+    document.getElementById("partner-banner-subtitle").textContent = __pb.subtitle;
+
+    let apLicenseData = null;
+    const apLicenseInput = document.getElementById("ap-license");
+    apLicenseInput.addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        apLicenseData = ev.target.result;
+        const label = document.getElementById("ap-license-label");
+        label.classList.add("has-file");
+        label.innerHTML = "✅ " + file.name + " selected — tap to change";
+        label.appendChild(apLicenseInput);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function openApplyModal(type){
+      document.getElementById("ap-type").value = type;
+      document.getElementById("apply-modal").classList.add("open");
+      document.getElementById("apply-form-wrap").style.display = "block";
+      document.getElementById("apply-success").style.display = "none";
+    }
+    function closeApplyModal(){
+      document.getElementById("apply-modal").classList.remove("open");
+    }
+    function submitApplication(){
+      const name = document.getElementById("ap-name").value.trim();
+      const emirate = document.getElementById("ap-emirate").value;
+      const contact = document.getElementById("ap-contact").value.trim();
+      const phone = document.getElementById("ap-phone").value.trim();
+      const email = document.getElementById("ap-email").value.trim();
+      if (!name || !emirate || !contact || !phone || !email){
+        alert("Please fill in all required fields.");
+        return;
+      }
+      if (!apLicenseData){
+        alert("Please upload your trade license — applications can't be reviewed without it.");
+        return;
+      }
+      const app = psSubmitApplication({
+        businessName: name,
+        applyType: document.getElementById("ap-type").value,
+        emirate: emirate,
+        contactName: contact,
+        phone: phone,
+        email: email,
+        license: apLicenseData
+      });
+      document.getElementById("apply-form-wrap").style.display = "none";
+      document.getElementById("apply-success").style.display = "block";
+      document.getElementById("ap-ref").textContent = app.id;
+      apLicenseData = null;
+    }
+  </script>
 </body>
 </html>

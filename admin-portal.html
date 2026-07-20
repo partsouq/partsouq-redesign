@@ -18,16 +18,17 @@
   *{box-sizing:border-box;}
   body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg-alt);color:var(--text);}
   a{color:inherit;text-decoration:none;}
-  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh;}
-  .sidebar{background:var(--bg-dark);color:#AEB9CF;padding:20px 16px;}
-  .logo{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+  .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh;}
+  .sidebar{background:var(--bg-dark);color:#AEB9CF;padding:20px 16px;overflow-y:auto;}
+  .logo{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
   .logo .mark{width:34px;height:34px;border-radius:8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:13px;}
   .logo b{color:#fff;font-size:16px;}
-  .navsection{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#647089;margin:16px 0 6px 10px;}
-  .navlink{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:8px;font-size:13px;margin-bottom:2px;cursor:pointer;}
+  .navsection{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#647089;margin:14px 0 6px 10px;}
+  .navlink{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;font-size:12.5px;margin-bottom:2px;cursor:pointer;}
   .navlink.active{background:var(--brand-blue);color:#fff;font-weight:700;}
   .navlink:not(.active):hover{background:rgba(255,255,255,.06);}
   .navlink .cnt{margin-left:auto;background:var(--accent-orange);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+  .navdivider{border-top:1px solid #24304A;margin:12px 0;}
 
   .main{padding:26px 32px;}
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
@@ -53,7 +54,7 @@
   .status.orange{background:var(--accent-orange-light);color:#B75C10;}
   .status.red{background:var(--danger-red-light);color:var(--danger-red);}
   .status.blue{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
-  .rowbtn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid var(--border);background:#fff;cursor:pointer;margin-right:6px;}
+  .rowbtn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid var(--border);background:#fff;cursor:pointer;margin-right:6px;margin-bottom:4px;}
   .rowbtn.approve{background:var(--success-green);color:#fff;border:none;}
   .rowbtn.reject{background:var(--danger-red-light);color:var(--danger-red);}
   .empty-row{text-align:center;color:var(--text-muted);padding:24px;font-size:13px;}
@@ -62,24 +63,93 @@
   .thumb-cell{width:42px;height:42px;border-radius:7px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;overflow:hidden;}
   .thumb-cell img{width:100%;height:100%;object-fit:cover;}
   .thumb-cell svg{width:20px;height:20px;stroke:var(--brand-blue);}
+
+  /* form controls used across the new admin pages */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  .form-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:5px;}
+  .form-field input, .form-field select, .form-field textarea{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-size:13.5px;font-family:inherit;box-sizing:border-box;}
+  .save-btn{background:var(--brand-blue);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:13.5px;cursor:pointer;}
+  .save-confirm{color:var(--success-green);font-size:12.5px;font-weight:600;margin-left:10px;display:none;}
+  .upload-box{border:1.5px dashed var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;font-size:11.5px;color:var(--text-secondary);}
+  .cat-image-row{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
+  .cat-swatch{width:52px;height:52px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .cat-swatch svg{width:26px;height:26px;}
+  .cat-swatch img{width:100%;height:100%;object-fit:cover;}
+
+  /* login gate */
+  #login-gate{position:fixed;inset:0;background:var(--bg-dark);display:flex;align-items:center;justify-content:center;z-index:2000;}
+  #login-gate .box{background:#fff;border-radius:14px;padding:30px;max-width:360px;width:100%;text-align:center;}
+  #login-gate .box .mark{width:44px;height:44px;border-radius:10px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:16px;margin:0 auto 14px;}
+  #login-gate h2{font-size:18px;margin:0 0 6px;}
+  #login-gate p{font-size:12.5px;color:var(--text-secondary);margin:0 0 18px;line-height:1.5;}
+  #login-gate input{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:12px;box-sizing:border-box;}
+  #login-gate button{width:100%;padding:11px;border-radius:8px;background:var(--brand-blue);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;}
+  #login-gate .err{color:var(--danger-red);font-size:12px;margin-top:10px;display:none;}
 </style>
 </head>
 <body>
+
+<div id="login-gate">
+  <div class="box">
+    <div class="mark">PS</div>
+    <h2>Admin Sign In</h2>
+    <p>Demo authentication only — this build has no real backend, so any non-empty password unlocks the portal. Do not reuse a real password here.</p>
+    <input id="login-pass" type="password" placeholder="Enter any password">
+    <button onclick="attemptLogin()">Sign In</button>
+    <p class="err" id="login-err">Please enter a password.</p>
+  </div>
+</div>
+
 <div class="app">
   <div class="sidebar">
     <a href="index.html" class="logo"><div class="mark">PS</div><b>Admin Portal</b></a>
+
     <div class="navsection">Overview</div>
     <div class="navlink active" data-page="dashboard">📊 Dashboard</div>
+    <div class="navlink" data-page="analytics">📈 Analytics</div>
+
     <div class="navsection">Operations</div>
-    <div class="navlink" data-page="listings">🧾 Listing Approvals <span class="cnt" id="nav-listings-badge" style="display:none;">0</span></div>
-    <div class="navlink" data-page="sellers">🏪 Sellers &amp; ID Verification <span class="cnt" id="nav-sellers-badge" style="display:none;">0</span></div>
-    <div class="navsection">Finance</div>
-    <div class="navlink" data-page="finance">💵 Payments &amp; Statements</div>
+    <div class="navlink" data-page="applications">➕ Applications <span class="cnt" id="nav-applications-badge" style="display:none;">0</span></div>
+    <div class="navlink" data-page="overrides">✏️ Listing/Service Overrides <span class="cnt" id="nav-overrides-badge" style="display:none;">0</span></div>
+    <div class="navlink" data-page="featuredbanner">🖼️ Featured Banner Management</div>
+
+    <div class="navsection">Sellers</div>
+    <div class="navlink" data-page="sellers">🏪 Spare Part Sellers</div>
+
+    <div class="navsection">Garages</div>
+    <div class="navlink" data-page="garages">🔧 Garages</div>
+    <div class="navlink" data-page="garagebookings">📅 Garage Bookings <span class="cnt" id="nav-garage-badge" style="display:none;">0</span></div>
+
+    <div class="navsection">Finance (Accounts)</div>
+    <div class="navlink" data-page="finance">📄 Subscriptions &amp; Payments</div>
+    <div class="navlink" data-page="billing">💳 Partner Billing</div>
+
+    <div class="navsection">Listings</div>
+    <div class="navlink" data-page="alllistings">≣ All Listings</div>
+    <div class="navlink" data-page="addlisting">⊕ Add Listing</div>
+
+    <div class="navsection">Orders</div>
+    <div class="navlink" data-page="orders">📦 All Orders</div>
+    <div class="navlink" data-page="disputes">⚠️ Disputes <span class="cnt" id="nav-disputes-badge" style="display:none;">0</span></div>
+
+    <div class="navsection">Marketing</div>
+    <div class="navlink" data-page="deals">🏷️ Discounts &amp; Deals</div>
+    <div class="navlink" data-page="partnerbanner">🖼️ Partner Banners</div>
+    <div class="navlink" data-page="herobanner">🖼️ Hero Banners</div>
+
     <div class="navsection">Support</div>
     <div class="navlink" data-page="requests">📝 Part Requests <span class="cnt" id="nav-requests-badge" style="display:none;">0</span></div>
+    <div class="navlink" data-page="catimages">🗂️ Category Images</div>
+    <div class="navlink" data-page="contact">💬 Contact Submissions <span class="cnt" id="nav-contact-badge" style="display:none;">0</span></div>
+    <div class="navlink" data-page="tickets">🎧 Support Tickets <span class="cnt" id="nav-tickets-badge" style="display:none;">0</span></div>
     <div class="navlink" data-page="users">👤 Users / Buyers</div>
+
     <div class="navsection">System</div>
-    <a href="index.html" class="navlink">↩ Back to Website</a>
+    <div class="navlink" data-page="settings">⚙️ Settings</div>
+    <a href="index.html" class="navlink">↗ View Website</a>
+    <a href="#" class="navlink" onclick="adminSignOut();return false;">⏻ Sign Out</a>
+    <div class="navdivider"></div>
+    <a href="index.html" class="navlink">← Back to Website</a>
   </div>
 
   <div class="main">
@@ -94,8 +164,37 @@
       </div>
     </div>
 
-    <div class="page" id="page-listings">
-      <div class="topbar"><div><h1>Listing Approvals</h1><span>Review new seller submissions before they go live in search</span></div></div>
+    <div class="page" id="page-analytics">
+      <div class="topbar"><div><h1>Analytics</h1><span>Computed live from real orders, listings and sellers — not sample numbers</span></div></div>
+      <div class="stats" id="analytics-stats"></div>
+      <div class="panel">
+        <h3>Listings by Category</h3>
+        <table id="analytics-categories"><tr><th>Category</th><th>Live Listings</th><th>Share</th></tr></table>
+      </div>
+      <div class="panel">
+        <h3>Top Sellers by Listings</h3>
+        <table id="analytics-sellers"><tr><th>Seller</th><th>Type</th><th>Listings</th><th>ID Status</th></tr></table>
+      </div>
+      <div class="panel">
+        <h3>Order Status Breakdown</h3>
+        <table id="analytics-orders"><tr><th>Status</th><th>Orders</th><th>Value</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-applications">
+      <div class="topbar"><div><h1>Applications</h1><span>Seller &amp; garage sign-ups awaiting review — approving one creates a real, live seller or garage</span></div></div>
+      <div class="panel">
+        <h3>Pending Applications</h3>
+        <table id="pending-applications"><tr><th>Ref</th><th>Business</th><th>Type</th><th>Emirate</th><th>Contact</th><th>License</th><th>Action</th></tr></table>
+      </div>
+      <div class="panel">
+        <h3>Decided Applications</h3>
+        <table id="decided-applications"><tr><th>Ref</th><th>Business</th><th>Type</th><th>Status</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-overrides">
+      <div class="topbar"><div><h1>Listing / Service Overrides</h1><span>Review new seller submissions — approve to publish, reject to send back</span></div></div>
       <div class="panel">
         <h3>Pending Review</h3>
         <p class="sub">Listings sellers submitted with a photo — approve to publish, reject to send back.</p>
@@ -107,16 +206,58 @@
       </div>
     </div>
 
+    <div class="page" id="page-featuredbanner">
+      <div class="topbar"><div><h1>Featured Banner Management</h1><span>Edits the blue promo banner on the homepage — live immediately</span></div></div>
+      <div class="panel">
+        <div class="form-field" style="margin-bottom:14px;"><label>Title</label><input id="fb-title"></div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Subtitle</label><input id="fb-subtitle"></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Button Text</label><input id="fb-cta-text"></div>
+          <div class="form-field"><label>Button Link</label><input id="fb-cta-link"></div>
+        </div>
+        <button class="save-btn" onclick="saveFeaturedBanner()">Save Changes</button>
+        <span class="save-confirm" id="fb-confirm">✓ Saved — check the homepage</span>
+      </div>
+    </div>
+
     <div class="page" id="page-sellers">
-      <div class="topbar"><div><h1>Sellers &amp; Garages</h1><span>ID / trade license verification</span></div></div>
+      <div class="topbar"><div><h1>Spare Part Sellers</h1><span>Directory of registered spare part suppliers + ID verification</span></div></div>
       <div class="panel">
         <h3>Seller Directory</h3>
         <table id="sellers-table"><tr><th>Business</th><th>Type</th><th>Emirate</th><th>Listings</th><th>ID Status</th><th>Action</th></tr></table>
       </div>
     </div>
 
+    <div class="page" id="page-garages">
+      <div class="topbar"><div><h1>Garages</h1><span>Controls what shows in "Book a Verified Garage" on the homepage</span></div></div>
+      <div class="panel">
+        <h3>Add a Garage</h3>
+        <div class="form-grid">
+          <div class="form-field"><label>Name *</label><input id="ng-name"></div>
+          <div class="form-field"><label>Emirate *</label><select id="ng-emirate"><option value="">Select</option><option>Dubai</option><option>Sharjah</option><option>Abu Dhabi</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option></select></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Area</label><input id="ng-area" placeholder="e.g. Al Quoz"></div>
+          <div class="form-field"><label>Price Range (AED)</label><input id="ng-price" placeholder="e.g. 100-400"></div>
+        </div>
+        <button class="save-btn" onclick="addGarage()">Add Garage</button>
+        <span class="save-confirm" id="ng-confirm">✓ Garage added — visible on the homepage now</span>
+      </div>
+      <div class="panel">
+        <h3>Garage Directory</h3>
+        <table id="garages-table"><tr><th>Name</th><th>Emirate</th><th>Specialties</th><th>Rating</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-garagebookings">
+      <div class="topbar"><div><h1>Garage Bookings</h1><span>Requests to book a verified garage from the homepage</span></div></div>
+      <div class="panel">
+        <table id="garage-bookings-table"><tr><th>Ref</th><th>Name</th><th>WhatsApp</th><th>Garage</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
     <div class="page" id="page-finance">
-      <div class="topbar"><div><h1>Payments &amp; Statements</h1><span>Cash-on-delivery collections, platform-wide</span></div></div>
+      <div class="topbar"><div><h1>Subscriptions &amp; Payments</h1><span>Cash-on-delivery collections, platform-wide</span></div></div>
       <div class="stats" id="finance-stats"></div>
       <div class="panel">
         <h3>Order Statement</h3>
@@ -124,10 +265,109 @@
       </div>
     </div>
 
+    <div class="page" id="page-billing">
+      <div class="topbar"><div><h1>Partner Billing</h1><span>Computed from real placed orders matched to each seller's catalog</span></div></div>
+      <div class="panel">
+        <p class="sub">Commission rate: <b id="billing-rate"></b> (set in System &gt; Settings). Order lines that can't be matched to a known product are shown separately rather than guessed.</p>
+        <table id="billing-table"><tr><th>Seller</th><th>Units Sold</th><th>Sales Value</th><th>Commission Owed</th></tr></table>
+        <p class="sub" id="billing-unattributed" style="margin-top:12px;"></p>
+      </div>
+    </div>
+
+    <div class="page" id="page-alllistings">
+      <div class="topbar"><div><h1>All Listings</h1><span>Every seed + seller/admin listing — edit price or take it offline</span></div></div>
+      <div class="panel">
+        <table id="alllistings-table"><tr><th>Image</th><th>Part</th><th>Category</th><th>Price</th><th>Seller</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-addlisting">
+      <div class="topbar"><div><h1>Add Listing</h1><span>Admin-added listings publish immediately, no approval step</span></div></div>
+      <div class="panel">
+        <div class="form-grid">
+          <div class="form-field"><label>Part Name *</label><input id="al-name"></div>
+          <div class="form-field"><label>SKU *</label><input id="al-sku"></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Category *</label><select id="al-category"></select></div>
+          <div class="form-field"><label>Price (AED) *</label><input id="al-price" type="number"></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Brand</label><input id="al-brand"></div>
+          <div class="form-field"><label>Photo</label>
+            <label class="upload-box" id="al-image-label" for="al-image">📷 Upload photo<input id="al-image" type="file" accept="image/*" style="display:none;"></label>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Description</label><textarea id="al-desc" rows="2"></textarea></div>
+        <button class="save-btn" onclick="addListingDirect()">Publish Listing</button>
+        <span class="save-confirm" id="al-confirm">✓ Published — live in search now</span>
+      </div>
+    </div>
+
+    <div class="page" id="page-orders">
+      <div class="topbar"><div><h1>All Orders</h1><span>Every order placed — update fulfillment status</span></div></div>
+      <div class="panel">
+        <table id="allorders-table"><tr><th>Order</th><th>Items</th><th>Status</th><th>Amount</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-disputes">
+      <div class="topbar"><div><h1>Disputes</h1><span>Filed by buyers from My Account &gt; Report an Issue</span></div></div>
+      <div class="panel">
+        <table id="disputes-table"><tr><th>Ref</th><th>Order</th><th>Reason</th><th>Details</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-deals">
+      <div class="topbar"><div><h1>Discounts &amp; Deals</h1><span>Edits the "Today's Deals" cards on the homepage — live immediately</span></div></div>
+      <div class="panel" id="deals-editor"></div>
+      <button class="save-btn" onclick="saveDeals()">Save Changes</button>
+      <span class="save-confirm" id="deals-confirm">✓ Saved — check the homepage</span>
+    </div>
+
+    <div class="page" id="page-partnerbanner">
+      <div class="topbar"><div><h1>Partner Banners</h1><span>Edits the promo banner shown to sellers/garages on Become a Partner</span></div></div>
+      <div class="panel">
+        <div class="form-field" style="margin-bottom:14px;"><label>Title</label><input id="pb-title"></div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Subtitle</label><input id="pb-subtitle"></div>
+        <button class="save-btn" onclick="savePartnerBanner()">Save Changes</button>
+        <span class="save-confirm" id="pb-confirm">✓ Saved</span>
+      </div>
+    </div>
+
+    <div class="page" id="page-herobanner">
+      <div class="topbar"><div><h1>Hero Banners</h1><span>Edits the homepage hero headline and subtext — live immediately</span></div></div>
+      <div class="panel">
+        <div class="form-field" style="margin-bottom:14px;"><label>Headline</label><input id="hb-title"></div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Subtext</label><input id="hb-subtitle"></div>
+        <button class="save-btn" onclick="saveHeroBanner()">Save Changes</button>
+        <span class="save-confirm" id="hb-confirm">✓ Saved — check the homepage</span>
+      </div>
+    </div>
+
     <div class="page" id="page-requests">
       <div class="topbar"><div><h1>Part Requests</h1><span>Buyers asking for parts not found in search</span></div></div>
       <div class="panel">
         <table id="requests-table"><tr><th>Ref</th><th>Name</th><th>WhatsApp</th><th>Car</th><th>Part Needed</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-catimages">
+      <div class="topbar"><div><h1>Category Images</h1><span>Upload a real photo per category, or change its accent color — reflected on the homepage carousel</span></div></div>
+      <div class="panel" id="catimages-editor"></div>
+    </div>
+
+    <div class="page" id="page-contact">
+      <div class="topbar"><div><h1>Contact Submissions</h1><span>Messages from the homepage Contact Us form</span></div></div>
+      <div class="panel">
+        <table id="contact-table"><tr><th>Ref</th><th>Name</th><th>Email</th><th>Message</th><th>Status</th><th>Action</th></tr></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-tickets">
+      <div class="topbar"><div><h1>Support Tickets</h1><span>Raised from My Account &gt; Support</span></div></div>
+      <div class="panel">
+        <table id="tickets-table"><tr><th>Ref</th><th>Subject</th><th>Message</th><th>Order</th><th>Status</th><th>Action</th></tr></table>
       </div>
     </div>
 
@@ -140,6 +380,19 @@
       </div>
     </div>
 
+    <div class="page" id="page-settings">
+      <div class="topbar"><div><h1>Settings</h1><span>Real settings — the commission rate here directly drives Partner Billing</span></div></div>
+      <div class="panel">
+        <div class="form-grid">
+          <div class="form-field"><label>Platform Commission (%)</label><input id="st-commission" type="number" min="0" max="100"></div>
+          <div class="form-field"><label>Admin Display Name</label><input id="st-adminname"></div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;"><label><input type="checkbox" id="st-maintenance" style="width:auto;margin-right:8px;">Maintenance Mode (shows a notice banner on the homepage)</label></div>
+        <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+        <span class="save-confirm" id="st-confirm">✓ Saved</span>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -147,6 +400,21 @@
 <script src="cart.js"></script>
 <script src="admin-data.js"></script>
 <script>
+  /* ---------- Login gate (demo-only) ---------- */
+  function attemptLogin(){
+    const pass = document.getElementById("login-pass").value;
+    if (!pass){ document.getElementById("login-err").style.display = "block"; return; }
+    psAdminLogin();
+    document.getElementById("login-gate").style.display = "none";
+  }
+  document.getElementById("login-pass").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
+  function adminSignOut(){
+    psAdminLogout();
+    location.href = "index.html";
+  }
+  if (psIsAdminLoggedIn()) document.getElementById("login-gate").style.display = "none";
+
+  /* ---------- Nav switching ---------- */
   document.querySelectorAll(".navlink[data-page]").forEach(nav => {
     nav.addEventListener("click", () => {
       document.querySelectorAll(".navlink[data-page]").forEach(n => n.classList.remove("active"));
@@ -159,24 +427,36 @@
   function statCard(iconPath, val, label){
     return '<div class="stat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2">' + iconPath + '</svg></div><b>' + val + '</b><span>' + label + '</span></div>';
   }
+  function updateNavBadge(id, n){
+    const el = document.getElementById(id);
+    el.textContent = n;
+    el.style.display = n > 0 ? "inline-block" : "none";
+  }
+  function clearRows(tableId){ document.getElementById(tableId).querySelectorAll("tr:not(:first-child)").forEach(r => r.remove()); }
+  function flashConfirm(id){
+    const el = document.getElementById(id);
+    el.style.display = "inline";
+    setTimeout(() => el.style.display = "none", 2500);
+  }
 
+  /* ---------- Dashboard ---------- */
   function renderDashboard(){
-    const listings = psGetAllSubmittedListings();
-    const pending = listings.filter(l => l.status === "Pending Review");
+    const listings = psGetAllListings();
+    const pendingListings = listings.filter(l => l.status === "Pending Review");
     const sellers = psGetSellers();
     const pendingIds = sellers.filter(s => s.idStatus === "Pending");
     const orders = psGetOrders();
     const cash = orders.reduce((s,o) => s + o.total, 0);
-    const totalListings = PS_PRODUCTS.length + listings.filter(l => l.status === "Approved").length;
+    const totalListings = listings.filter(l => l.status === "Approved").length;
 
     document.getElementById("dash-stats").innerHTML =
       statCard('<rect x="3" y="7" width="18" height="12" rx="2"/>', totalListings, "Live Listings") +
-      statCard('<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', pending.length, "Pending Approval") +
+      statCard('<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', pendingListings.length, "Pending Approval") +
       statCard('<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>', sellers.length, "Registered Sellers") +
       statCard('<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/>', psFmt(cash), "Cash Collected (COD)");
 
+    clearRows("dash-orders");
     const table = document.getElementById("dash-orders");
-    table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
     const statusClass = {"Delivered":"green","Out for Delivery":"blue","Processing":"orange"};
     if (!orders.length){
       table.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>No orders placed yet.</td></tr>");
@@ -187,21 +467,104 @@
       table.appendChild(tr);
     });
 
-    updateNavBadge("nav-listings-badge", pending.length);
-    updateNavBadge("nav-sellers-badge", pendingIds.length);
+    updateNavBadge("nav-overrides-badge", pendingListings.length);
     updateNavBadge("nav-requests-badge", psGetPartRequests().filter(r => r.status === "New").length);
+    updateNavBadge("nav-applications-badge", psGetApplications().filter(a => a.status === "Pending").length);
+    updateNavBadge("nav-garage-badge", psGetGarageBookings().filter(b => b.status === "New").length);
+    updateNavBadge("nav-disputes-badge", psGetDisputes().filter(d => d.status === "Open").length);
+    updateNavBadge("nav-contact-badge", psGetContactSubmissions().filter(c => c.status === "New").length);
+    updateNavBadge("nav-tickets-badge", psGetSupportTickets().filter(t => t.status === "Open").length);
   }
 
-  function updateNavBadge(id, n){
-    const el = document.getElementById(id);
-    el.textContent = n;
-    el.style.display = n > 0 ? "inline-block" : "none";
+  /* ---------- Analytics ---------- */
+  function renderAnalytics(){
+    const listings = psGetLiveListings();
+    const sellers = psGetSellers();
+    const orders = psGetOrders();
+    const verified = sellers.filter(s => s.idStatus === "Verified").length;
+
+    document.getElementById("analytics-stats").innerHTML =
+      statCard('<rect x="3" y="7" width="18" height="12" rx="2"/>', listings.length, "Live Listings") +
+      statCard('<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>', verified + " / " + sellers.length, "Sellers Verified") +
+      statCard('<path d="M20 7L9 18l-5-5"/>', orders.length, "Total Orders") +
+      statCard('<path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/>', psGetPartRequests().length + psGetGarageBookings().length, "Requests + Bookings");
+
+    clearRows("analytics-categories");
+    const catTable = document.getElementById("analytics-categories");
+    PS_CATEGORIES.forEach(c => {
+      const count = listings.filter(l => l.category === c).length;
+      const pct = listings.length ? Math.round((count / listings.length) * 100) : 0;
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + c + "</td><td>" + count + "</td><td>" + pct + "%</td>";
+      catTable.appendChild(tr);
+    });
+
+    clearRows("analytics-sellers");
+    const sellerTable = document.getElementById("analytics-sellers");
+    sellers.slice().sort((a,b) => b.listings - a.listings).slice(0,8).forEach(s => {
+      const tr = document.createElement("tr");
+      const cls = s.idStatus === "Verified" ? "green" : s.idStatus === "Pending" ? "orange" : "red";
+      tr.innerHTML = "<td>" + s.name + "</td><td>" + s.type + "</td><td>" + s.listings + "</td><td><span class='status " + cls + "'>" + s.idStatus + "</span></td>";
+      sellerTable.appendChild(tr);
+    });
+
+    clearRows("analytics-orders");
+    const orderTable = document.getElementById("analytics-orders");
+    const byStatus = {};
+    orders.forEach(o => {
+      if (!byStatus[o.status]) byStatus[o.status] = {count:0, value:0};
+      byStatus[o.status].count++; byStatus[o.status].value += o.total;
+    });
+    Object.keys(byStatus).forEach(status => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + status + "</td><td>" + byStatus[status].count + "</td><td>" + psFmt(byStatus[status].value) + "</td>";
+      orderTable.appendChild(tr);
+    });
   }
 
+  /* ---------- Applications ---------- */
+  function renderApplicationsPage(){
+    const all = psGetApplications();
+    const pending = all.filter(a => a.status === "Pending");
+    const pendingTable = document.getElementById("pending-applications");
+    clearRows("pending-applications");
+    if (!pending.length){
+      pendingTable.insertAdjacentHTML("beforeend", "<tr><td colspan='7' class='empty-row'>No pending applications.</td></tr>");
+    }
+    pending.forEach(a => {
+      const tr = document.createElement("tr");
+      const license = a.license ? '<img src="' + a.license + '" style="width:36px;height:36px;object-fit:cover;border-radius:6px;">' : "—";
+      tr.innerHTML = "<td>" + a.id + "</td><td>" + a.businessName + "</td><td>" + a.applyType + "</td><td>" + a.emirate + "</td><td>" + a.contactName + " · " + a.phone + "</td><td>" + license + "</td><td></td>";
+      const actionTd = tr.lastElementChild;
+      const approveBtn = document.createElement("button");
+      approveBtn.className = "rowbtn approve"; approveBtn.textContent = "Approve";
+      approveBtn.onclick = () => { psSetApplicationStatus(a.id, "Approved"); renderAll(); };
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "rowbtn reject"; rejectBtn.textContent = "Reject";
+      rejectBtn.onclick = () => { psSetApplicationStatus(a.id, "Rejected"); renderAll(); };
+      actionTd.appendChild(approveBtn); actionTd.appendChild(rejectBtn);
+      pendingTable.appendChild(tr);
+    });
+
+    const decided = all.filter(a => a.status !== "Pending");
+    clearRows("decided-applications");
+    const decidedTable = document.getElementById("decided-applications");
+    if (!decided.length){
+      decidedTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>Nothing decided yet.</td></tr>");
+    }
+    decided.forEach(a => {
+      const tr = document.createElement("tr");
+      const cls = a.status === "Approved" ? "green" : "red";
+      tr.innerHTML = "<td>" + a.id + "</td><td>" + a.businessName + "</td><td>" + a.applyType + "</td><td><span class='status " + cls + "'>" + a.status + "</span></td>";
+      decidedTable.appendChild(tr);
+    });
+  }
+
+  /* ---------- Listing/Service Overrides (pending seller submissions) ---------- */
   function renderListingsPage(){
     const all = psGetAllSubmittedListings();
     const pendingTable = document.getElementById("pending-listings");
-    pendingTable.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
+    clearRows("pending-listings");
     const pending = all.filter(l => l.status === "Pending Review");
     if (!pending.length){
       pendingTable.insertAdjacentHTML("beforeend", "<tr><td colspan='7' class='empty-row'>No pending listings — all caught up.</td></tr>");
@@ -222,7 +585,7 @@
     });
 
     const decidedTable = document.getElementById("decided-listings");
-    decidedTable.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
+    clearRows("decided-listings");
     const decided = all.filter(l => l.status === "Approved" || l.status === "Rejected");
     if (!decided.length){
       decidedTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>Nothing decided yet.</td></tr>");
@@ -236,9 +599,28 @@
     });
   }
 
+  /* ---------- Featured Banner Management ---------- */
+  function fillFeaturedBannerForm(){
+    const c = psGetSiteContent().featuredBanner;
+    document.getElementById("fb-title").value = c.title;
+    document.getElementById("fb-subtitle").value = c.subtitle;
+    document.getElementById("fb-cta-text").value = c.ctaText;
+    document.getElementById("fb-cta-link").value = c.ctaLink;
+  }
+  function saveFeaturedBanner(){
+    psSetSiteContent("featuredBanner", {
+      title: document.getElementById("fb-title").value,
+      subtitle: document.getElementById("fb-subtitle").value,
+      ctaText: document.getElementById("fb-cta-text").value,
+      ctaLink: document.getElementById("fb-cta-link").value
+    });
+    flashConfirm("fb-confirm");
+  }
+
+  /* ---------- Sellers ---------- */
   function renderSellersPage(){
+    clearRows("sellers-table");
     const table = document.getElementById("sellers-table");
-    table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
     psGetSellers().forEach(s => {
       const tr = document.createElement("tr");
       const cls = s.idStatus === "Verified" ? "green" : s.idStatus === "Pending" ? "orange" : "red";
@@ -257,6 +639,41 @@
     });
   }
 
+  /* ---------- Garages ---------- */
+  function renderGaragesPage(){
+    clearRows("garages-table");
+    const table = document.getElementById("garages-table");
+    psGetGarages(true).forEach(g => {
+      const tr = document.createElement("tr");
+      const active = g.active !== false;
+      tr.innerHTML = "<td>" + g.name + "</td><td>" + g.emirate + "</td><td>" + (g.specialties||[]).join(", ") + "</td><td>⭐ " + g.rating + "</td><td><span class='status " + (active?"green":"red") + "'>" + (active?"Active":"Inactive") + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      const btn = document.createElement("button");
+      btn.className = "rowbtn " + (active ? "reject" : "approve");
+      btn.textContent = active ? "Deactivate" : "Activate";
+      btn.onclick = () => { psSetGarageActive(g.id, !active); renderAll(); };
+      actionTd.appendChild(btn);
+      table.appendChild(tr);
+    });
+  }
+  function addGarage(){
+    const name = document.getElementById("ng-name").value.trim();
+    const emirate = document.getElementById("ng-emirate").value;
+    if (!name || !emirate){ alert("Please fill in the garage name and emirate."); return; }
+    const priceParts = document.getElementById("ng-price").value.split("-").map(s => Number(s.trim())).filter(n => !isNaN(n));
+    psAddGarage({
+      name: name, area: document.getElementById("ng-area").value.trim() || emirate, emirate: emirate,
+      specialties: [], rating: 0, jobs: 0, etaMin: 30, etaMax: 60,
+      priceMin: priceParts[0] || 100, priceMax: priceParts[1] || 400, active: true
+    });
+    document.getElementById("ng-name").value = "";
+    document.getElementById("ng-area").value = "";
+    document.getElementById("ng-price").value = "";
+    flashConfirm("ng-confirm");
+    renderAll();
+  }
+
+  /* ---------- Finance / Billing ---------- */
   function renderFinancePage(){
     const orders = psGetOrders();
     const cash = orders.reduce((s,o) => s + o.total, 0);
@@ -268,8 +685,8 @@
       statCard('<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', psFmt(pendingCash), "Pending Collection") +
       statCard('<path d="M20 7L9 18l-5-5"/>', orders.length, "Total Orders");
 
+    clearRows("finance-table");
     const table = document.getElementById("finance-table");
-    table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
     const statusClass = {"Delivered":"green","Out for Delivery":"blue","Processing":"orange"};
     orders.forEach(o => {
       const tr = document.createElement("tr");
@@ -277,10 +694,192 @@
       table.appendChild(tr);
     });
   }
+  function renderBillingPage(){
+    const result = psComputePartnerBilling();
+    document.getElementById("billing-rate").textContent = result.commissionPct + "%";
+    clearRows("billing-table");
+    const table = document.getElementById("billing-table");
+    if (!result.rows.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>No attributable sales yet.</td></tr>");
+    }
+    result.rows.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + r.seller + "</td><td>" + r.unitsSold + "</td><td>" + psFmt(r.salesValue) + "</td><td>" + psFmt(r.commissionOwed) + "</td>";
+      table.appendChild(tr);
+    });
+    document.getElementById("billing-unattributed").textContent = result.unattributedUnits
+      ? result.unattributedUnits + " unit(s) from legacy demo orders couldn't be matched to a known product/seller and are excluded above."
+      : "";
+  }
 
+  /* ---------- All Listings / Add Listing ---------- */
+  function renderAllListingsPage(){
+    clearRows("alllistings-table");
+    const table = document.getElementById("alllistings-table");
+    psGetAllListings().forEach(p => {
+      const tr = document.createElement("tr");
+      const thumb = p.image ? '<img src="' + p.image + '">' : psIcon(p.category);
+      const cls = p.status === "Approved" ? "green" : p.status === "Out of Stock" ? "red" : p.status === "Pending Review" ? "orange" : "red";
+      tr.innerHTML = "<td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + "</td><td>" + p.category + "</td><td>" + psFmt(p.price) + "</td><td>" + p.seller + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      const editBtn = document.createElement("button");
+      editBtn.className = "rowbtn"; editBtn.textContent = "Edit Price";
+      editBtn.onclick = () => {
+        const newPrice = prompt("New price for " + p.name + " (AED):", p.price);
+        if (newPrice && !isNaN(Number(newPrice))) { psOverrideListing(p.id, {price: Number(newPrice)}); renderAll(); }
+      };
+      actionTd.appendChild(editBtn);
+      if (p.status === "Approved") {
+        const oosBtn = document.createElement("button");
+        oosBtn.className = "rowbtn reject"; oosBtn.textContent = "Mark Out of Stock";
+        oosBtn.onclick = () => { psOverrideListing(p.id, {status: "Out of Stock"}); renderAll(); };
+        actionTd.appendChild(oosBtn);
+      } else if (p.status === "Out of Stock") {
+        const backBtn = document.createElement("button");
+        backBtn.className = "rowbtn approve"; backBtn.textContent = "Back in Stock";
+        backBtn.onclick = () => { psOverrideListing(p.id, {status: "Approved"}); renderAll(); };
+        actionTd.appendChild(backBtn);
+      }
+      table.appendChild(tr);
+    });
+  }
+  let alImageData = null;
+  function fillAddListingForm(){
+    const sel = document.getElementById("al-category");
+    if (!sel.options.length) PS_CATEGORIES.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("al-image");
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        alImageData = e.target.result;
+        const label = document.getElementById("al-image-label");
+        label.innerHTML = "✅ " + file.name;
+        label.appendChild(input);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+  function addListingDirect(){
+    const name = document.getElementById("al-name").value.trim();
+    const sku = document.getElementById("al-sku").value.trim();
+    const category = document.getElementById("al-category").value;
+    const price = Number(document.getElementById("al-price").value);
+    if (!name || !sku || !category || !price){ alert("Please fill in part name, SKU, category and price."); return; }
+    psAddListingDirect({
+      name: name, sku: sku, category: category, price: price,
+      brand: document.getElementById("al-brand").value.trim() || "—",
+      desc: document.getElementById("al-desc").value.trim(),
+      image: alImageData
+    });
+    ["al-name","al-sku","al-price","al-brand","al-desc"].forEach(id => document.getElementById(id).value = "");
+    alImageData = null;
+    flashConfirm("al-confirm");
+    renderAll();
+  }
+
+  /* ---------- All Orders / Disputes ---------- */
+  const ORDER_FLOW = ["Processing","Out for Delivery","Delivered"];
+  function renderAllOrdersPage(){
+    clearRows("allorders-table");
+    const table = document.getElementById("allorders-table");
+    const statusClass = {"Delivered":"green","Out for Delivery":"blue","Processing":"orange"};
+    psGetOrders().forEach(o => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>#" + o.id + "</td><td>" + o.items.map(i=>i.name).join(", ") + "</td><td><span class='status " + (statusClass[o.status]||"orange") + "'>" + o.status + "</span></td><td>" + psFmt(o.total) + "</td><td></td>";
+      const actionTd = tr.lastElementChild;
+      const idx = ORDER_FLOW.indexOf(o.status);
+      if (idx > -1 && idx < ORDER_FLOW.length - 1){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve";
+        btn.textContent = "Mark " + ORDER_FLOW[idx+1];
+        btn.onclick = () => { psSetOrderStatus(o.id, ORDER_FLOW[idx+1]); renderAll(); };
+        actionTd.appendChild(btn);
+      }
+      table.appendChild(tr);
+    });
+  }
+  function renderDisputesPage(){
+    clearRows("disputes-table");
+    const table = document.getElementById("disputes-table");
+    const disputes = psGetDisputes();
+    if (!disputes.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No disputes filed.</td></tr>");
+    }
+    disputes.forEach(d => {
+      const tr = document.createElement("tr");
+      const cls = d.status === "Open" ? "orange" : "green";
+      tr.innerHTML = "<td>" + d.id + "</td><td>#" + (d.orderId||"—") + "</td><td>" + d.reason + "</td><td>" + (d.details||"—") + "</td><td><span class='status " + cls + "'>" + d.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      if (d.status === "Open"){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve"; btn.textContent = "Mark Resolved";
+        btn.onclick = () => { psSetDisputeStatus(d.id, "Resolved"); renderAll(); };
+        actionTd.appendChild(btn);
+      }
+      table.appendChild(tr);
+    });
+  }
+
+  /* ---------- Marketing: Deals / Partner Banner / Hero Banner ---------- */
+  function renderDealsEditor(){
+    const deals = psGetSiteContent().deals;
+    const wrap = document.getElementById("deals-editor");
+    wrap.innerHTML = "";
+    deals.forEach((d, i) => {
+      wrap.insertAdjacentHTML("beforeend",
+        "<div class='form-grid' style='border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px;'>" +
+        "<div class='form-field'><label>Deal " + (i+1) + " Title</label><input class='deal-title' data-i='" + i + "' value='" + d.title.replace(/'/g,"&#39;") + "'></div>" +
+        "<div class='form-field'><label>Subtitle</label><input class='deal-subtitle' data-i='" + i + "' value='" + d.subtitle.replace(/'/g,"&#39;") + "'></div>" +
+        "<div class='form-field'><label>Button Text</label><input class='deal-cta' data-i='" + i + "' value='" + d.ctaText.replace(/'/g,"&#39;") + "'></div>" +
+        "<div class='form-field'><label>Category Link</label><select class='deal-category' data-i='" + i + "'></select></div>" +
+        "</div>"
+      );
+    });
+    wrap.querySelectorAll(".deal-category").forEach(sel => {
+      const i = Number(sel.dataset.i);
+      PS_CATEGORIES.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; if (c === deals[i].category) o.selected = true; sel.appendChild(o); });
+    });
+  }
+  function saveDeals(){
+    const deals = [];
+    document.querySelectorAll(".deal-title").forEach((el, i) => {
+      deals.push({
+        title: el.value,
+        subtitle: document.querySelector(".deal-subtitle[data-i='" + i + "']").value,
+        ctaText: document.querySelector(".deal-cta[data-i='" + i + "']").value,
+        category: document.querySelector(".deal-category[data-i='" + i + "']").value
+      });
+    });
+    psSetDeals(deals);
+    flashConfirm("deals-confirm");
+  }
+  function fillPartnerBannerForm(){
+    const c = psGetSiteContent().partnerBanner;
+    document.getElementById("pb-title").value = c.title;
+    document.getElementById("pb-subtitle").value = c.subtitle;
+  }
+  function savePartnerBanner(){
+    psSetSiteContent("partnerBanner", {title: document.getElementById("pb-title").value, subtitle: document.getElementById("pb-subtitle").value});
+    flashConfirm("pb-confirm");
+  }
+  function fillHeroBannerForm(){
+    const c = psGetSiteContent().hero;
+    document.getElementById("hb-title").value = c.title;
+    document.getElementById("hb-subtitle").value = c.subtitle;
+  }
+  function saveHeroBanner(){
+    psSetSiteContent("hero", {title: document.getElementById("hb-title").value, subtitle: document.getElementById("hb-subtitle").value});
+    flashConfirm("hb-confirm");
+  }
+
+  /* ---------- Part Requests ---------- */
   function renderRequestsPage(){
+    clearRows("requests-table");
     const table = document.getElementById("requests-table");
-    table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
     const reqs = psGetPartRequests();
     if (!reqs.length){
       table.insertAdjacentHTML("beforeend", "<tr><td colspan='7' class='empty-row'>No part requests submitted yet.</td></tr>");
@@ -302,12 +901,146 @@
     });
   }
 
+  /* ---------- Category Images ---------- */
+  function renderCategoryImagesEditor(){
+    const wrap = document.getElementById("catimages-editor");
+    wrap.innerHTML = "";
+    const overrides = psGetCategoryImageOverrides();
+    PS_CATEGORIES.forEach(cat => {
+      const st = psCatStyle(cat);
+      const ov = overrides[cat] || {};
+      const row = document.createElement("div");
+      row.className = "cat-image-row";
+      const swatchContent = ov.image ? '<img src="' + ov.image + '">' : psIcon(cat).replace("<svg ", '<svg stroke="' + (ov.glow || st.glow) + '" ');
+      row.innerHTML =
+        "<div class='cat-swatch' style='background:" + st.grad + "'>" + swatchContent + "</div>" +
+        "<div style='flex:1;'><b style='font-size:13.5px;'>" + cat + "</b>" +
+        "<div style='margin-top:6px;display:flex;gap:10px;align-items:center;'>" +
+        "<label class='upload-box' style='flex:none;padding:6px 10px;' for='cat-img-" + cat.replace(/[^a-zA-Z]/g,"") + "'>📷 Upload image<input type='file' accept='image/*' id='cat-img-" + cat.replace(/[^a-zA-Z]/g,"") + "' style='display:none;'></label>" +
+        "<button class='rowbtn' data-reset='" + cat.replace(/'/g,"&#39;") + "'>Reset to default</button>" +
+        "</div></div>";
+      wrap.appendChild(row);
+      row.querySelector("input[type=file]").addEventListener("change", e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => { psSetCategoryImage(cat, {image: ev.target.result}); renderAll(); };
+        reader.readAsDataURL(file);
+      });
+      row.querySelector("[data-reset]").addEventListener("click", () => { psSetCategoryImage(cat, {image: null}); renderAll(); });
+    });
+  }
+
+  /* ---------- Contact Submissions / Support Tickets ---------- */
+  function renderContactPage(){
+    clearRows("contact-table");
+    const table = document.getElementById("contact-table");
+    const msgs = psGetContactSubmissions();
+    if (!msgs.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No messages yet.</td></tr>");
+    }
+    msgs.forEach(m => {
+      const tr = document.createElement("tr");
+      const cls = m.status === "New" ? "orange" : "green";
+      tr.innerHTML = "<td>" + m.id + "</td><td>" + m.name + "</td><td>" + m.email + "</td><td>" + m.message + "</td><td><span class='status " + cls + "'>" + m.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      if (m.status === "New"){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve"; btn.textContent = "Mark Resolved";
+        btn.onclick = () => { psSetContactStatus(m.id, "Resolved"); renderAll(); };
+        actionTd.appendChild(btn);
+      }
+      table.appendChild(tr);
+    });
+  }
+  function renderTicketsPage(){
+    clearRows("tickets-table");
+    const table = document.getElementById("tickets-table");
+    const tickets = psGetSupportTickets();
+    if (!tickets.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No tickets raised yet.</td></tr>");
+    }
+    tickets.forEach(t => {
+      const tr = document.createElement("tr");
+      const cls = t.status === "Open" ? "orange" : t.status === "In Progress" ? "blue" : "green";
+      tr.innerHTML = "<td>" + t.id + "</td><td>" + t.subject + "</td><td>" + t.message + "</td><td>" + (t.orderId ? "#"+t.orderId : "—") + "</td><td><span class='status " + cls + "'>" + t.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      if (t.status !== "Resolved"){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve";
+        btn.textContent = t.status === "Open" ? "Mark In Progress" : "Mark Resolved";
+        btn.onclick = () => { psSetTicketStatus(t.id, t.status === "Open" ? "In Progress" : "Resolved"); renderAll(); };
+        actionTd.appendChild(btn);
+      }
+      table.appendChild(tr);
+    });
+  }
+
+  /* ---------- Garage Bookings ---------- */
+  function renderGarageBookingsPage(){
+    clearRows("garage-bookings-table");
+    const table = document.getElementById("garage-bookings-table");
+    const list = psGetGarageBookings();
+    if (!list.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='8' class='empty-row'>No garage bookings submitted yet.</td></tr>");
+    }
+    list.forEach(b => {
+      const tr = document.createElement("tr");
+      const cls = b.status === "New" ? "orange" : b.status === "Confirmed" ? "blue" : "green";
+      tr.innerHTML = "<td>" + b.id + "</td><td>" + b.name + "</td><td>" + b.phone + "</td><td>" + (b.garageName || "—") + "</td><td>" + b.service + "</td><td>" + (b.date || "—") + "</td><td><span class='status " + cls + "'>" + b.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      if (b.status !== "Completed"){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve";
+        btn.textContent = b.status === "New" ? "Mark Confirmed" : "Mark Completed";
+        btn.onclick = () => { psSetGarageBookingStatus(b.id, b.status === "New" ? "Confirmed" : "Completed"); renderAll(); };
+        actionTd.appendChild(btn);
+      }
+      table.appendChild(tr);
+    });
+  }
+
+  /* ---------- Settings ---------- */
+  function fillSettingsForm(){
+    const s = psGetSettings();
+    document.getElementById("st-commission").value = s.commissionPct;
+    document.getElementById("st-adminname").value = s.adminName;
+    document.getElementById("st-maintenance").checked = s.maintenanceMode;
+  }
+  function saveSettings(){
+    psSetSettings({
+      commissionPct: Number(document.getElementById("st-commission").value) || 0,
+      adminName: document.getElementById("st-adminname").value,
+      maintenanceMode: document.getElementById("st-maintenance").checked
+    });
+    flashConfirm("st-confirm");
+    renderAll();
+  }
+
+  /* ---------- Master render ---------- */
   function renderAll(){
     renderDashboard();
+    renderAnalytics();
+    renderApplicationsPage();
     renderListingsPage();
+    fillFeaturedBannerForm();
     renderSellersPage();
+    renderGaragesPage();
+    renderGarageBookingsPage();
     renderFinancePage();
+    renderBillingPage();
+    renderAllListingsPage();
+    fillAddListingForm();
+    renderAllOrdersPage();
+    renderDisputesPage();
+    renderDealsEditor();
+    fillPartnerBannerForm();
+    fillHeroBannerForm();
     renderRequestsPage();
+    renderCategoryImagesEditor();
+    renderContactPage();
+    renderTicketsPage();
+    fillSettingsForm();
     document.getElementById("user-order-count").textContent = psGetOrders().length;
   }
   renderAll();

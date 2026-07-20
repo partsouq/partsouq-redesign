@@ -144,8 +144,9 @@
       fCat.appendChild(label);
     });
 
-    // Build brand filter checkboxes from the dataset
-    const brands = [...new Set(PS_PRODUCTS.map(p => p.brand))].sort();
+    // Build brand filter checkboxes from the live catalog (seed catalog + every
+    // Approved seller/admin listing, with admin overrides applied)
+    const brands = [...new Set(psGetLiveListings().map(p => p.brand))].sort();
     const fBrand = document.getElementById("f-brand");
     brands.forEach(b => {
       const label = document.createElement("label");
@@ -193,7 +194,7 @@
     }
 
     function renderResults(){
-      let list = PS_PRODUCTS.filter(matches);
+      let list = psGetLiveListings().filter(matches);
       if (state.sort === "low") list = list.slice().sort((a,b) => a.price - b.price);
       else if (state.sort === "high") list = list.slice().sort((a,b) => b.price - a.price);
       else if (state.sort === "rating") list = list.slice().sort((a,b) => b.rating - a.rating);
@@ -210,8 +211,9 @@
         const card = document.createElement("div");
         card.className = "card";
         const discount = p.oldPrice ? Math.round(100 - (p.price / p.oldPrice) * 100) : null;
+        const thumb = p.image ? '<img src="' + p.image + '" style="width:100%;height:100%;object-fit:cover;">' : psIcon(p.category);
         card.innerHTML =
-          '<div class="thumb">' + (discount ? '<span class="badge">-' + discount + '%</span>' : "") + psIcon(p.category) + '</div>' +
+          '<div class="thumb">' + (discount ? '<span class="badge">-' + discount + '%</span>' : "") + thumb + '</div>' +
           '<a href="product-detail.html?id=' + p.id + '" class="name">' + p.name + '</a>' +
           '<div class="sku">' + p.sku + '</div>' +
           '<div class="price">' + psFmt(p.price) + (p.oldPrice ? '<span class="old">' + psFmt(p.oldPrice) + '</span>' : "") + '</div>' +

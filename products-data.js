@@ -16,6 +16,23 @@ const PS_ICONS = {
 };
 function psIcon(category){ return PS_ICONS[category] || PS_ICONS["Engine"]; }
 
+/* Richer "photo-card" styling for the homepage category carousel —
+   a distinct dark gradient + accent glow color per category, since real
+   photography isn't available in this build (see chat note). */
+const PS_CAT_STYLE = {
+  "All Parts":     {grad:"linear-gradient(160deg,#1b2436,#0e1420)", glow:"#8FA6FF"},
+  "Engine":        {grad:"linear-gradient(160deg,#2b2114,#120e08)", glow:"#FFB74A"},
+  "Brakes":        {grad:"linear-gradient(160deg,#301414,#160707)", glow:"#FF6B5E"},
+  "Suspension":    {grad:"linear-gradient(160deg,#141d30,#080b14)", glow:"#7FA8FF"},
+  "Body Parts":    {grad:"linear-gradient(160deg,#132622,#070f0d)", glow:"#4FD8C4"},
+  "Electrical":    {grad:"linear-gradient(160deg,#101a2e,#070b14)", glow:"#7CFF7A"},
+  "AC & Cooling":  {grad:"linear-gradient(160deg,#0e2230,#060f16)", glow:"#57D9FF"},
+  "Steering":      {grad:"linear-gradient(160deg,#20222a,#0c0d10)", glow:"#C9CFDC"},
+  "Tools & Garage":{grad:"linear-gradient(160deg,#2a1c10,#120b05)", glow:"#FFA24A"},
+  "Book Garage":   {grad:"linear-gradient(160deg,#1c1408,#0d0904)", glow:"#FF7A1A"}
+};
+function psCatStyle(category){ return PS_CAT_STYLE[category] || PS_CAT_STYLE["Engine"]; }
+
 const PS_PRODUCTS = [
   {id:"p1",  name:"Toyota Oil Filter",              sku:"90915-YZZE1",   brand:"Toyota", category:"Engine",         price:35,  oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:58,  desc:"OEM-spec oil filter for Toyota 4-cylinder engines. Confirm fitment against your VIN before ordering."},
   {id:"p2",  name:"Bosch Air Filter",                sku:"1457433765",   brand:"Bosch",  category:"Engine",         price:45,  oldPrice:60,   seller:"Al Twal Auto Parts",   rating:4.5, reviews:40,  desc:"High-flow air filter suitable for a range of sedans. Photos and part details were checked before listing."},
@@ -58,9 +75,38 @@ const CAR_DB = {
   "Mazda": ["6","CX-5","3","CX-9"]
 };
 
-function psFindProduct(id){ return PS_PRODUCTS.find(p => p.id === id); }
+/* Seed garage directory — admin-manageable via admin-data.js (psGetGarages() merges
+   this seed with admin overrides/additions, so Admin > Garages actually controls
+   what shows on the homepage "Book a Verified Garage" section). */
+const PS_GARAGES_SEED = [
+  {id:"g1", name:"Al Quoz Service Centre",  area:"Al Quoz",    emirate:"Dubai",   specialties:["Engine","Brakes","AC & Cooling","Electrical"], rating:4.8, jobs:284, etaMin:45, etaMax:60, priceMin:150, priceMax:450, active:true},
+  {id:"g2", name:"Sharjah Auto Care",       area:"Industrial 12", emirate:"Sharjah", specialties:["Suspension","Steering","Body Parts","Tools & Garage"], rating:4.6, jobs:97,  etaMin:30, etaMax:50, priceMin:120, priceMax:400, active:true},
+  {id:"g3", name:"Ajman Express Garage",    area:"Al Jurf",    emirate:"Ajman",   specialties:["Engine","Electrical","Brakes","Tools & Garage"], rating:4.7, jobs:152, etaMin:40, etaMax:55, priceMin:100, priceMax:380, active:true}
+];
+
+/* psFindProduct checks the seed catalog first (applying any admin price/status
+   override on top of it), then falls back to seller/admin-submitted listings —
+   so a product-detail page or cart line works for ANY live listing, not just
+   the 24 hardcoded seed products. Falls back gracefully if admin-data.js isn't
+   loaded on a given page. */
+function psFindProduct(id){
+  const seed = PS_PRODUCTS.find(p => p.id === id);
+  if (seed) {
+    if (typeof psGetProductOverrides === "function") {
+      const ov = psGetProductOverrides()[id];
+      if (ov) return Object.assign({}, seed, ov);
+    }
+    return seed;
+  }
+  if (typeof psGetAllSubmittedListings === "function") {
+    return psGetAllSubmittedListings().find(l => l.id === id);
+  }
+  return undefined;
+}
+function psFindProductByName(name){ return PS_PRODUCTS.find(p => p.name === name); }
 function psRelated(product, limit){
   limit = limit || 5;
-  return PS_PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, limit);
+  const pool = (typeof psGetLiveListings === "function") ? psGetLiveListings() : PS_PRODUCTS;
+  return pool.filter(p => p.category === product.category && p.id !== product.id).slice(0, limit);
 }
 function psFmt(n){ return "AED " + n.toFixed(2).replace(/\.00$/, ".00"); }

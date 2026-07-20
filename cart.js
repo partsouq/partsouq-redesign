@@ -45,16 +45,27 @@ function psUpdateCartBadge(){
 }
 
 const PS_SEED_ORDERS = [
-  {id:"PS-10234", items:[{name:"Bosch Alternator + Brake Pad Set", qty:3}], total:760, status:"Delivered"},
-  {id:"PS-10256", items:[{name:"NGK Spark Plug Set", qty:1}], total:100, status:"Out for Delivery"},
-  {id:"PS-10261", items:[{name:"AC Compressor + Filter Kit", qty:2}], total:720, status:"Processing"}
+  {id:"PS-10234", items:[{name:"Bosch Alternator — 12V 120A", id:"p14", qty:1},{name:"Bosch Brake Pad Set — Front", id:"p5", qty:2}], total:760, status:"Delivered"},
+  {id:"PS-10256", items:[{name:"NGK Spark Plug Set", id:"p3", qty:1}], total:100, status:"Out for Delivery"},
+  {id:"PS-10261", items:[{name:"AC Compressor Denso", id:"p17", qty:1},{name:"AC Condenser", id:"p19", qty:1}], total:720, status:"Processing"}
 ];
+/* Order status can be changed by the admin portal for BOTH seed demo orders
+   and real placed orders — overrides are stored separately so a status change
+   sticks even though PS_SEED_ORDERS itself is a constant. */
+const PS_ORDER_STATUS_OVERRIDES_KEY = "ps_order_status_overrides";
 function psGetOrders(){
-  try {
-    const stored = JSON.parse(localStorage.getItem(PS_ORDERS_KEY));
-    if (stored && stored.length) return stored.concat(PS_SEED_ORDERS);
-    return PS_SEED_ORDERS.slice();
-  } catch(e){ return PS_SEED_ORDERS.slice(); }
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(PS_ORDER_STATUS_OVERRIDES_KEY)) || {}; } catch(e){ overrides = {}; }
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem(PS_ORDERS_KEY)) || []; } catch(e){ stored = []; }
+  const all = stored.concat(PS_SEED_ORDERS);
+  return all.map(o => overrides[o.id] ? Object.assign({}, o, {status: overrides[o.id]}) : o);
+}
+function psSetOrderStatus(id, status){
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(PS_ORDER_STATUS_OVERRIDES_KEY)) || {}; } catch(e){ overrides = {}; }
+  overrides[id] = status;
+  localStorage.setItem(PS_ORDER_STATUS_OVERRIDES_KEY, JSON.stringify(overrides));
 }
 function psPlaceOrder(){
   const lines = psCartLines();
@@ -63,7 +74,7 @@ function psPlaceOrder(){
   const total = subtotal + 20;
   const order = {
     id: "PS-" + Math.floor(10000 + Math.random() * 89999),
-    items: lines.map(l => ({name: l.product.name, qty: l.qty})),
+    items: lines.map(l => ({name: l.product.name, id: l.product.id, qty: l.qty})),
     total: total,
     status: "Processing"
   };

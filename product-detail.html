@@ -167,6 +167,7 @@
 
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
+  <script src="admin-data.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const product = psFindProduct(params.get("id")) || PS_PRODUCTS.find(p => p.id === "p14");
@@ -176,7 +177,7 @@
     document.getElementById("crumb-cat").textContent = product.category;
     document.getElementById("crumb-cat").href = "search-results.html?category=" + encodeURIComponent(product.category);
     document.getElementById("crumb-name").textContent = product.name;
-    document.getElementById("gallery-main").innerHTML = psIcon(product.category);
+    document.getElementById("gallery-main").innerHTML = product.image ? '<img src="' + product.image + '" style="width:100%;height:100%;object-fit:cover;">' : psIcon(product.category);
     document.getElementById("p-name").textContent = product.name;
     document.getElementById("p-sku").textContent = "OEM / Part No: " + product.sku + "  •  Brand: " + product.brand;
     document.getElementById("p-price").innerHTML = psFmt(product.price) + ' <small>incl. VAT</small>' + (product.oldPrice ? ' <small style="text-decoration:line-through;">' + psFmt(product.oldPrice) + '</small>' : "");

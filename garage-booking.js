@@ -1,4 +1,4 @@
-/* PartSouq shared "Book a Verified Garage" modal.
+/* AvoraSouq shared "Book a Verified Garage" modal.
    Include after admin-data.js + products-data.js. Call openGarageBookingModal(garageId). */
 
 (function(){

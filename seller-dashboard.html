@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PartSouq — Partner Dashboard</title>
+<title>AvoraSouq — Partner Dashboard</title>
 <style>
   :root{
     --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
@@ -169,7 +169,7 @@
 <div class="app">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-close" onclick="toggleSidebar(false)">✕</div>
-    <a href="index.html" class="logo"><div class="mark">PS</div><b>Partner Portal</b></a>
+    <a href="index.html" class="logo"><div class="mark">AS</div><b>Partner Portal</b></a>
     <div class="navlink active" data-page="dashboard">📊 Dashboard</div>
     <div class="navlink" data-page="listings">📦 My Listings</div>
     <div class="navlink" data-page="addlisting">➕ Add Listing</div>
@@ -191,7 +191,7 @@
 
       <div class="plancard">
         <div>
-          <small>PARTSOUQ ID</small>
+          <small>AVORASOUQ ID</small>
           <div class="id" id="plan-psid">—</div>
         </div>
         <div>
@@ -221,7 +221,7 @@
 
       <div class="panel" style="background:var(--success-green-light);border:none;">
         <h3 style="color:var(--success-green);">💵 Cash on Delivery Reminder</h3>
-        <p style="font-size:13px;color:#0d6b4f;margin:0;">PartSouq will forward approved orders to you with the buyer's Mulkiya and delivery details. Dispatch only after admin approval.</p>
+        <p style="font-size:13px;color:#0d6b4f;margin:0;">AvoraSouq will forward approved orders to you with the buyer's Mulkiya and delivery details. Dispatch only after admin approval.</p>
       </div>
     </div>
 
@@ -288,20 +288,20 @@
         <div class="policy-box">⚠ Policy: Only genuine, functional, good-condition parts. Damaged or misrepresented parts = immediate suspension. Buyers pay cash on receipt — part must match listing exactly.</div>
 
         <button class="save-btn" onclick="submitNewListing()">Submit for Review</button>
-        <span class="save-confirm" id="al-confirm">✓ Submitted — awaiting PartSouq review</span>
-        <p style="font-size:11.5px;color:var(--text-muted);margin-top:10px;">New listings go to PartSouq for review before they appear in search.</p>
+        <span class="save-confirm" id="al-confirm">✓ Submitted — awaiting AvoraSouq review</span>
+        <p style="font-size:11.5px;color:var(--text-muted);margin-top:10px;">New listings go to AvoraSouq for review before they appear in search.</p>
       </div>
     </div>
 
     <!-- ORDERS -->
     <div class="page" id="page-orders">
-      <div class="topbar"><div><h1>Orders Received</h1><span>Only shows orders PartSouq has approved and forwarded to you</span></div></div>
+      <div class="topbar"><div><h1>Orders Received</h1><span>Only shows orders AvoraSouq has approved and forwarded to you</span></div></div>
       <div id="orders-list"></div>
     </div>
 
     <!-- PAYMENT STATEMENT -->
     <div class="page" id="page-statement">
-      <div class="topbar"><div><h1>Payment Statement</h1><span>A running record of every payment PartSouq has confirmed receiving from you — like a bank statement.</span></div></div>
+      <div class="topbar"><div><h1>Payment Statement</h1><span>A running record of every payment AvoraSouq has confirmed receiving from you — like a bank statement.</span></div></div>
       <div class="panel">
         <div style="background:var(--bg-dark);color:#fff;border-radius:10px;padding:20px;text-align:center;margin-bottom:18px;">
           <small style="color:var(--text-muted);text-transform:uppercase;font-size:11px;">Total Paid to Date</small>
@@ -486,7 +486,7 @@
       const delBtn = document.createElement("button");
       delBtn.className = "rowbtn reject"; delBtn.textContent = "Request Deletion";
       delBtn.onclick = () => {
-        if (confirm("Send PartSouq a request to remove \"" + p.name + "\" from the live catalog?")){
+        if (confirm("Send AvoraSouq a request to remove \"" + p.name + "\" from the live catalog?")){
           psRequestListingDeletion(p.id, p.name, SELLER_NAME);
           alert("Deletion request sent — an admin will review it.");
         }
@@ -604,7 +604,7 @@
     wrap.innerHTML = "";
     const orders = psGetOrdersForSeller(SELLER_NAME).filter(o => o.status !== "Pending Admin Review");
     if (!orders.length){
-      wrap.innerHTML = "<div class='panel'><p class='empty-row'>No approved orders yet. Orders appear here once PartSouq verifies the buyer's Mulkiya.</p></div>";
+      wrap.innerHTML = "<div class='panel'><p class='empty-row'>No approved orders yet. Orders appear here once AvoraSouq verifies the buyer's Mulkiya.</p></div>";
       return;
     }
     const ORDER_FLOW = ["Processing","Out for Delivery","Delivered"];

@@ -1,4 +1,4 @@
-/* PartSouq shared admin/operations data layer.
+/* AvoraSouq shared admin/operations data layer.
    Client-side demo store (localStorage) — every store here is read AND
    written by real pages on the site (not just the admin portal), so admin
    actions actually change what visitors see. A real production version of
@@ -187,7 +187,7 @@ function psAddListingDirect(listing){
   const rec = Object.assign({
     id: "admin-" + Math.floor(1000 + Math.random() * 8999),
     status: "Approved",
-    seller: "PartSouq Team",
+    seller: "AvoraSouq Team",
     rating: 0, reviews: 0
   }, listing);
   list.push(rec);
@@ -249,7 +249,7 @@ const PS_CONTENT_DEFAULTS = {
     image: "images/promo-banner.jpg"
   },
   partnerBanner: {
-    title: "Grow your business with PartSouq",
+    title: "Grow your business with AvoraSouq",
     subtitle: "Join 250+ verified sellers and garages already earning through the platform."
   },
   offerBanner: {
@@ -405,8 +405,8 @@ function psComputePartnerBilling(){
   return {rows: rows, unattributedUnits: unattributed, commissionPct: commissionPct};
 }
 
-/* ---------- Seller PartSouq ID + Subscription Plan ----------
-   Every seller gets a stable PartSouq ID (PSS-00001 style, based on their
+/* ---------- Seller AvoraSouq ID + Subscription Plan ----------
+   Every seller gets a stable AvoraSouq ID (ASS-00001 style, based on their
    position in the directory so it never changes across reloads) and a
    subscription plan record. This drives the Seller Dashboard's Dashboard
    and Profile pages, and is what the admin's Subscriptions & Payments /
@@ -416,7 +416,7 @@ function psSellerPsId(sellerId){
   const all = psGetSellers();
   const idx = all.findIndex(s => s.id === sellerId);
   const n = idx > -1 ? idx + 1 : ((Math.abs(String(sellerId).split("").reduce((a,c)=>a+c.charCodeAt(0),0)) % 99999) + 1);
-  return "PSS-" + String(n).padStart(5, "0");
+  return "ASS-" + String(n).padStart(5, "0");
 }
 function psGetAllSellerPlans(){
   try { return JSON.parse(localStorage.getItem(PS_SELLER_PLAN_KEY)) || {}; } catch(e){ return {}; }

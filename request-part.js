@@ -1,4 +1,4 @@
-/* PartSouq shared "Request a Part" modal.
+/* AvoraSouq shared "Request a Part" modal.
    Include after admin-data.js. Call openRequestPartModal() from any button. */
 
 (function(){

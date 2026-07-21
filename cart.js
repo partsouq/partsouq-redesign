@@ -1,4 +1,4 @@
-/* PartSouq shared cart + order engine.
+/* AvoraSouq shared cart + order engine.
    Uses localStorage so cart/orders persist across pages on this site
    (this is the visitor's own browser storage — not the artifact sandbox). */
 
@@ -48,9 +48,9 @@ function psUpdateCartBadge(){
 document.addEventListener("DOMContentLoaded", psUpdateCartBadge);
 
 const PS_SEED_ORDERS = [
-  {id:"PS-10234", items:[{name:"Bosch Alternator — 12V 120A", id:"p14", qty:1},{name:"Bosch Brake Pad Set — Front", id:"p5", qty:2}], total:760, status:"Delivered"},
-  {id:"PS-10256", items:[{name:"NGK Spark Plug Set", id:"p3", qty:1}], total:100, status:"Out for Delivery"},
-  {id:"PS-10261", items:[{name:"AC Compressor Denso", id:"p17", qty:1},{name:"AC Condenser", id:"p19", qty:1}], total:720, status:"Processing"}
+  {id:"AS-10234", items:[{name:"Bosch Alternator — 12V 120A", id:"p14", qty:1},{name:"Bosch Brake Pad Set — Front", id:"p5", qty:2}], total:760, status:"Delivered"},
+  {id:"AS-10256", items:[{name:"NGK Spark Plug Set", id:"p3", qty:1}], total:100, status:"Out for Delivery"},
+  {id:"AS-10261", items:[{name:"AC Compressor Denso", id:"p17", qty:1},{name:"AC Condenser", id:"p19", qty:1}], total:720, status:"Processing"}
 ];
 /* Order status can be changed by the admin portal for BOTH seed demo orders
    and real placed orders — overrides are stored separately so a status change
@@ -71,7 +71,7 @@ function psSetOrderStatus(id, status){
   localStorage.setItem(PS_ORDER_STATUS_OVERRIDES_KEY, JSON.stringify(overrides));
 }
 /* details (optional) = {buyer:{name,phone,address,emirate,area}, oldPartPhoto, mulkiya}
-   Orders now start life as "Pending Admin Review" — PartSouq checks the buyer's
+   Orders now start life as "Pending Admin Review" — AvoraSouq checks the buyer's
    Mulkiya against the order before it's ever forwarded to a seller for dispatch,
    matching the real verified-fitment workflow (not a fake status). */
 function psPlaceOrder(details){
@@ -81,7 +81,7 @@ function psPlaceOrder(details){
   const fee = 20;
   const total = subtotal + fee;
   const order = {
-    id: "PS-" + Math.floor(10000 + Math.random() * 89999),
+    id: "AS-" + Math.floor(10000 + Math.random() * 89999),
     items: lines.map(l => ({name: l.product.name, id: l.product.id, qty: l.qty})),
     total: total,
     deliveryFee: fee,

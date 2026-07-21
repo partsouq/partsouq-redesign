@@ -359,6 +359,14 @@
     function closeApplyModal(){
       document.getElementById("apply-modal").classList.remove("open");
     }
+    // Deep-link support: ?apply=seller or ?apply=garage (used by the homepage
+    // footer's "Sell Your Parts" / "Register Garage" links) opens the apply
+    // modal pre-set to the right applicant type as soon as the page loads.
+    (function(){
+      const applyParam = new URLSearchParams(location.search).get("apply");
+      if (applyParam === "seller") openApplyModal("Spare Part Supplier");
+      else if (applyParam === "garage") openApplyModal("Garage / Workshop");
+    })();
     function submitApplication(){
       const name = document.getElementById("ap-name").value.trim();
       const emirate = document.getElementById("ap-emirate").value;

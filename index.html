@@ -42,7 +42,10 @@
   .headerlinks a{display:flex;flex-direction:column;align-items:center;gap:3px;}
   nav{background:#fff;border-bottom:1px solid var(--border);}
   nav .wrap{display:flex;gap:28px;font-size:14px;padding:11px 24px;color:var(--text-secondary);}
+  nav a{position:relative;padding:2px 0;}
   nav a:hover{color:var(--brand-blue);}
+  nav a.active{color:var(--brand-blue);font-weight:700;}
+  nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;background:var(--brand-blue);border-radius:2px;}
 
   /* hero — real photo (car + Dubai skyline + parts) behind the "Find parts for
      your car" widget, cropped from the reference the user provided. Position is
@@ -94,10 +97,13 @@
   /* With a real photo (photographic banner from the reference): full-bleed wide
      banner, copy overlaid on a dark scrim over the left of the image — same
      composition as the reference's own "wide banner" layout. */
-  .promo-card.has-photo{display:flex;align-items:center;min-height:300px;grid-template-columns:none;}
+  .promo-card.has-photo{display:flex;align-items:center;aspect-ratio:3.4/1;min-height:0;max-height:220px;grid-template-columns:none;}
   .promo-card.has-photo::before{content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(100deg, rgba(7,12,26,.84) 0%, rgba(7,12,26,.56) 40%, rgba(7,12,26,.16) 72%, rgba(7,12,26,.03) 100%);}
-  .promo-card.has-photo>.promo-copy{max-width:480px;padding:40px;}
+  .promo-card.has-photo>.promo-copy{max-width:440px;padding:0 36px;}
+  .promo-card.has-photo h2{font-size:clamp(17px,2.3vw,24px);margin:0 0 6px;}
+  .promo-card.has-photo p{font-size:clamp(11.5px,1.3vw,13.5px);margin:0 0 12px;}
+  .promo-card.has-photo .btn-primary{padding:9px 16px;font-size:13px;}
   .promo-card.has-photo #promo-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
   .promo-icon{display:flex;flex-direction:column;align-items:center;gap:10px;width:76px;}
   .promo-icon svg{width:34px;height:34px;padding:16px;box-sizing:content-box;border-radius:50%;background:rgba(255,255,255,.15);}
@@ -205,9 +211,11 @@
     .promo-card>.promo-copy{padding:24px 22px 4px;}
     .promo-art{justify-content:flex-start;padding:4px 22px 24px;height:auto;}
     #promo-image{height:auto;aspect-ratio:16/9;}
-    .promo-card.has-photo{min-height:260px;}
+    .promo-card.has-photo{aspect-ratio:16/10;max-height:220px;}
     .promo-card.has-photo::before{background:linear-gradient(180deg, rgba(7,12,26,.72) 0%, rgba(7,12,26,.6) 55%, rgba(7,12,26,.78) 100%);}
-    .promo-card.has-photo>.promo-copy{max-width:none;padding:22px;}
+    .promo-card.has-photo>.promo-copy{max-width:none;padding:18px;}
+    .promo-card.has-photo h2{font-size:16px;}
+    .promo-card.has-photo p{font-size:11.5px;margin-bottom:8px;}
     .promo-card.has-photo #promo-image{aspect-ratio:auto;}
 
     .offer-banner-card{aspect-ratio:16/9;}
@@ -271,13 +279,6 @@
 
   <div id="maintenance-banner" style="display:none;background:var(--accent-orange);color:#fff;text-align:center;font-size:12.5px;font-weight:700;padding:8px;">⚠ AvoraSouq is currently in maintenance mode — some features may be temporarily unavailable.</div>
 
-  <div class="utility">
-    <div class="wrap">
-      <span>🇦🇪 UAE's Trusted Auto Parts Marketplace</span>
-      <span>Up to 40% Off on selected parts</span>
-      <span>New listings added daily from 250+ verified sellers</span>
-    </div>
-  </div>
 
   <header>
     <div class="wrap">
@@ -293,7 +294,7 @@
       <div class="headerlinks">
         <a href="become-a-partner.html">🎧<span>Support</span></a>
         <a href="become-a-partner.html">🔧<span>Sell</span></a>
-        <a href="my-account.html">♡<span>Wishlist</span></a>
+        <a href="my-account.html">🤍<span>Wishlist</span></a>
         <a href="cart-checkout.html" style="position:relative;">🛒<span>Cart</span><span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-10px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a>
         <a href="my-account.html">👤<span>My Account</span></a>
       </div>
@@ -396,14 +397,7 @@
     </div>
   </section>
 
-  <section class="section" style="background:var(--bg-alt);" id="book-garage">
-    <div class="wrap">
-      <h2 class="sectitle"><span>Book a Verified Garage <span class="pill" style="font-size:11px;vertical-align:middle;">Dubai · Sharjah · Ajman</span></span> <a href="become-a-partner.html">All garages →</a></h2>
-      <div class="garages" id="garage-cards"></div>
-    </div>
-  </section>
-
-  <section class="section" style="background:var(--bg-alt);">
+  <section class="section" style="background:var(--bg-alt);" id="deals-section">
     <div class="wrap">
       <h2 class="sectitle">Today's Deals <a href="search-results.html">All deals →</a></h2>
       <div class="deals" id="deals-wrap"></div>
@@ -414,6 +408,13 @@
     <div class="wrap">
       <h2 class="sectitle">Newly Listed Parts <a href="search-results.html">See all →</a></h2>
       <div class="products" id="newly-listed"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-alt);" id="book-garage">
+    <div class="wrap">
+      <h2 class="sectitle"><span>Book a Verified Garage <span class="pill" style="font-size:11px;vertical-align:middle;">Dubai · Sharjah · Ajman</span></span> <a href="become-a-partner.html">All garages →</a></h2>
+      <div class="garages" id="garage-cards"></div>
     </div>
   </section>
 
@@ -439,8 +440,36 @@
           <label style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;">Photo *</label>
           <label class="upload-box" id="ct-photo-label" for="ct-photo" style="display:block;border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;font-size:12.5px;color:var(--success-green);font-weight:600;">📎 Choose Photo<input id="ct-photo" type="file" accept="image/*" style="display:none;"></label>
         </div>
-        <button type="button" class="btn btn-primary" style="background:var(--success-green);width:100%;justify-content:center;" onclick="submitContactForm()">Submit</button>
+        <button type="button" class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitContactForm()">Submit</button>
         <p id="ct-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:12px 0 0;">✓ Thanks — your message was sent. Our team will reach back out on WhatsApp or email.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="terms">
+    <div class="wrap" style="max-width:760px;">
+      <h2 class="sectitle" style="justify-content:flex-start;gap:10px;">Policies &amp; Terms</h2>
+      <div style="display:grid;gap:14px;">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
+          <h3 style="margin:0 0 6px;font-size:14.5px;">Payments &amp; Orders</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0;">AvoraSouq operates on Cash on Delivery only — no online payments are taken on the platform. Every order is reviewed by our team against the Mulkiya (vehicle registration) you upload at checkout before it is forwarded to the seller for dispatch, so fitment is checked before the part ships.</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
+          <h3 style="margin:0 0 6px;font-size:14.5px;">Cancellations</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0;">You can cancel an order yourself from My Account for as long as it's still "Pending Admin Review." Once an order has been approved and forwarded to the seller, cancellations are handled by contacting support directly.</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
+          <h3 style="margin:0 0 6px;font-size:14.5px;">Returns &amp; Disputes</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0;">If a part doesn't match your order, don't accept delivery — file a report from My Account &gt; Report an Issue and AvoraSouq steps in to help resolve it directly with the seller.</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
+          <h3 style="margin:0 0 6px;font-size:14.5px;">Seller &amp; Garage Partner Terms</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0;">Sellers and garages listed on AvoraSouq are verified before their listings go live, and all listings are reviewed prior to publishing. See <a href="become-a-partner.html" style="color:var(--brand-blue);font-weight:600;">Become a Partner</a> for full onboarding terms.</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
+          <h3 style="margin:0 0 6px;font-size:14.5px;">Privacy</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0;">This is a demo build — all data (accounts, orders, listings) is stored only in your own browser's local storage and is never sent to a server. Clearing your browser data will reset the demo.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -452,9 +481,9 @@
           <a href="index.html" class="logo"><div class="mark" style="border-color:#fff;">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
           <p style="font-size:12.5px;margin-top:12px;line-height:1.6;">Quality car parts and trusted garage services — verified, secured and coordinated through one platform.</p>
         </div>
-        <div><h4>Shop</h4><a href="search-results.html">All Parts</a><a href="search-results.html">Today's Deals</a><a href="search-results.html">Brakes &amp; Discs</a><a href="search-results.html">Engine Parts</a><a href="search-results.html">Suspension</a></div>
-        <div><h4>Services</h4><a href="become-a-partner.html">Book a Garage</a><a href="become-a-partner.html#how">How It Works</a><a href="my-account.html">Track Order</a><a href="#" onclick="openRequestPartModal();return false;">Request a Part</a></div>
-        <div><h4>Partner Network</h4><a href="become-a-partner.html">Sell Your Parts</a><a href="become-a-partner.html">Register Garage</a><a href="become-a-partner.html">Partner Terms</a></div>
+        <div><h4>Shop</h4><a href="search-results.html">All Parts</a><a href="#deals-section">Today's Deals</a><a href="search-results.html?category=Brakes">Brakes &amp; Discs</a><a href="search-results.html?category=Engine">Engine Parts</a><a href="search-results.html?category=Suspension">Suspension</a></div>
+        <div><h4>Services</h4><a href="#book-garage">Book a Garage</a><a href="become-a-partner.html#how">How It Works</a><a href="my-account.html">Track Order</a><a href="#" onclick="openRequestPartModal();return false;">Request a Part</a></div>
+        <div><h4>Partner Network</h4><a href="become-a-partner.html?apply=seller">Sell Your Parts</a><a href="become-a-partner.html?apply=garage">Register Garage</a><a href="#terms">Partner Terms</a></div>
         <div><h4>Help &amp; Legal</h4><a href="#contact">Contact Us</a><a href="#terms">Policies &amp; Terms</a></div>
       </div>
       <div class="bottom">
@@ -549,7 +578,7 @@
     }
     const catTiles = document.getElementById("cat-tiles");
     catTiles.appendChild(catCard("All Parts", "All Parts", "search-results.html"));
-    PS_CATEGORIES.forEach(c => {
+    PS_CATEGORIES.filter(c => c !== "Tools & Garage").forEach(c => {
       catTiles.appendChild(catCard(c, c, "search-results.html?category=" + encodeURIComponent(c)));
     });
     catTiles.appendChild(catCard("Book Garage", "Book a Garage", "#book-garage"));

@@ -37,13 +37,15 @@
   .side a.active{background:var(--brand-blue-light);color:var(--brand-blue-dark);font-weight:700;}
 
   .content h2{font-size:20px;margin:0 0 18px;}
-  .ordercard{border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+  .ordercard{border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;}
   .ordercard .oid{font-size:12px;color:var(--text-muted);margin-bottom:4px;}
   .ordercard .name{font-size:13.5px;font-weight:600;}
   .status{font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;}
   .status.delivered{background:var(--success-green-light);color:var(--success-green);}
   .status.transit{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
   .status.processing{background:var(--accent-orange-light);color:#B75C10;}
+  .status.pending{background:var(--accent-orange-light);color:#B75C10;}
+  .status.cancelled{background:#F3F4F6;color:var(--text-muted);}
   .ordercard .price{font-weight:700;color:var(--brand-blue-dark);margin-right:16px;}
   .page{display:none;}
   .page.active{display:block;}
@@ -108,7 +110,7 @@
       <a href="#" class="active" data-page="orders" onclick="showPage('orders');return false;">📦 My Orders</a>
       <a href="#" data-page="support" onclick="showPage('support');return false;">🎫 Support</a>
       <a href="#addresses">📍 Addresses</a>
-      <a href="#wishlist">♡ Wishlist</a>
+      <a href="#wishlist">🤍 Wishlist</a>
       <a href="#profile">👤 Profile</a>
       <a href="#settings">⚙ Settings</a>
       <a href="login-register.html">🚪 Logout</a>
@@ -174,8 +176,8 @@
       if (name === "support") renderTickets();
     }
 
-    const statusClass = {"Delivered":"delivered","Out for Delivery":"transit","Processing":"processing"};
-    const statusLabel = {"Delivered":"✓ Delivered","Out for Delivery":"🚚 Out for Delivery","Processing":"⏳ Processing"};
+    const statusClass = {"Delivered":"delivered","Out for Delivery":"transit","Processing":"processing","Pending Admin Review":"pending","Cancelled":"cancelled"};
+    const statusLabel = {"Delivered":"✓ Delivered","Out for Delivery":"🚚 Out for Delivery","Processing":"⏳ Processing","Pending Admin Review":"⏳ Pending Admin Review","Cancelled":"✕ Cancelled"};
     const wrap = document.getElementById("orders-list");
     let currentDisputeOrder = null;
 
@@ -193,6 +195,27 @@
           '<div class="price">' + psFmt(order.total) + '</div>' +
           '<a href="search-results.html" class="btn">View Details</a>' +
           '<a href="#" class="btn" style="border-color:var(--accent-orange);color:#B75C10;" onclick="openDisputeModal(\'' + order.id + '\');return false;">⚠ Report an Issue</a>';
+        /* Buyers can cancel their own order themselves — but only while it's
+           still "Pending Admin Review". Once AvoraSouq approves it and forwards
+           it to the seller for dispatch, cancellation has to go through support
+           (matches what the homepage's Policies & Terms > Cancellations text
+           now promises, and mirrors the seller-side cancel-order pattern). */
+        if (order.status === "Pending Admin Review"){
+          const cancelBtn = document.createElement("a");
+          cancelBtn.href = "#";
+          cancelBtn.className = "btn";
+          cancelBtn.style.borderColor = "var(--border)";
+          cancelBtn.style.color = "var(--text-secondary)";
+          cancelBtn.textContent = "✕ Cancel Order";
+          cancelBtn.onclick = (e) => {
+            e.preventDefault();
+            if (confirm("Cancel order #" + order.id + "? This can't be undone.")){
+              psSetOrderStatus(order.id, "Cancelled");
+              renderOrders();
+            }
+          };
+          div.appendChild(cancelBtn);
+        }
         wrap.appendChild(div);
 
         const opt = document.createElement("option");

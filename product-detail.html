@@ -36,6 +36,10 @@
   .headerlinks{display:flex;gap:22px;font-size:12px;color:var(--text-secondary);}
   nav{background:#fff;border-bottom:1px solid var(--border);}
   nav .wrap{display:flex;gap:28px;font-size:14px;padding:11px 24px;color:var(--text-secondary);}
+  nav a{position:relative;padding:2px 0;}
+  nav a:hover{color:var(--brand-blue);}
+  nav a.active{color:var(--brand-blue);font-weight:700;}
+  nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;background:var(--brand-blue);border-radius:2px;}
   .crumbs{padding:14px 0;font-size:12.5px;color:var(--text-muted);}
   .crumbs a:hover{color:var(--brand-blue);}
 
@@ -166,13 +170,12 @@
 </head>
 <body>
 
-  <div class="utility"><div class="wrap"><span>UAE's Trusted Auto Parts Marketplace</span><span>Up to 40% Off on selected parts</span></div></div>
 
   <header>
     <div class="wrap">
       <a href="index.html" class="logo"><div class="mark">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
       <form class="searchbar" action="search-results.html" method="get"><input name="q" placeholder="Search part name, OEM number or car model..."><button type="submit">🔍</button></form>
-      <div class="headerlinks"><a href="my-account.html">♡ Wishlist</a><a href="cart-checkout.html" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><a href="my-account.html">👤 Account</a></div>
+      <div class="headerlinks"><a href="my-account.html">🤍 Wishlist</a><a href="cart-checkout.html" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><a href="my-account.html">👤 Account</a></div>
     </div>
   </header>
   <nav><div class="wrap"><a href="index.html">Home</a><a href="search-results.html">Shop Parts</a><a href="search-results.html">Today's Deals</a><a href="become-a-partner.html">Book a Garage</a><a href="become-a-partner.html">Become a Partner</a></div></nav>
@@ -192,22 +195,12 @@
         <div class="price" id="p-price"></div>
         <div class="delivery-line" id="p-delivery-line"></div>
       </div>
-      <div class="rating" id="p-rating"></div>
       <div class="mulkiyanote"><span>🪪</span><div><b>Mulkiya Verified:</b> OEM, chassis and engine code checked before dispatch.</div></div>
-
-      <div class="fitcheck">
-        <b>✓ Confirm this fits your car</b>
-        <div class="row">
-          <select><option>Select Brand</option></select>
-          <select><option>Select Model</option></select>
-          <select><option>Select Year</option></select>
-        </div>
-      </div>
 
       <div class="buybox">
         <div class="qty"><button onclick="changeQty(-1)">−</button><span id="qty-val">1</span><button onclick="changeQty(1)">+</button></div>
         <a href="#" class="btn btn-primary" id="add-cart-btn">🛒 Add to Cart</a>
-        <a href="my-account.html" class="btn btn-outline">♡</a>
+        <a href="cart-checkout.html" class="btn btn-outline" id="checkout-btn">Checkout</a>
       </div>
 
       <div class="codnote">🔒 <div><b>Cash on Delivery.</b> Pay only after the part arrives and you confirm it's correct — no online payment required.</div></div>
@@ -222,14 +215,12 @@
 
   <div class="wrap">
     <div class="tabs">
-      <div class="tab active">Description</div>
-      <div class="tab">Specifications</div>
-      <div class="tab">Compatible Vehicles</div>
-      <div class="tab" id="tab-reviews">Reviews</div>
+      <div class="tab active" data-tab="desc">Description</div>
+      <div class="tab" data-tab="specs">Specifications</div>
     </div>
     <div class="tabcontent">
-      <p id="p-desc"></p>
-      <table class="specs" id="p-specs"></table>
+      <p id="p-desc" data-tabpanel="desc"></p>
+      <table class="specs" id="p-specs" data-tabpanel="specs" style="display:none;"></table>
     </div>
   </div>
 
@@ -327,8 +318,6 @@
     const deliveryFee = product.deliveryFee || 20;
     const deliveryTime = (product.estDelivery && product.estDeliveryUnit) ? (product.estDelivery + " " + product.estDeliveryUnit) : "Same day / next day";
     document.getElementById("p-delivery-line").textContent = "Delivery charge: " + psFmt(deliveryFee) + " · Estimated delivery: " + deliveryTime;
-    document.getElementById("p-rating").innerHTML = "★★★★★ <b>" + product.rating + "</b> (" + product.reviews + " reviews)";
-    document.getElementById("tab-reviews").textContent = "Reviews (" + product.reviews + ")";
     document.getElementById("p-seller-initials").textContent = product.seller.split(" ").map(w => w[0]).slice(0,2).join("");
     document.getElementById("p-seller-name").textContent = product.seller;
     document.getElementById("p-desc").textContent = product.desc;
@@ -349,6 +338,20 @@
       const tr = document.createElement("tr");
       tr.innerHTML = "<td>" + r[0] + "</td><td>" + r[1] + "</td>";
       specsTable.appendChild(tr);
+    });
+
+    /* Description / Specifications are real switching tabs — clicking one shows
+       its panel and hides the other (previously all four "tabs" were just
+       labels with no click behavior and everything rendered at once). */
+    document.querySelectorAll(".tabs .tab").forEach(tabEl => {
+      tabEl.addEventListener("click", () => {
+        document.querySelectorAll(".tabs .tab").forEach(t => t.classList.remove("active"));
+        tabEl.classList.add("active");
+        const target = tabEl.getAttribute("data-tab");
+        document.querySelectorAll("[data-tabpanel]").forEach(p => {
+          p.style.display = (p.getAttribute("data-tabpanel") === target) ? "" : "none";
+        });
+      });
     });
 
     function changeQty(delta){

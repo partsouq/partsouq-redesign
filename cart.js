@@ -98,3 +98,19 @@ function psPlaceOrder(details){
   psSaveCart([]);
   return order;
 }
+
+/* Highlight whichever link in the top nav row (Home / Shop Parts / Today's Deals /
+   Book a Garage / How It Works / Become a Partner / Contact) matches the page
+   currently open, so the row always shows where you are with the brand-blue
+   highlight color (nav a.active is styled per-page in each <style> block). */
+document.addEventListener("DOMContentLoaded", function(){
+  const here = location.pathname.split("/").pop() || "index.html";
+  // Scoped to the top nav row only — the mobile bottom app-bar (.ps-bottom-nav)
+  // sets its own active tab per page directly in the HTML and isn't touched here.
+  document.querySelectorAll("nav:not(.ps-bottom-nav) a[href]").forEach(function(a){
+    const href = a.getAttribute("href");
+    if (href.startsWith("#")) return; // in-page anchor (e.g. "Contact" -> #contact), not a separate page
+    const hrefFile = href.split("#")[0].split("?")[0] || "index.html";
+    if (hrefFile === here) a.classList.add("active");
+  });
+});

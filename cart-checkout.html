@@ -163,6 +163,7 @@
         <div class="sumrow"><span id="sum-count-1">Subtotal (0 items)</span><span id="sum-subtotal-1">AED 0.00</span></div>
         <div class="sumrow"><span>Delivery Fee</span><span id="sum-fee-1">AED 20.00</span></div>
         <div class="sumrow total"><span>Total</span><span id="sum-total-1">AED 0.00</span></div>
+        <p id="step1-error" style="display:none;color:var(--danger-red,#D92D20);font-size:12.5px;margin:8px 0 0;"></p>
         <button class="btn btn-primary" id="to-delivery-btn">Continue to Delivery →</button>
       </div>
     </div>
@@ -195,6 +196,7 @@
             <input id="dv-mulkiya" type="file" accept="image/*,.pdf" style="display:none;">
           </label>
         </div>
+        <p id="step2-error" style="display:none;color:var(--danger-red,#D92D20);font-size:12.5px;margin:-4px 0 10px;"></p>
         <div class="btnrow">
           <button class="btn btn-ghost" data-goto="1">← Back</button>
           <button class="btn btn-primary" id="to-payment-btn">Continue to Payment →</button>
@@ -226,7 +228,7 @@
         </div>
         <div class="btnrow">
           <button class="btn btn-ghost" data-goto="2">← Back</button>
-          <button class="btn btn-primary" id="confirm-btn" style="background:var(--success-green);">Confirm Order — Pay Cash on Delivery</button>
+          <button class="btn btn-primary" id="confirm-btn">Confirm Order — Pay Cash on Delivery</button>
         </div>
       </div>
       <div class="summary">
@@ -337,7 +339,13 @@
     }
 
     document.getElementById("to-delivery-btn").addEventListener("click", () => {
-      if (!psCartLines().length){ alert("Your cart is empty — add a part before checking out."); return; }
+      const err = document.getElementById("step1-error");
+      if (!psCartLines().length){
+        err.textContent = "Your cart is empty — add a part before checking out.";
+        err.style.display = "block";
+        return;
+      }
+      err.style.display = "none";
       showStep(2);
     });
 
@@ -363,18 +371,24 @@
     wireUpload("dv-mulkiya", "dv-mulkiya-label", v => dvMulkiyaData = v);
 
     document.getElementById("to-payment-btn").addEventListener("click", () => {
+      const err = document.getElementById("step2-error");
       const name = document.getElementById("dv-name").value.trim();
       const phone = document.getElementById("dv-phone").value.trim();
       const address = document.getElementById("dv-address").value.trim();
       const emirate = document.getElementById("dv-emirate").value;
       if (!name || !phone || !address || !emirate){
-        alert("Please fill in your name, phone, street address and emirate.");
+        err.textContent = "Please fill in your name, phone, street address and emirate.";
+        err.style.display = "block";
+        window.scrollTo({top: 0, behavior: "smooth"});
         return;
       }
       if (!dvMulkiyaData){
-        alert("Please upload your Mulkiya (vehicle registration card) — AvoraSouq verifies fitment against it before dispatch.");
+        err.textContent = "Please upload your Mulkiya (vehicle registration card) — AvoraSouq verifies fitment against it before dispatch.";
+        err.style.display = "block";
+        window.scrollTo({top: 0, behavior: "smooth"});
         return;
       }
+      err.style.display = "none";
       showStep(3);
     });
 
@@ -390,7 +404,7 @@
         oldPartPhoto: dvOldPartData,
         mulkiya: dvMulkiyaData
       });
-      if (!order) { alert("Your cart is empty — add a part before checking out."); showStep(1); return; }
+      if (!order) { showStep(1); document.getElementById("step1-error").textContent = "Your cart is empty — add a part before checking out."; document.getElementById("step1-error").style.display = "block"; return; }
       document.getElementById("order-ref").textContent = order.id;
       showStep(4);
     });

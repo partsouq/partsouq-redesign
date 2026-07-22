@@ -218,7 +218,7 @@ function psGetGarageBookings(){
 function psSubmitGarageBooking(booking){
   const list = psGetGarageBookings();
   list.unshift(Object.assign({
-    id: "GB-" + Math.floor(1000 + Math.random() * 8999),
+    id: "GBK-" + Math.floor(10000 + Math.random() * 89999),
     status: "New"
   }, booking));
   localStorage.setItem(PS_GARAGE_BOOKINGS_KEY, JSON.stringify(list));

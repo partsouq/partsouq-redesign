@@ -26,10 +26,14 @@
   .logo .mark{width:38px;height:38px;border-radius:9px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:15px;}
   .logo .word b{font-size:19px;}
   .logo .word small{display:block;font-size:9px;letter-spacing:.08em;color:var(--text-muted);font-weight:700;}
-  .searchbar{flex:1;display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .searchbar{flex:1;display:flex;align-items:center;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(16,25,46,.05);transition:box-shadow .15s,border-color .15s;}
+  .searchbar:focus-within{border-color:var(--brand-blue);box-shadow:0 0 0 4px var(--brand-blue-light);}
   .searchbar input{flex:1;border:none;padding:10px 12px;font-size:14px;outline:none;}
-  .searchbar button{background:var(--brand-blue);border:none;color:#fff;padding:0 18px;cursor:pointer;}
-  .headerlinks{display:flex;gap:22px;font-size:12px;color:var(--text-secondary);}
+  .searchbar button{background:linear-gradient(135deg,var(--brand-blue),var(--brand-blue-dark));border:none;color:#fff;padding:0 22px;cursor:pointer;font-weight:700;font-size:15px;align-self:stretch;transition:opacity .15s;}
+  .searchbar button:hover{opacity:.9;}
+  .headerlinks{display:flex;gap:4px;font-size:12.5px;color:var(--text-secondary);font-weight:600;background:var(--bg-alt);padding:5px;border-radius:14px;}
+  .headerlinks a{padding:8px 14px;border-radius:10px;transition:background .15s,color .15s,box-shadow .15s;}
+  .headerlinks a:hover{background:#fff;color:var(--brand-blue-dark);box-shadow:0 2px 6px rgba(16,25,46,.08);}
 
   .crumbs{padding:14px 0;font-size:12.5px;color:var(--text-muted);}
   .layout{display:grid;grid-template-columns:250px 1fr;gap:28px;padding-bottom:50px;}
@@ -51,12 +55,21 @@
   .card .thumb{height:110px;border-radius:8px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;}
   .card .thumb svg{width:40px;height:40px;stroke:var(--brand-blue);}
   .card .badge{position:absolute;top:8px;left:8px;background:var(--accent-orange);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;}
+  .card .wishbtn{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;}
+  .card .wishbtn.on{color:var(--accent-orange);border-color:var(--accent-orange);}
   .card .name{display:block;color:var(--text);font-size:13px;font-weight:600;margin-bottom:2px;}
   .card .sku{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
   .card .price{font-weight:700;color:var(--brand-blue-dark);font-size:15px;}
   .card .old{font-size:11.5px;color:var(--text-muted);text-decoration:line-through;margin-left:6px;}
   .card .tag{font-size:10.5px;color:var(--success-green);margin-top:6px;display:flex;align-items:center;gap:4px;}
   .card .addbtn{width:100%;margin-top:10px;justify-content:center;}
+  .cardfacts{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px;}
+  .factbadge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+  .factbadge.cond-new{background:var(--brand-blue-light);color:var(--brand-blue-dark);}
+  .factbadge.cond-used{background:var(--accent-orange-light);color:#B75C10;}
+  .factbadge.seller-word{background:var(--success-green-light);color:var(--success-green);}
+  .cardcompat{font-size:11px;color:var(--text-secondary);margin:2px 0;}
+  .carddelivery{font-size:10.5px;color:var(--text-muted);margin:2px 0 2px;}
 
   .pagination{display:flex;justify-content:center;gap:6px;margin-top:30px;}
   .pagination span{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:7px;font-size:13px;color:var(--text-secondary);}
@@ -68,7 +81,7 @@
     .wrap{padding:0 16px;}
     header .wrap{flex-wrap:wrap;gap:10px;}
     header .wrap .logo{order:1;}
-    header .wrap .headerlinks{order:2;margin-left:auto;gap:14px;}
+    header .wrap .headerlinks{order:2;margin-left:auto;gap:2px;}
     header .wrap .searchbar{order:3;flex-basis:100%;}
     .layout{grid-template-columns:minmax(0,1fr);gap:18px;}
     .filters{order:2;}
@@ -116,7 +129,7 @@
     <div class="wrap">
       <a href="index.html" class="logo"><div class="mark">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
       <form class="searchbar" action="search-results.html" method="get" id="header-search"><input name="q" id="q-input" placeholder="Search part name, OEM number or car model..."><button type="submit">🔍</button></form>
-      <div class="headerlinks"><a href="my-account.html">🤍 Wishlist</a><a href="cart-checkout.html" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><a href="my-account.html">👤 Account</a></div>
+      <div class="headerlinks"><a href="my-account.html?page=wishlist">🤍 Wishlist</a><a href="cart-checkout.html" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><a href="my-account.html">👤 Account</a></div>
     </div>
   </header>
 
@@ -170,6 +183,7 @@
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
   <script src="admin-data.js"></script>
+  <script src="track-order.js"></script>
   <script src="request-part.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
@@ -265,17 +279,26 @@
         const discount = p.oldPrice ? Math.round(100 - (p.price / p.oldPrice) * 100) : null;
         const thumb = p.image ? '<img src="' + p.image + '" style="width:100%;height:100%;object-fit:cover;">' : psIcon(p.category);
         card.innerHTML =
-          '<div class="thumb">' + (discount ? '<span class="badge">-' + discount + '%</span>' : "") + thumb + '</div>' +
+          '<div class="thumb">' + (discount ? '<span class="badge">-' + discount + '%</span>' : "") +
+          '<span class="wishbtn' + (psIsWishlisted(p.id) ? " on" : "") + '" data-wish="' + p.id + '">' + (psIsWishlisted(p.id) ? "❤" : "🤍") + '</span>' +
+          thumb + '</div>' +
           '<a href="product-detail.html?id=' + p.id + '" class="name">' + p.name + '</a>' +
           '<div class="sku">' + p.sku + '</div>' +
           '<div class="price">' + psFmt(p.price) + (p.oldPrice ? '<span class="old">' + psFmt(p.oldPrice) + '</span>' : "") + '</div>' +
+          psCardFacts(p) +
           '<div class="tag">✓ Verified Seller · ' + p.seller + '</div>' +
-          '<a href="#" class="btn addbtn" data-id="' + p.id + '">Add to Cart</a>';
+          '<a href="#" class="btn btn-primary addbtn" data-id="' + p.id + '">Add to Cart</a>';
         card.querySelector(".addbtn").addEventListener("click", e => {
           e.preventDefault();
           psAddToCart(p.id, 1);
           e.target.textContent = "Added ✓";
           setTimeout(() => { e.target.textContent = "Add to Cart"; }, 1200);
+        });
+        card.querySelector(".wishbtn").addEventListener("click", e => {
+          e.preventDefault();
+          const on = psToggleWishlist(p.id);
+          e.target.classList.toggle("on", on);
+          e.target.textContent = on ? "❤" : "🤍";
         });
         grid.appendChild(card);
       });

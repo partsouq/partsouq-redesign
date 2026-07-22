@@ -43,6 +43,64 @@ function psUpdateCartBadge(){
     el.style.display = n > 0 ? "inline-flex" : "none";
   });
 }
+
+/* ---------- Wishlist (real localStorage-backed, not decorative) ---------- */
+const PS_WISHLIST_KEY = "ps_wishlist";
+function psGetWishlist(){
+  try { return JSON.parse(localStorage.getItem(PS_WISHLIST_KEY)) || []; }
+  catch(e){ return []; }
+}
+function psIsWishlisted(id){ return psGetWishlist().indexOf(id) !== -1; }
+function psToggleWishlist(id){
+  let list = psGetWishlist();
+  const on = list.indexOf(id) !== -1;
+  list = on ? list.filter(x => x !== id) : list.concat([id]);
+  localStorage.setItem(PS_WISHLIST_KEY, JSON.stringify(list));
+  psUpdateWishlistBadge();
+  return !on; // returns the new state (true = now wishlisted)
+}
+function psUpdateWishlistBadge(){
+  const n = psGetWishlist().length;
+  document.querySelectorAll(".ps-wishlist-badge").forEach(el => {
+    el.textContent = n;
+    el.style.display = n > 0 ? "inline-flex" : "none";
+  });
+}
+document.addEventListener("DOMContentLoaded", psUpdateWishlistBadge);
+
+/* ---------- Saved delivery addresses (buyer address book) ---------- */
+const PS_ADDRESSES_KEY = "ps_buyer_addresses";
+function psGetAddresses(){
+  try { return JSON.parse(localStorage.getItem(PS_ADDRESSES_KEY)) || []; }
+  catch(e){ return []; }
+}
+function psSaveAddresses(list){ localStorage.setItem(PS_ADDRESSES_KEY, JSON.stringify(list)); }
+function psAddAddress(addr){
+  const list = psGetAddresses();
+  const rec = Object.assign({id: "addr-" + Math.floor(1000 + Math.random()*8999)}, addr);
+  if (rec.isDefault || !list.length) list.forEach(a => a.isDefault = false);
+  list.push(rec);
+  psSaveAddresses(list);
+  return rec;
+}
+function psDeleteAddress(id){ psSaveAddresses(psGetAddresses().filter(a => a.id !== id)); }
+function psSetDefaultAddress(id){
+  const list = psGetAddresses();
+  list.forEach(a => a.isDefault = (a.id === id));
+  psSaveAddresses(list);
+}
+function psGetDefaultAddress(){ return psGetAddresses().find(a => a.isDefault) || psGetAddresses()[0] || null; }
+
+/* ---------- Buyer profile (display name / email shown across the site) ---------- */
+const PS_PROFILE_KEY = "ps_buyer_profile";
+function psGetProfile(){
+  try {
+    const stored = JSON.parse(localStorage.getItem(PS_PROFILE_KEY));
+    if (stored && stored.name) return stored;
+  } catch(e){}
+  return {name: "Irfan A.", email: "irfan.aidigital@gmail.com"};
+}
+function psSaveProfile(profile){ localStorage.setItem(PS_PROFILE_KEY, JSON.stringify(profile)); }
 // Make sure the badge reflects the cart's real (persisted) count on every
 // fresh page load too — not just after an in-session add/remove.
 document.addEventListener("DOMContentLoaded", psUpdateCartBadge);

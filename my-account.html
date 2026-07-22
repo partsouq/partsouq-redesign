@@ -102,18 +102,20 @@
 </head>
 <body>
 
-  <header><div class="wrap"><a href="index.html" class="logo"><div class="mark">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a><a href="cart-checkout.html" class="btn" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a></div></header>
+  <header><div class="wrap"><a href="index.html" class="logo"><div class="mark">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a><div style="display:flex;gap:10px;"><a href="index.html" class="btn">🏠 Home</a><a href="cart-checkout.html" class="btn" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a></div></div></header>
+
+  <div class="wrap crumbs" style="padding-top:14px;font-size:12.5px;color:var(--text-muted);"><a href="index.html" style="color:var(--brand-blue);font-weight:600;">← Back to Home</a></div>
 
   <div class="wrap layout">
     <aside class="side">
-      <div class="who"><div class="av">IR</div><div style="display:flex;flex-direction:column;"><b>Irfan A.</b><span>irfan.aidigital@gmail.com</span></div></div>
+      <div class="who"><div class="av" id="side-avatar">IR</div><div style="display:flex;flex-direction:column;"><b id="side-name">Irfan A.</b><span id="side-email">irfan.aidigital@gmail.com</span></div></div>
       <a href="#" class="active" data-page="orders" onclick="showPage('orders');return false;">📦 My Orders</a>
       <a href="#" data-page="support" onclick="showPage('support');return false;">🎫 Support</a>
-      <a href="#addresses">📍 Addresses</a>
-      <a href="#wishlist">🤍 Wishlist</a>
-      <a href="#profile">👤 Profile</a>
-      <a href="#settings">⚙ Settings</a>
-      <a href="login-register.html">🚪 Logout</a>
+      <a href="#" data-page="addresses" onclick="showPage('addresses');return false;">📍 Addresses</a>
+      <a href="#" data-page="wishlist" onclick="showPage('wishlist');return false;">🤍 Wishlist</a>
+      <a href="#" data-page="profile" onclick="showPage('profile');return false;">👤 Profile</a>
+      <a href="#" data-page="settings" onclick="showPage('settings');return false;">⚙ Settings</a>
+      <a href="#" onclick="doLogout();return false;">🚪 Logout</a>
     </aside>
 
     <div class="content">
@@ -135,6 +137,52 @@
         </div>
         <h3 style="font-size:15px;margin:0 0 12px;">Your Tickets</h3>
         <div id="tickets-list"></div>
+      </div>
+
+      <div class="page" id="page-addresses">
+        <h2>Addresses</h2>
+        <div id="addresses-list"></div>
+        <div style="border:1px solid var(--border);border-radius:12px;padding:18px;margin-top:18px;">
+          <h3 style="font-size:15px;margin:0 0 14px;">Add a New Address</h3>
+          <div class="field"><label>Label</label><input id="addr-label" placeholder="e.g. Home, Office"></div>
+          <div class="field"><label>Full Name *</label><input id="addr-name"></div>
+          <div class="field"><label>Phone / WhatsApp *</label><input id="addr-phone"></div>
+          <div class="field"><label>Street Address *</label><input id="addr-street" placeholder="Building, street, area"></div>
+          <div class="field"><label>Emirate *</label><select id="addr-emirate"><option value="">Select</option><option>Dubai</option><option>Sharjah</option><option>Abu Dhabi</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option></select></div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:14px;"><input type="checkbox" id="addr-default" style="width:auto;"> Set as default delivery address</label>
+          <button class="btn btn-primary" onclick="submitAddress()">Save Address</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-wishlist">
+        <h2>Wishlist</h2>
+        <div id="wishlist-list"></div>
+      </div>
+
+      <div class="page" id="page-profile">
+        <h2>Profile</h2>
+        <div style="border:1px solid var(--border);border-radius:12px;padding:18px;max-width:420px;">
+          <div class="field"><label>Full Name</label><input id="prof-name"></div>
+          <div class="field"><label>Email</label><input id="prof-email" type="email"></div>
+          <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+          <p id="prof-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:10px 0 0;">✓ Profile updated.</p>
+        </div>
+      </div>
+
+      <div class="page" id="page-settings">
+        <h2>Settings</h2>
+        <div style="border:1px solid var(--border);border-radius:12px;padding:18px;max-width:420px;margin-bottom:18px;">
+          <h3 style="font-size:15px;margin:0 0 14px;">Notifications</h3>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-secondary);margin-bottom:12px;"><input type="checkbox" id="set-email" style="width:auto;"> Email me about order status updates</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-secondary);margin-bottom:14px;"><input type="checkbox" id="set-whatsapp" style="width:auto;"> WhatsApp me delivery updates</label>
+          <button class="btn btn-primary" onclick="saveSettings()">Save Preferences</button>
+          <p id="set-confirm" style="display:none;color:var(--success-green);font-size:13px;font-weight:600;margin:10px 0 0;">✓ Preferences saved.</p>
+        </div>
+        <div style="border:1px solid var(--accent-orange);border-radius:12px;padding:18px;max-width:420px;">
+          <h3 style="font-size:15px;margin:0 0 6px;color:#B75C10;">Reset Demo Data</h3>
+          <p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 12px;">This is a local-storage-only demo — this clears every order, address, wishlist item and ticket saved in this browser and starts fresh. It can't be undone.</p>
+          <button class="btn" style="border-color:var(--accent-orange);color:#B75C10;" onclick="resetDemoData()">Clear My Local Data</button>
+        </div>
       </div>
     </div>
   </div>
@@ -168,12 +216,148 @@
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
   <script src="admin-data.js"></script>
+  <script src="track-order.js"></script>
   <script>
     function showPage(name){
       document.querySelectorAll(".side a[data-page]").forEach(a => a.classList.toggle("active", a.dataset.page === name));
       document.querySelectorAll(".content .page").forEach(p => p.classList.remove("active"));
       document.getElementById("page-" + name).classList.add("active");
       if (name === "support") renderTickets();
+      if (name === "addresses") renderAddresses();
+      if (name === "wishlist") renderWishlist();
+      if (name === "profile") loadProfileForm();
+      if (name === "settings") loadSettingsForm();
+      history.replaceState(null, "", location.pathname + "?page=" + name);
+    }
+
+    // Deep-link support: my-account.html?page=wishlist (used by the header's
+    // Wishlist link everywhere on the site) opens straight to that tab.
+    const deepLinkPage = new URLSearchParams(location.search).get("page");
+    if (deepLinkPage && document.getElementById("page-" + deepLinkPage)) showPage(deepLinkPage);
+
+    function doLogout(){
+      if (confirm("Log out of AvoraSouq?")) location.href = "login-register.html";
+    }
+
+    // The account name/email shown in the sidebar (and used on tickets/disputes)
+    // comes from the real editable Profile tab, not a hardcoded string.
+    function refreshSideProfile(){
+      const p = psGetProfile();
+      document.getElementById("side-name").textContent = p.name;
+      document.getElementById("side-email").textContent = p.email;
+      document.getElementById("side-avatar").textContent = p.name.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase();
+    }
+    refreshSideProfile();
+
+    function loadProfileForm(){
+      const p = psGetProfile();
+      document.getElementById("prof-name").value = p.name;
+      document.getElementById("prof-email").value = p.email;
+      document.getElementById("prof-confirm").style.display = "none";
+    }
+    function saveProfile(){
+      const name = document.getElementById("prof-name").value.trim();
+      const email = document.getElementById("prof-email").value.trim();
+      if (!name || !email){ alert("Please fill in both your name and email."); return; }
+      psSaveProfile({name: name, email: email});
+      refreshSideProfile();
+      document.getElementById("prof-confirm").style.display = "block";
+    }
+
+    const PS_BUYER_SETTINGS_KEY = "ps_buyer_settings";
+    function loadSettingsForm(){
+      let s = {};
+      try { s = JSON.parse(localStorage.getItem(PS_BUYER_SETTINGS_KEY)) || {}; } catch(e){ s = {}; }
+      document.getElementById("set-email").checked = s.email !== false;
+      document.getElementById("set-whatsapp").checked = s.whatsapp !== false;
+      document.getElementById("set-confirm").style.display = "none";
+    }
+    function saveSettings(){
+      localStorage.setItem(PS_BUYER_SETTINGS_KEY, JSON.stringify({
+        email: document.getElementById("set-email").checked,
+        whatsapp: document.getElementById("set-whatsapp").checked
+      }));
+      document.getElementById("set-confirm").style.display = "block";
+    }
+    function resetDemoData(){
+      if (!confirm("This clears every order, address, wishlist item and ticket saved in this browser. Continue?")) return;
+      Object.keys(localStorage).filter(k => k.indexOf("ps_") === 0).forEach(k => localStorage.removeItem(k));
+      location.reload();
+    }
+
+    function renderAddresses(){
+      const list = document.getElementById("addresses-list");
+      const addrs = psGetAddresses();
+      list.innerHTML = "";
+      addrs.forEach(a => {
+        const div = document.createElement("div");
+        div.className = "ordercard";
+        div.innerHTML =
+          '<div><div class="oid">' + (a.label || "Address") + (a.isDefault ? " · <b style=\"color:var(--brand-blue-dark);\">Default</b>" : "") + '</div>' +
+          '<div class="name">' + a.name + ' · ' + a.phone + '</div>' +
+          '<div style="font-size:12.5px;color:var(--text-secondary);">' + a.street + ', ' + a.emirate + '</div></div>';
+        if (!a.isDefault){
+          const b = document.createElement("a");
+          b.href = "#"; b.className = "btn"; b.textContent = "Set Default";
+          b.onclick = (e) => { e.preventDefault(); psSetDefaultAddress(a.id); renderAddresses(); };
+          div.appendChild(b);
+        }
+        const del = document.createElement("a");
+        del.href = "#"; del.className = "btn"; del.style.borderColor = "var(--accent-orange)"; del.style.color = "#B75C10"; del.textContent = "Delete";
+        del.onclick = (e) => { e.preventDefault(); if (confirm("Delete this address?")){ psDeleteAddress(a.id); renderAddresses(); } };
+        div.appendChild(del);
+        list.appendChild(div);
+      });
+      if (!addrs.length){
+        list.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;">No saved addresses yet — add one below so checkout can prefill it for you.</p>';
+      }
+    }
+
+    function submitAddress(){
+      const name = document.getElementById("addr-name").value.trim();
+      const phone = document.getElementById("addr-phone").value.trim();
+      const street = document.getElementById("addr-street").value.trim();
+      const emirate = document.getElementById("addr-emirate").value;
+      if (!name || !phone || !street || !emirate){
+        alert("Please fill in name, phone, street address and emirate.");
+        return;
+      }
+      psAddAddress({
+        label: document.getElementById("addr-label").value.trim() || "Address",
+        name: name, phone: phone, street: street, emirate: emirate,
+        isDefault: document.getElementById("addr-default").checked
+      });
+      ["addr-label","addr-name","addr-phone","addr-street"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById("addr-emirate").value = "";
+      document.getElementById("addr-default").checked = false;
+      renderAddresses();
+    }
+
+    function renderWishlist(){
+      const list = document.getElementById("wishlist-list");
+      list.innerHTML = "";
+      const ids = psGetWishlist();
+      const items = ids.map(id => psFindProduct(id)).filter(Boolean);
+      items.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "ordercard";
+        const thumb = p.image ? '<img src="' + p.image + '" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">' : "";
+        div.innerHTML =
+          '<div style="display:flex;align-items:center;gap:12px;">' + thumb +
+          '<div><div class="name">' + p.name + '</div><div style="font-size:12.5px;color:var(--text-secondary);">' + p.category + '</div></div></div>' +
+          '<div class="price">' + psFmt(p.price) + '</div>';
+        const view = document.createElement("a");
+        view.href = "product-detail.html?id=" + p.id; view.className = "btn"; view.textContent = "View";
+        div.appendChild(view);
+        const remove = document.createElement("a");
+        remove.href = "#"; remove.className = "btn"; remove.style.borderColor = "var(--accent-orange)"; remove.style.color = "#B75C10"; remove.textContent = "Remove";
+        remove.onclick = (e) => { e.preventDefault(); psToggleWishlist(p.id); renderWishlist(); };
+        div.appendChild(remove);
+        list.appendChild(div);
+      });
+      if (!items.length){
+        list.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;">Nothing saved yet. Tap the ♡ on any part to add it here. <a href="search-results.html" style="color:var(--brand-blue);font-weight:600;">Browse parts →</a></p>';
+      }
     }
 
     const statusClass = {"Delivered":"delivered","Out for Delivery":"transit","Processing":"processing","Pending Admin Review":"pending","Cancelled":"cancelled"};
@@ -241,7 +425,7 @@
       const details = document.getElementById("disp-details").value.trim();
       const dispute = psFileDispute({
         orderId: currentDisputeOrder, reason: reason, details: details,
-        name: "Irfan A.", email: "irfan.aidigital@gmail.com"
+        name: psGetProfile().name, email: psGetProfile().email
       });
       closeDisputeModal();
       alert("Your issue was reported (reference " + dispute.id + "). Our team will review it and reach out.");
@@ -278,7 +462,7 @@
       const ticket = psSubmitSupportTicket({
         subject: subject, message: message,
         orderId: document.getElementById("tk-order").value || null,
-        name: "Irfan A.", email: "irfan.aidigital@gmail.com"
+        name: psGetProfile().name, email: psGetProfile().email
       });
       document.getElementById("tk-subject").value = "";
       document.getElementById("tk-message").value = "";

@@ -174,6 +174,7 @@
     <div class="navlink" data-page="listings">📦 My Listings</div>
     <div class="navlink" data-page="addlisting">➕ Add Listing</div>
     <div class="navlink" data-page="orders">🧾 Orders</div>
+    <div class="navlink" data-page="garagebookings">📅 Garage Bookings</div>
     <div class="navlink" data-page="statement">💵 Payment Statement</div>
     <div class="navsection">Account</div>
     <div class="navlink" data-page="profile">👤 My Profile</div>
@@ -297,6 +298,14 @@
     <div class="page" id="page-orders">
       <div class="topbar"><div><h1>Orders Received</h1><span>Only shows orders AvoraSouq has approved and forwarded to you</span></div></div>
       <div id="orders-list"></div>
+    </div>
+
+    <!-- GARAGE BOOKINGS -->
+    <div class="page" id="page-garagebookings">
+      <div class="topbar"><div><h1>Garage Bookings</h1><span>Requests customers have booked with your garage from the homepage</span></div></div>
+      <div class="panel">
+        <table id="garage-bookings-table"><tr><th>Ref</th><th>Customer</th><th>WhatsApp</th><th>Service</th><th>Vehicle / Issue</th><th>Date &amp; Time</th><th>Pickup</th><th>Status</th><th>Action</th></tr></table>
+      </div>
     </div>
 
     <!-- PAYMENT STATEMENT -->
@@ -688,11 +697,47 @@
     setTimeout(() => el.style.display = "none", 2200);
   }
 
+  /* ---------- Garage Bookings ----------
+     This demo has a single hardcoded logged-in partner account (no real
+     multi-tenant login), so — same simplification as Orders/Listings above —
+     this shows every booking in the system rather than trying to guess which
+     garage "this" account owns. It reads the exact same psGetGarageBookings()
+     store the admin portal manages, so confirming here is real and visible
+     to admin too. */
+  function renderGarageBookings(){
+    const table = document.getElementById("garage-bookings-table");
+    if (!table) return;
+    while (table.rows.length > 1) table.deleteRow(1);
+    const list = psGetGarageBookings();
+    if (!list.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='9' class='empty-row'>No garage bookings yet.</td></tr>");
+      return;
+    }
+    list.forEach(b => {
+      const tr = document.createElement("tr");
+      const cls = b.status === "New" ? "orange" : b.status === "Confirmed" ? "blue" : "green";
+      const vehicleIssue = [b.carDetails, b.issueDescription].filter(Boolean).join(" — ") || "—";
+      const dateTime = [b.date, b.time].filter(Boolean).join(" ") || "—";
+      const pickup = b.pickupRequired === "yes" ? "🚚 Pickup" : "Bring car";
+      tr.innerHTML = "<td>" + b.id + "</td><td>" + b.name + "</td><td>" + b.phone + "</td><td>" + b.service + "</td><td style='max-width:220px;'>" + vehicleIssue + "</td><td>" + dateTime + "</td><td>" + pickup + "</td><td><span class='status " + cls + "'>" + b.status + "</span></td><td></td>";
+      const actionTd = tr.lastElementChild;
+      if (b.status !== "Completed"){
+        const btn = document.createElement("button");
+        btn.className = "rowbtn approve";
+        btn.textContent = b.status === "New" ? "Confirm" : "Mark Completed";
+        btn.onclick = () => { psSetGarageBookingStatus(b.id, b.status === "New" ? "Confirmed" : "Completed"); renderGarageBookings(); };
+        actionTd.appendChild(btn);
+      }
+      table.appendChild(tr);
+    });
+  }
+
   function renderAll(){
     renderDashboard();
     renderListings();
     fillAddListingForm();
     renderOrders();
+    renderGarageBookings();
     renderStatement();
     renderProfile();
   }

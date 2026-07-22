@@ -349,7 +349,7 @@
     <div class="page" id="page-garagebookings">
       <div class="topbar"><div><h1>Garage Bookings</h1><span>Requests to book a verified garage from the homepage</span></div></div>
       <div class="panel">
-        <table id="garage-bookings-table"><tr><th>Ref</th><th>Name</th><th>WhatsApp</th><th>Garage</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th></tr></table>
+        <table id="garage-bookings-table"><tr><th>Ref</th><th>Name</th><th>WhatsApp</th><th>Garage</th><th>Service</th><th>Vehicle / Issue</th><th>Date &amp; Time</th><th>Pickup</th><th>Status</th><th>Action</th></tr></table>
       </div>
     </div>
 
@@ -1310,12 +1310,15 @@
     const table = document.getElementById("garage-bookings-table");
     const list = psGetGarageBookings();
     if (!list.length){
-      table.insertAdjacentHTML("beforeend", "<tr><td colspan='8' class='empty-row'>No garage bookings submitted yet.</td></tr>");
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='10' class='empty-row'>No garage bookings submitted yet.</td></tr>");
     }
     list.forEach(b => {
       const tr = document.createElement("tr");
       const cls = b.status === "New" ? "orange" : b.status === "Confirmed" ? "blue" : "green";
-      tr.innerHTML = "<td>" + b.id + "</td><td>" + b.name + "</td><td>" + b.phone + "</td><td>" + (b.garageName || "—") + "</td><td>" + b.service + "</td><td>" + (b.date || "—") + "</td><td><span class='status " + cls + "'>" + b.status + "</span></td><td></td>";
+      const vehicleIssue = [b.carDetails, b.issueDescription].filter(Boolean).join(" — ") || "—";
+      const dateTime = [b.date, b.time].filter(Boolean).join(" ") || "—";
+      const pickup = b.pickupRequired === "yes" ? "🚚 Pickup" : "Bring car";
+      tr.innerHTML = "<td>" + b.id + "</td><td>" + b.name + "</td><td>" + b.phone + "</td><td>" + (b.garageName || "—") + "</td><td>" + b.service + "</td><td style='max-width:220px;'>" + vehicleIssue + "</td><td>" + dateTime + "</td><td>" + pickup + "</td><td><span class='status " + cls + "'>" + b.status + "</span></td><td></td>";
       const actionTd = tr.lastElementChild;
       if (b.status !== "Completed"){
         const btn = document.createElement("button");

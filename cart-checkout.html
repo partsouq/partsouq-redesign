@@ -179,6 +179,7 @@
             <select id="dv-emirate"><option value="">Emirate *</option><option>Dubai</option><option>Sharjah</option><option>Abu Dhabi</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option></select>
             <input id="dv-area" placeholder="Area / District">
           </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary);"><input type="checkbox" id="dv-save-address" style="width:auto;"> Save this address to my account for next time</label>
         </div>
         <div class="upload-note">
           <b>📷 Upload Old Part Photo</b>
@@ -272,6 +273,7 @@
   <script src="products-data.js"></script>
   <script src="cart.js"></script>
   <script src="admin-data.js"></script>
+  <script src="track-order.js"></script>
   <script>
     let currentStep = 1;
     let dvOldPartData = null, dvMulkiyaData = null;
@@ -388,6 +390,12 @@
         window.scrollTo({top: 0, behavior: "smooth"});
         return;
       }
+      if (document.getElementById("dv-save-address").checked){
+        psAddAddress({
+          label: "Saved Address", name: name, phone: phone, street: address,
+          emirate: emirate, isDefault: !psGetAddresses().length
+        });
+      }
       err.style.display = "none";
       showStep(3);
     });
@@ -410,6 +418,17 @@
     });
 
     renderCart();
+
+    // Prefill the delivery form from the buyer's saved default address
+    // (set in My Account > Addresses), so returning buyers don't retype it.
+    (function(){
+      const def = psGetDefaultAddress();
+      if (!def) return;
+      document.getElementById("dv-name").value = def.name || "";
+      document.getElementById("dv-phone").value = def.phone || "";
+      document.getElementById("dv-address").value = def.street || "";
+      document.getElementById("dv-emirate").value = def.emirate || "";
+    })();
   </script>
 </body>
 </html>

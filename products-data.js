@@ -52,30 +52,30 @@ const PS_CATEGORY_DEFAULT_IMAGES = {
 function psCategoryDefaultImage(category){ return PS_CATEGORY_DEFAULT_IMAGES[category] || null; }
 
 const PS_PRODUCTS = [
-  {id:"p1",  name:"Toyota Oil Filter",              sku:"90915-YZZE1",   brand:"Toyota", category:"Engine",         price:35,  oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:58,  desc:"OEM-spec oil filter for Toyota 4-cylinder engines. Confirm fitment against your VIN before ordering."},
-  {id:"p2",  name:"Bosch Air Filter",                sku:"1457433765",   brand:"Bosch",  category:"Engine",         price:45,  oldPrice:60,   seller:"Al Twal Auto Parts",   rating:4.5, reviews:40,  desc:"High-flow air filter suitable for a range of sedans. Photos and part details were checked before listing."},
-  {id:"p3",  name:"NGK Spark Plug Set",              sku:"ILFR6A11",     brand:"NGK",    category:"Engine",         price:25,  oldPrice:null, seller:"Deira Auto Traders",   rating:4.7, reviews:112, desc:"Set of iridium spark plugs for improved ignition. Confirm cylinder count matches your engine."},
-  {id:"p4",  name:"Honda Brake Pad Set — Front",     sku:"45022-TLA-A00",brand:"Honda",  category:"Brakes",         price:120, oldPrice:null, seller:"Gulf Auto Spares",     rating:4.8, reviews:96,  desc:"Front brake pad set for Honda sedans and crossovers. Listing checked for compatibility before going live."},
-  {id:"p5",  name:"Bosch Brake Pad Set — Front",     sku:"0986TB2170",   brand:"Bosch",  category:"Brakes",         price:145, oldPrice:240,  seller:"Al Twal Auto Parts",   rating:4.6, reviews:74,  desc:"Bosch front brake pads with reduced noise and dust. Fits a range of sedans — confirm before ordering."},
-  {id:"p6",  name:"Brembo Brake Disc Set",           sku:"09.A961.11",   brand:"Brembo", category:"Brakes",         price:310, oldPrice:null, seller:"Sharjah Motor Spares", rating:4.7, reviews:51,  desc:"Vented front brake disc pair. Recommended to replace pads at the same time."},
-  {id:"p7",  name:"ATE Ceramic Brake Pads",          sku:"13.0460-7181", brand:"ATE",    category:"Brakes",         price:165, oldPrice:220,  seller:"Deira Auto Traders",   rating:4.5, reviews:38,  desc:"Ceramic compound pads for lower dust and quieter braking."},
-  {id:"p8",  name:"KYB Shock Absorber — Front",      sku:"334703",       brand:"KYB",    category:"Suspension",     price:210, oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:44,  desc:"Front shock absorber, sold individually. Compatibility checked against listed models."},
-  {id:"p9",  name:"Suspension Coil Spring Set",      sku:"48131-YZZE1",  brand:"Toyota", category:"Suspension",     price:180, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.4, reviews:22,  desc:"Front coil spring pair for standard ride height."},
-  {id:"p10", name:"Control Arm — Lower",             sku:"48069-09290",  brand:"Toyota", category:"Suspension",     price:240, oldPrice:290,  seller:"Sharjah Motor Spares", rating:4.5, reviews:19,  desc:"Lower control arm with bushings pre-installed."},
-  {id:"p11", name:"Side Mirror Assembly — Right",    sku:"MR-2201",      brand:"OEM",    category:"Body Parts",     price:165, oldPrice:null, seller:"Deira Auto Traders",   rating:4.3, reviews:15,  desc:"Right-side power mirror assembly, unpainted."},
-  {id:"p12", name:"Headlight Assembly — Left",       sku:"HL-3392",      brand:"Depo",   category:"Body Parts",     price:420, oldPrice:480,  seller:"Gulf Auto Spares",     rating:4.6, reviews:27,  desc:"Left headlight assembly, halogen. Confirm trim level before ordering."},
-  {id:"p13", name:"Front Bumper Cover",               sku:"BC-1187",      brand:"OEM",    category:"Body Parts",     price:520, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.4, reviews:12,  desc:"Primed front bumper cover, ready for paint."},
-  {id:"p14", name:"Bosch Alternator — 12V 120A",     sku:"0986041230",   brand:"Bosch",  category:"Electrical",     price:450, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.8, reviews:126, desc:"Genuine-fit Bosch alternator suitable for a range of sedans and SUVs. Listing details, photos and compatibility were checked by AvoraSouq before publishing. Check the Specifications tab for the exact compatible model before ordering."},
-  {id:"p15", name:"Car Battery 70Ah",                 sku:"DIN70",        brand:"Varta",  category:"Electrical",     price:380, oldPrice:null, seller:"Sharjah Motor Spares", rating:4.7, reviews:88,  desc:"70Ah maintenance-free starter battery."},
-  {id:"p16", name:"Starter Motor",                    sku:"ST-1187",      brand:"Denso",  category:"Electrical",     price:520, oldPrice:600,  seller:"Deira Auto Traders",   rating:4.5, reviews:33,  desc:"Remanufactured starter motor, bench-tested before listing."},
-  {id:"p17", name:"AC Compressor Denso",              sku:"10S17C",       brand:"Denso",  category:"AC & Cooling",   price:650, oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:41,  desc:"AC compressor unit. Confirm your AC gas type and fitting size before ordering."},
-  {id:"p18", name:"Radiator Assembly",                sku:"RAD-2205",     brand:"Toyota", category:"AC & Cooling",   price:380, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.5, reviews:29,  desc:"Aluminium-core radiator assembly with plastic end tanks."},
-  {id:"p19", name:"AC Condenser",                     sku:"COND-118",     brand:"Nissens", category:"AC & Cooling",  price:290, oldPrice:340,  seller:"Sharjah Motor Spares", rating:4.4, reviews:18,  desc:"AC condenser, direct-fit replacement."},
-  {id:"p20", name:"Steering Rack Assembly",           sku:"SR-4471",      brand:"Bosch",  category:"Steering",       price:890, oldPrice:null, seller:"Deira Auto Traders",   rating:4.6, reviews:21,  desc:"Complete power steering rack assembly, tested before listing."},
-  {id:"p21", name:"Power Steering Pump",              sku:"PSP-330",      brand:"Toyota", category:"Steering",       price:310, oldPrice:360,  seller:"Gulf Auto Spares",     rating:4.5, reviews:17,  desc:"Hydraulic power steering pump, direct-fit."},
-  {id:"p22", name:"Tie Rod End — Outer",              sku:"TR-115",       brand:"Moog",   category:"Steering",       price:65,  oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.6, reviews:34,  desc:"Outer tie rod end, sold individually."},
-  {id:"p23", name:"Socket Wrench Set 40pc",           sku:"SWS-40",       brand:"Stanley",category:"Tools & Garage", price:145, oldPrice:null, seller:"Sharjah Motor Spares", rating:4.8, reviews:62,  desc:"40-piece socket and ratchet set in a carry case."},
-  {id:"p24", name:"Hydraulic Floor Jack 2T",          sku:"HFJ-2T",       brand:"Bosch",  category:"Tools & Garage", price:260, oldPrice:300,  seller:"Deira Auto Traders",   rating:4.7, reviews:45,  desc:"2-tonne hydraulic floor jack with low entry height."}
+  {id:"p1",  name:"Toyota Oil Filter",              sku:"90915-YZZE1",   brand:"Toyota", category:"Engine",         price:35,  oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:58,  condition:"New",  compat:"Toyota Corolla, Camry, RAV4",        desc:"OEM-spec oil filter for Toyota 4-cylinder engines. Confirm fitment against your VIN before ordering."},
+  {id:"p2",  name:"Bosch Air Filter",                sku:"1457433765",   brand:"Bosch",  category:"Engine",         price:45,  oldPrice:60,   seller:"Al Twal Auto Parts",   rating:4.5, reviews:40,  condition:"New",  compat:"Toyota Camry, Honda Accord, Nissan Altima", desc:"High-flow air filter suitable for a range of sedans. Photos and part details were checked before listing."},
+  {id:"p3",  name:"NGK Spark Plug Set",              sku:"ILFR6A11",     brand:"NGK",    category:"Engine",         price:25,  oldPrice:null, seller:"Deira Auto Traders",   rating:4.7, reviews:112, condition:"New",  compat:"Toyota Corolla, Honda Civic, Nissan Sunny", desc:"Set of iridium spark plugs for improved ignition. Confirm cylinder count matches your engine."},
+  {id:"p4",  name:"Honda Brake Pad Set — Front",     sku:"45022-TLA-A00",brand:"Honda",  category:"Brakes",         price:120, oldPrice:null, seller:"Gulf Auto Spares",     rating:4.8, reviews:96,  condition:"New",  compat:"Honda Civic, Accord, CR-V",          desc:"Front brake pad set for Honda sedans and crossovers. Listing checked for compatibility before going live."},
+  {id:"p5",  name:"Bosch Brake Pad Set — Front",     sku:"0986TB2170",   brand:"Bosch",  category:"Brakes",         price:145, oldPrice:240,  seller:"Al Twal Auto Parts",   rating:4.6, reviews:74,  condition:"New",  compat:"Toyota Hilux, Fortuner, Land Cruiser", desc:"Bosch front brake pads with reduced noise and dust. Fits a range of sedans — confirm before ordering."},
+  {id:"p6",  name:"Brembo Brake Disc Set",           sku:"09.A961.11",   brand:"Brembo", category:"Brakes",         price:310, oldPrice:null, seller:"Sharjah Motor Spares", rating:4.7, reviews:51,  condition:"New",  compat:"BMW 3 Series, Mercedes C-Class",     desc:"Vented front brake disc pair. Recommended to replace pads at the same time."},
+  {id:"p7",  name:"ATE Ceramic Brake Pads",          sku:"13.0460-7181", brand:"ATE",    category:"Brakes",         price:165, oldPrice:220,  seller:"Deira Auto Traders",   rating:4.5, reviews:38,  condition:"New",  compat:"Mercedes C-Class, E-Class",          desc:"Ceramic compound pads for lower dust and quieter braking."},
+  {id:"p8",  name:"KYB Shock Absorber — Front",      sku:"334703",       brand:"KYB",    category:"Suspension",     price:210, oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:44,  condition:"New",  compat:"Toyota Hilux, Fortuner",             desc:"Front shock absorber, sold individually. Compatibility checked against listed models."},
+  {id:"p9",  name:"Suspension Coil Spring Set",      sku:"48131-YZZE1",  brand:"Toyota", category:"Suspension",     price:180, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.4, reviews:22,  condition:"New",  compat:"Toyota Land Cruiser, Prado",         desc:"Front coil spring pair for standard ride height."},
+  {id:"p10", name:"Control Arm — Lower",             sku:"48069-09290",  brand:"Toyota", category:"Suspension",     price:240, oldPrice:290,  seller:"Sharjah Motor Spares", rating:4.5, reviews:19,  condition:"Used", compat:"Toyota Camry, RAV4",                 desc:"Used, inspected lower control arm with bushings pre-installed."},
+  {id:"p11", name:"Side Mirror Assembly — Right",    sku:"MR-2201",      brand:"OEM",    category:"Body Parts",     price:165, oldPrice:null, seller:"Deira Auto Traders",   rating:4.3, reviews:15,  condition:"Used", compat:"Toyota Corolla",                     desc:"Used, inspected right-side power mirror assembly, unpainted."},
+  {id:"p12", name:"Headlight Assembly — Left",       sku:"HL-3392",      brand:"Depo",   category:"Body Parts",     price:420, oldPrice:480,  seller:"Gulf Auto Spares",     rating:4.6, reviews:27,  condition:"Used", compat:"Nissan Patrol",                      desc:"Used, inspected left headlight assembly, halogen. Confirm trim level before ordering."},
+  {id:"p13", name:"Front Bumper Cover",               sku:"BC-1187",      brand:"OEM",    category:"Body Parts",     price:520, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.4, reviews:12,  condition:"Used", compat:"Toyota Land Cruiser",                desc:"Used, inspected primed front bumper cover, ready for paint."},
+  {id:"p14", name:"Bosch Alternator — 12V 120A",     sku:"0986041230",   brand:"Bosch",  category:"Electrical",     price:450, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.8, reviews:126, condition:"New",  compat:"Toyota Hilux, Fortuner",             desc:"Genuine-fit Bosch alternator suitable for a range of sedans and SUVs. Listing details, photos and compatibility were checked by AvoraSouq before publishing. Check the Specifications tab for the exact compatible model before ordering."},
+  {id:"p15", name:"Car Battery 70Ah",                 sku:"DIN70",        brand:"Varta",  category:"Electrical",     price:380, oldPrice:null, seller:"Sharjah Motor Spares", rating:4.7, reviews:88,  condition:"New",  compat:"Universal fit — most sedans & SUVs", desc:"70Ah maintenance-free starter battery."},
+  {id:"p16", name:"Starter Motor",                    sku:"ST-1187",      brand:"Denso",  category:"Electrical",     price:520, oldPrice:600,  seller:"Deira Auto Traders",   rating:4.5, reviews:33,  condition:"Used", compat:"Toyota Corolla, Camry",              desc:"Used, bench-tested remanufactured starter motor."},
+  {id:"p17", name:"AC Compressor Denso",              sku:"10S17C",       brand:"Denso",  category:"AC & Cooling",   price:650, oldPrice:null, seller:"Gulf Auto Spares",     rating:4.6, reviews:41,  condition:"New",  compat:"Toyota Camry, Corolla",              desc:"AC compressor unit. Confirm your AC gas type and fitting size before ordering."},
+  {id:"p18", name:"Radiator Assembly",                sku:"RAD-2205",     brand:"Toyota", category:"AC & Cooling",   price:380, oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.5, reviews:29,  condition:"New",  compat:"Toyota Camry, Corolla",              desc:"Aluminium-core radiator assembly with plastic end tanks."},
+  {id:"p19", name:"AC Condenser",                     sku:"COND-118",     brand:"Nissens", category:"AC & Cooling",  price:290, oldPrice:340,  seller:"Sharjah Motor Spares", rating:4.4, reviews:18,  condition:"New",  compat:"Nissan Altima, Sunny",               desc:"AC condenser, direct-fit replacement."},
+  {id:"p20", name:"Steering Rack Assembly",           sku:"SR-4471",      brand:"Bosch",  category:"Steering",       price:890, oldPrice:null, seller:"Deira Auto Traders",   rating:4.6, reviews:21,  condition:"New",  compat:"Toyota Land Cruiser",                desc:"Complete power steering rack assembly, tested before listing."},
+  {id:"p21", name:"Power Steering Pump",              sku:"PSP-330",      brand:"Toyota", category:"Steering",       price:310, oldPrice:360,  seller:"Gulf Auto Spares",     rating:4.5, reviews:17,  condition:"New",  compat:"Toyota Hilux, Fortuner",             desc:"Hydraulic power steering pump, direct-fit."},
+  {id:"p22", name:"Tie Rod End — Outer",              sku:"TR-115",       brand:"Moog",   category:"Steering",       price:65,  oldPrice:null, seller:"Al Twal Auto Parts",   rating:4.6, reviews:34,  condition:"New",  compat:"Honda Accord, Civic",                desc:"Outer tie rod end, sold individually."},
+  {id:"p23", name:"Socket Wrench Set 40pc",           sku:"SWS-40",       brand:"Stanley",category:"Tools & Garage", price:145, oldPrice:null, seller:"Sharjah Motor Spares", rating:4.8, reviews:62,  condition:"New",  compat:"Universal — any vehicle",            desc:"40-piece socket and ratchet set in a carry case."},
+  {id:"p24", name:"Hydraulic Floor Jack 2T",          sku:"HFJ-2T",       brand:"Bosch",  category:"Tools & Garage", price:260, oldPrice:300,  seller:"Deira Auto Traders",   rating:4.7, reviews:45,  condition:"New",  compat:"Universal — any vehicle",            desc:"2-tonne hydraulic floor jack with low entry height."}
 ];
 
 const CAR_DB = {
@@ -128,3 +128,32 @@ function psRelated(product, limit){
   return pool.filter(p => p.category === product.category && p.id !== product.id).slice(0, limit);
 }
 function psFmt(n){ return "AED " + n.toFixed(2).replace(/\.00$/, ".00"); }
+
+/* Shared helpers so every product card (homepage, search results, related-parts,
+   product page) shows the same real facts consistently, instead of each page
+   re-deriving its own subset. Nothing here is invented per-card — it all reads
+   straight off the product record. */
+function psDeliveryText(p){
+  return (p.estDelivery && p.estDeliveryUnit) ? (p.estDelivery + " " + p.estDeliveryUnit) : "Same day / next day";
+}
+function psSellerWord(rating){
+  if (rating >= 4.7) return "Excellent Seller";
+  if (rating >= 4.3) return "Good Seller";
+  if (rating >= 3.8) return "Fair Seller";
+  return "New Seller";
+}
+/* Sellers can list a part as New or as Used at a few grades ("Used – Good", etc,
+   per seller-dashboard.html's Add Listing form) — anything starting with "Used"
+   gets the orange used-condition treatment, everything else reads as New. */
+function psIsUsed(condition){ return !!(condition && condition.indexOf("Used") === 0); }
+/* Renders the small facts block used under a product card's name/price —
+   condition, compatible vehicle, delivery estimate and Cash on Delivery note. */
+function psCardFacts(p){
+  const bits = [];
+  bits.push('<span class="factbadge cond-' + (psIsUsed(p.condition) ? "used" : "new") + '">' + (p.condition || "New") + '</span>');
+  if (typeof p.rating === "number") bits.push('<span class="factbadge seller-word">' + psSellerWord(p.rating) + '</span>');
+  let html = '<div class="cardfacts">' + bits.join("") + '</div>';
+  if (p.compat) html += '<div class="cardcompat">🚗 ' + p.compat + '</div>';
+  html += '<div class="carddelivery">🚚 ' + psDeliveryText(p) + ' · AED ' + (p.deliveryFee || 20).toFixed(0) + ' delivery · 💵 Cash on Delivery</div>';
+  return html;
+}

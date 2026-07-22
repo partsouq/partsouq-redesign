@@ -55,25 +55,44 @@
   <a href="index.html" class="logo"><div class="mark">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a>
 
   <div class="card">
-    <div class="segtabs"><div class="active">Log In</div><div>Register</div></div>
-    <h2>Welcome back</h2>
-    <p class="sub">Log in to track orders and manage your account.</p>
+    <h2 id="lr-heading">Welcome back</h2>
+    <p class="sub" id="lr-sub">Log in to track orders, add items to cart, and checkout.</p>
 
     <div class="accttype">
       <div class="active" id="acct-buyer" onclick="selectAcct('buyer')">🛒 Buyer</div>
       <div id="acct-partner" onclick="selectAcct('partner')">🔧 Partner (Supplier / Garage)</div>
     </div>
 
-    <div class="field"><label>Email or Mobile Number</label><input placeholder="you@example.com"></div>
-    <div class="field"><label>Password</label><input type="password" placeholder="••••••••"></div>
-    <a class="btn" id="login-btn" href="my-account.html" style="display:block;text-align:center;text-decoration:none;">Log In →</a>
+    <!-- BUYER: email + on-screen verification code (no real mail server on a static site) -->
+    <div id="buyer-flow">
+      <div id="buyer-step-email">
+        <div class="field"><label>Email Address</label><input id="by-email" type="email" placeholder="you@example.com"></div>
+        <button type="button" class="btn" onclick="sendBuyerCode()">Send Verification Code →</button>
+      </div>
+      <div id="buyer-step-code" style="display:none;">
+        <div id="buyer-code-box" style="background:var(--brand-blue-light);color:var(--brand-blue-dark);border-radius:9px;padding:12px 14px;font-size:12.5px;margin-bottom:16px;line-height:1.5;"></div>
+        <div class="field"><label>Enter 6-Digit Code</label><input id="by-code" inputmode="numeric" maxlength="6" placeholder="000000"></div>
+        <button type="button" class="btn" onclick="verifyBuyerCode()">Verify &amp; Log In →</button>
+        <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:12px;cursor:pointer;" onclick="backToBuyerEmail()">← Use a different email</p>
+      </div>
+      <p class="err" id="buyer-err" style="display:none;color:var(--danger-red,#D92D20);font-size:12px;margin-top:10px;text-align:center;"></p>
+    </div>
 
-    <div style="display:flex;align-items:center;gap:10px;margin:18px 0;">
+    <!-- PARTNER: email + PIN issued by the AvoraSouq admin team — rejects anyone not registered/approved -->
+    <div id="partner-flow" style="display:none;">
+      <div class="field"><label>Registered Email</label><input id="pt-email" type="email" placeholder="you@business.com"></div>
+      <div class="field"><label>Login PIN (issued by AvoraSouq admin)</label><input id="pt-pin" inputmode="numeric" placeholder="e.g. 1234"></div>
+      <button type="button" class="btn" onclick="attemptPartnerLogin()">Log In →</button>
+      <p class="err" id="partner-err" style="display:none;color:var(--danger-red,#D92D20);font-size:12px;margin-top:10px;text-align:center;"></p>
+      <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:14px;">Not registered yet? <a href="become-a-partner.html" style="color:var(--brand-blue);font-weight:600;">Apply to become a partner</a> — you'll only get a login once AvoraSouq admin approves your application.</p>
+    </div>
+
+    <div id="oauth-section" style="display:flex;align-items:center;gap:10px;margin:18px 0;">
       <div style="flex:1;height:1px;background:var(--border);"></div>
       <span style="font-size:11.5px;color:var(--text-muted);">OR CONTINUE WITH</span>
       <div style="flex:1;height:1px;background:var(--border);"></div>
     </div>
-    <div style="display:flex;gap:10px;">
+    <div id="oauth-buttons" style="display:flex;gap:10px;">
       <button type="button" class="oauth-btn" onclick="oauthComingSoon('Google')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:13.5px;font-weight:600;color:var(--text);cursor:pointer;">
         <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34 5.1 29.3 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34 5.1 29.3 3 24 3 16 3 9 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 36.4 26.7 37 24 37c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9 40.4 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.2 5.2C40.5 36.3 45 30.7 45 24c0-1.4-.1-2.7-.4-3.5z"/></svg>
         Google
@@ -83,23 +102,91 @@
         Apple
       </button>
     </div>
-    <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px;">Google and Apple sign-in are coming soon — use email for now.</p>
-
-    <p class="fineprint">Don't have an account? <a href="#">Register</a> · <a href="#">Forgot password?</a></p>
+    <p id="oauth-note" style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px;">Google and Apple sign-in are coming soon — use email for now.</p>
   </div>
 
   <p style="font-size:12px;color:var(--text-muted);margin-top:18px;">Are you a AvoraSouq team member? <a href="admin-portal.html" style="color:var(--brand-blue);font-weight:600;">🛡 Admin Sign In</a></p>
 
+  <script src="products-data.js"></script>
+  <script src="cart.js"></script>
+  <script src="admin-data.js"></script>
   <script>
+    const redirectTo = new URLSearchParams(location.search).get('redirect') || null;
+    let pendingBuyerEmail = null, pendingBuyerCode = null;
+
     function selectAcct(type){
       document.getElementById('acct-buyer').classList.toggle('active', type === 'buyer');
       document.getElementById('acct-partner').classList.toggle('active', type === 'partner');
-      document.getElementById('login-btn').setAttribute('href', type === 'buyer' ? 'my-account.html' : 'seller-dashboard.html');
+      document.getElementById('buyer-flow').style.display = type === 'buyer' ? 'block' : 'none';
+      document.getElementById('partner-flow').style.display = type === 'partner' ? 'block' : 'none';
+      document.getElementById('oauth-section').style.display = type === 'buyer' ? 'flex' : 'none';
+      document.getElementById('oauth-buttons').style.display = type === 'buyer' ? 'flex' : 'none';
+      document.getElementById('oauth-note').style.display = type === 'buyer' ? 'block' : 'none';
+      document.getElementById('lr-heading').textContent = type === 'buyer' ? 'Welcome back' : 'Partner Sign In';
+      document.getElementById('lr-sub').textContent = type === 'buyer'
+        ? 'Log in to track orders, add items to cart, and checkout.'
+        : 'For registered, AvoraSouq-approved sellers and garages only.';
     }
     const preselect = new URLSearchParams(location.search).get('type');
-    if (preselect === 'partner') selectAcct('partner');
+    if (preselect === 'partner') selectAcct('partner'); else selectAcct('buyer');
+
+    function backToBuyerEmail(){
+      document.getElementById('buyer-step-email').style.display = 'block';
+      document.getElementById('buyer-step-code').style.display = 'none';
+      document.getElementById('buyer-err').style.display = 'none';
+    }
+    function sendBuyerCode(){
+      const email = document.getElementById('by-email').value.trim();
+      const errEl = document.getElementById('buyer-err');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        errEl.textContent = 'Please enter a valid email address.';
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      pendingBuyerEmail = email;
+      pendingBuyerCode = psGenerateVerificationCode();
+      document.getElementById('buyer-code-box').innerHTML =
+        '📧 <b>Demo mode:</b> this site has no real email server, so instead of emailing ' + email + ', your verification code is shown right here: <b style="font-size:16px;letter-spacing:2px;">' + pendingBuyerCode + '</b>';
+      document.getElementById('buyer-step-email').style.display = 'none';
+      document.getElementById('buyer-step-code').style.display = 'block';
+    }
+    function verifyBuyerCode(){
+      const code = document.getElementById('by-code').value.trim();
+      const errEl = document.getElementById('buyer-err');
+      if (code !== pendingBuyerCode){
+        errEl.textContent = 'Incorrect code — please check and try again.';
+        errEl.style.display = 'block';
+        return;
+      }
+      psBuyerLogin(pendingBuyerEmail);
+      location.href = redirectTo || 'my-account.html';
+    }
+    document.getElementById('by-code') && document.getElementById('by-code').addEventListener('keydown', e => { if (e.key === 'Enter') verifyBuyerCode(); });
+    document.getElementById('by-email') && document.getElementById('by-email').addEventListener('keydown', e => { if (e.key === 'Enter') sendBuyerCode(); });
+
+    function attemptPartnerLogin(){
+      const email = document.getElementById('pt-email').value.trim();
+      const pin = document.getElementById('pt-pin').value.trim();
+      const errEl = document.getElementById('partner-err');
+      const result = psAttemptSellerLogin(email, pin);
+      if (result.ok){
+        errEl.style.display = 'none';
+        location.href = redirectTo || 'seller-dashboard.html';
+        return;
+      }
+      const messages = {
+        not_registered: "This email isn't registered with AvoraSouq. Please apply via Become a Partner — you can't bypass this without admin approval.",
+        not_approved: "Your account (" + (result.seller ? result.seller.name : "this business") + ") is still pending AvoraSouq admin approval. You'll be able to log in once approved.",
+        wrong_pin: "Incorrect PIN for that email. Contact AvoraSouq admin if you've lost your PIN."
+      };
+      errEl.textContent = messages[result.reason] || "Login failed.";
+      errEl.style.display = 'block';
+    }
+    document.getElementById('pt-pin') && document.getElementById('pt-pin').addEventListener('keydown', e => { if (e.key === 'Enter') attemptPartnerLogin(); });
+
     function oauthComingSoon(provider){
-      alert(provider + " sign-in isn't connected yet in this demo — log in with email for now.");
+      alert(provider + " sign-in isn't connected yet in this demo — use email verification above for now.");
     }
   </script>
 </body>

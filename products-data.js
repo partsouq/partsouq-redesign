@@ -2,7 +2,7 @@
    Loaded by every page so the same product / same category always
    shows the same image and the same facts, everywhere. */
 
-const PS_CATEGORIES = ["Engine","Brakes","Suspension","Body Parts","Electrical","AC & Cooling","Steering","Tools & Garage"];
+const PS_CATEGORIES = ["Engine","Brakes","Suspension","Body Parts","Electrical","AC & Cooling","Steering","Tools & Garage"].slice().sort((a,b) => a.localeCompare(b));
 
 const PS_ICONS = {
   "Engine": '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="6" width="14" height="12" rx="2"/><path d="M9 6V4h6v2"/></svg>',
@@ -99,7 +99,7 @@ const CAR_DB = {
 const PS_GARAGES_SEED = [
   {id:"g1", name:"Al Quoz Service Centre",  area:"Al Quoz",    emirate:"Dubai",   specialties:["Engine","Brakes","AC & Cooling","Electrical"], rating:4.8, jobs:284, etaMin:45, etaMax:60, priceMin:150, priceMax:450, active:true},
   {id:"g2", name:"Sharjah Auto Care",       area:"Industrial 12", emirate:"Sharjah", specialties:["Suspension","Steering","Body Parts","Tools & Garage"], rating:4.6, jobs:97,  etaMin:30, etaMax:50, priceMin:120, priceMax:400, active:true},
-  {id:"g3", name:"Ajman Express Garage",    area:"Al Jurf",    emirate:"Ajman",   specialties:["Engine","Electrical","Brakes","Tools & Garage"], rating:4.7, jobs:152, etaMin:40, etaMax:55, priceMin:100, priceMax:380, active:true}
+  {id:"g3", name:"Speedfix Workshop",       area:"Al Jurf",    emirate:"Ajman",   specialties:["Engine","Electrical","Brakes","Tools & Garage"], rating:4.7, jobs:152, etaMin:40, etaMax:55, priceMin:100, priceMax:380, active:true}
 ];
 
 /* psFindProduct checks the seed catalog first (applying any admin price/status

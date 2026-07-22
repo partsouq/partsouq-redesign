@@ -236,7 +236,10 @@
     if (deepLinkPage && document.getElementById("page-" + deepLinkPage)) showPage(deepLinkPage);
 
     function doLogout(){
-      if (confirm("Log out of AvoraSouq?")) location.href = "login-register.html";
+      if (confirm("Log out of AvoraSouq?")){
+        psBuyerLogout();
+        location.href = "login-register.html";
+      }
     }
 
     // The account name/email shown in the sidebar (and used on tickets/disputes)

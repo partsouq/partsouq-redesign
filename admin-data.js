@@ -55,30 +55,61 @@ function psSetApplicationStatus(id, status){
   a.status = status;
   localStorage.setItem(PS_APPLICATIONS_KEY, JSON.stringify(list));
   if (status === "Approved") {
+    /* Every approved partner — seller or garage — gets a real login identity
+       right away: their applied email plus a freshly generated PIN, which the
+       admin team then hands to them (Admin > Sellers/Garages shows the PIN so
+       it can be shared). Nothing is auto-verified without this step. */
+    const loginPin = psGenerateLoginPin();
     if (a.applyType === "Garage / Workshop") {
-      psAddGarage({
+      const g = psAddGarage({
         name: a.businessName, area: a.emirate, emirate: a.emirate,
         specialties: a.specialties || [], rating: 0, jobs: 0,
         etaMin: 30, etaMax: 60, priceMin: 100, priceMax: 400, active: true
       });
+      // Garages also need a Sellers-directory record (email/PIN/idStatus) so they
+      // can sign in to the same Partner Dashboard login gate as spare-part sellers.
+      psAddSeller({
+        id: g.id, name: a.businessName, type: "Garage / Workshop", emirate: a.emirate,
+        idStatus: "Verified", listings: 0, email: a.email, loginPin: loginPin
+      });
     } else {
       psAddSeller({
         name: a.businessName, type: "Spare Part Supplier", emirate: a.emirate,
-        idStatus: "Verified", listings: 0
+        idStatus: "Verified", listings: 0, email: a.email, loginPin: loginPin
       });
     }
   }
 }
 
-/* ---------- Seller directory (seed + persisted edits + admin/application additions) ---------- */
+/* ---------- Seller directory (seed + persisted edits + admin/application additions) ----------
+   Every seller/garage record also carries `email` (the login identity) and `loginPin`
+   (a PIN issued by the AvoraSouq admin team — see psGenerateLoginPin()). Only accounts
+   with idStatus === "Verified" AND a matching email+PIN can sign in to the Partner
+   Dashboard (seller-dashboard.html) — there is no bypass around this check. */
 const PS_SELLERS_SEED = [
-  {id:"s1", name:"Al Twal Auto Parts",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Verified", listings:6},
-  {id:"s2", name:"Gulf Auto Spares",     type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6},
-  {id:"s3", name:"Sharjah Motor Spares", type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6},
-  {id:"s4", name:"Deira Auto Traders",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Pending",  listings:6},
-  {id:"s5", name:"Al Barsha Garage",     type:"Garage / Workshop",   emirate:"Dubai",   idStatus:"Pending",  listings:0},
-  {id:"s6", name:"Speedfix Workshop",    type:"Garage / Workshop",   emirate:"Ajman",   idStatus:"Verified", listings:0}
+  {id:"s1", name:"Al Twal Auto Parts",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Verified", listings:6, email:"altwal@avorasouq-demo.com",       loginPin:"1234"},
+  {id:"s2", name:"Gulf Auto Spares",     type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6, email:"gulfauto@avorasouq-demo.com",      loginPin:"2345"},
+  {id:"s3", name:"Sharjah Motor Spares", type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6, email:"sharjahmotor@avorasouq-demo.com",  loginPin:"3456"},
+  {id:"s4", name:"Deira Auto Traders",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Pending",  listings:6, email:"deira@avorasouq-demo.com",         loginPin:"4567"},
+  {id:"s5", name:"Al Barsha Garage",     type:"Garage / Workshop",   emirate:"Dubai",   idStatus:"Pending",  listings:0, email:"albarsha@avorasouq-demo.com",      loginPin:"5678"},
+  {id:"s6", name:"Speedfix Workshop",    type:"Garage / Workshop",   emirate:"Ajman",   idStatus:"Verified", listings:0, email:"speedfix@avorasouq-demo.com",      loginPin:"6789"}
 ];
+/* Generates a fresh 4-digit PIN — used when admin approves a new application
+   and whenever admin clicks "Regenerate PIN" for an existing partner. */
+function psGenerateLoginPin(){ return String(Math.floor(1000 + Math.random() * 8999)); }
+/* Looks up a Verified/Pending/Rejected seller or garage by email (case-insensitive) —
+   the single source of truth the login gate checks against. Returns undefined if no
+   partner is registered with that email at all. */
+function psFindSellerByEmail(email){
+  const clean = (email || "").trim().toLowerCase();
+  if (!clean) return undefined;
+  return psGetSellers().find(s => (s.email || "").trim().toLowerCase() === clean);
+}
+function psRegenerateSellerPin(id){
+  const pin = psGenerateLoginPin();
+  psEditSeller(id, {loginPin: pin});
+  return pin;
+}
 const PS_SELLERS_ADDED_KEY = "ps_sellers_added";
 function psGetAddedSellers(){
   try { return JSON.parse(localStorage.getItem(PS_SELLERS_ADDED_KEY)) || []; }
@@ -368,7 +399,10 @@ function psSetDisputeStatus(id, status){
    Real settings that other computations actually use — e.g. the commission
    rate here directly drives the Partner Billing numbers below. ---------- */
 const PS_SETTINGS_KEY = "ps_admin_settings";
-const PS_SETTINGS_DEFAULTS = {commissionPct: 8, maintenanceMode: false, adminName: "Irfan A."};
+/* adminUsername/adminPassword are a real (locally-stored, demo-only) admin
+   credential pair — the admin login gate checks the entered username+password
+   against these rather than accepting anything. Changeable from Admin > Settings. */
+const PS_SETTINGS_DEFAULTS = {commissionPct: 8, maintenanceMode: false, adminName: "Irfan A.", adminUsername: "admin", adminPassword: "AvoraSouq@2026"};
 function psGetSettings(){
   let stored = {};
   try { stored = JSON.parse(localStorage.getItem(PS_SETTINGS_KEY)) || {}; } catch(e){ stored = {}; }
@@ -493,8 +527,46 @@ function psGetOrdersForSeller(sellerName){
   }));
 }
 
-/* ---------- Admin session (demo-only gate — no real backend auth exists) ---------- */
+/* ---------- Admin session ----------
+   Real (if locally-stored) credential check — see PS_SETTINGS_DEFAULTS.adminUsername/
+   adminPassword above. No password bypasses this: attemptLogin() in admin-portal.html
+   calls psCheckAdminCredentials() and only proceeds on a true match. */
 const PS_ADMIN_SESSION_KEY = "ps_admin_session";
 function psIsAdminLoggedIn(){ return sessionStorage.getItem(PS_ADMIN_SESSION_KEY) === "1"; }
 function psAdminLogin(){ sessionStorage.setItem(PS_ADMIN_SESSION_KEY, "1"); }
 function psAdminLogout(){ sessionStorage.removeItem(PS_ADMIN_SESSION_KEY); }
+function psCheckAdminCredentials(username, password){
+  const s = psGetSettings();
+  return (username || "").trim() === s.adminUsername && password === s.adminPassword;
+}
+
+/* ---------- Seller/garage partner session ----------
+   Real login gate for seller-dashboard.html: a partner must enter the email
+   AvoraSouq admin has on file for their account PLUS the PIN admin issued them
+   (see psGenerateLoginPin()/psRegenerateSellerPin()). Both must match a
+   Verified record — unregistered emails and unapproved (Pending/Rejected)
+   accounts are always rejected, with no bypass. */
+const PS_SELLER_SESSION_KEY = "ps_seller_session";
+function psSellerLogin(sellerId){ sessionStorage.setItem(PS_SELLER_SESSION_KEY, sellerId); }
+function psSellerLogout(){ sessionStorage.removeItem(PS_SELLER_SESSION_KEY); }
+/* Returns the logged-in seller/garage record, or null if there's no session,
+   the account was deleted, or it's no longer Verified (e.g. admin revoked it
+   after login) — callers should treat null as "show the login gate again". */
+function psGetLoggedInSeller(){
+  const id = sessionStorage.getItem(PS_SELLER_SESSION_KEY);
+  if (!id) return null;
+  const s = psGetSellers().find(x => x.id === id);
+  if (!s || s.idStatus !== "Verified") return null;
+  return s;
+}
+/* Attempts a login with email+PIN. Returns {ok:true, seller} on success, or
+   {ok:false, reason} describing exactly why (used to show the right message
+   in the login form: not registered vs. pending approval vs. wrong PIN). */
+function psAttemptSellerLogin(email, pin){
+  const s = psFindSellerByEmail(email);
+  if (!s) return {ok:false, reason:"not_registered"};
+  if (s.idStatus !== "Verified") return {ok:false, reason:"not_approved", seller:s};
+  if (String(s.loginPin || "") !== String(pin || "").trim()) return {ok:false, reason:"wrong_pin"};
+  psSellerLogin(s.id);
+  return {ok:true, seller:s};
+}

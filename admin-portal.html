@@ -149,10 +149,11 @@
   <div class="box">
     <div class="mark">AS</div>
     <h2>Admin Sign In</h2>
-    <p>Demo authentication only — this build has no real backend, so any non-empty password unlocks the portal. Do not reuse a real password here.</p>
-    <input id="login-pass" type="password" placeholder="Enter any password">
+    <p>This is a separate, dedicated login for the AvoraSouq admin team only — sellers and garages sign in on the Partner Dashboard instead. Credentials are checked for real (stored locally in this demo build, changeable in Settings). Default: <b>admin</b> / <b>AvoraSouq@2026</b>.</p>
+    <input id="login-user" type="text" placeholder="Username" autocomplete="username">
+    <input id="login-pass" type="password" placeholder="Password" autocomplete="current-password">
     <button onclick="attemptLogin()">Sign In</button>
-    <p class="err" id="login-err">Please enter a password.</p>
+    <p class="err" id="login-err">Incorrect username or password.</p>
   </div>
 </div>
 
@@ -321,7 +322,8 @@
       <div class="topbar"><div><h1>Spare Part Sellers</h1><span>Directory of registered spare part suppliers + ID verification</span></div></div>
       <div class="panel">
         <h3>Seller Directory</h3>
-        <table id="sellers-table"><tr><th>AvoraSouq ID</th><th>Business</th><th>Type</th><th>Emirate</th><th>Plan</th><th>Listings</th><th>ID Status</th><th>Notes</th><th>Action</th></tr></table>
+        <p class="sub">Email + Login PIN below is exactly what a seller/garage needs to sign in to the Partner Dashboard — only Verified accounts can log in.</p>
+        <table id="sellers-table"><tr><th>AvoraSouq ID</th><th>Business</th><th>Type</th><th>Emirate</th><th>Login Email</th><th>Login PIN</th><th>Plan</th><th>Listings</th><th>ID Status</th><th>Notes</th><th>Action</th></tr></table>
       </div>
     </div>
 
@@ -493,6 +495,16 @@
         <button class="save-btn" onclick="saveSettings()">Save Settings</button>
         <span class="save-confirm" id="st-confirm">✓ Saved</span>
       </div>
+      <div class="panel">
+        <h3>Admin Sign-In Credentials</h3>
+        <p class="sub">Controls the separate Admin Portal login page — sellers/garages use their own email+PIN login on the Partner Dashboard instead.</p>
+        <div class="form-grid">
+          <div class="form-field"><label>Admin Username</label><input id="st-adminuser"></div>
+          <div class="form-field"><label>New Password (leave blank to keep current)</label><input id="st-adminpass" type="password" autocomplete="new-password"></div>
+        </div>
+        <button class="save-btn" onclick="saveAdminCredentials()">Update Credentials</button>
+        <span class="save-confirm" id="st-cred-confirm">✓ Updated</span>
+      </div>
     </div>
 
   </div>
@@ -523,11 +535,17 @@
 <script>
   /* ---------- Login gate (demo-only) ---------- */
   function attemptLogin(){
+    const user = document.getElementById("login-user").value;
     const pass = document.getElementById("login-pass").value;
-    if (!pass){ document.getElementById("login-err").style.display = "block"; return; }
+    if (!psCheckAdminCredentials(user, pass)){
+      document.getElementById("login-err").style.display = "block";
+      return;
+    }
+    document.getElementById("login-err").style.display = "none";
     psAdminLogin();
     document.getElementById("login-gate").style.display = "none";
   }
+  document.getElementById("login-user").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
   document.getElementById("login-pass").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
   function adminSignOut(){
     psAdminLogout();
@@ -673,7 +691,12 @@
       const actionTd = tr.lastElementChild;
       const approveBtn = document.createElement("button");
       approveBtn.className = "rowbtn approve"; approveBtn.textContent = "Approve";
-      approveBtn.onclick = () => { psSetApplicationStatus(a.id, "Approved"); renderAll(); };
+      approveBtn.onclick = () => {
+        psSetApplicationStatus(a.id, "Approved");
+        const created = psFindSellerByEmail(a.email);
+        if (created) alert("Approved! " + created.name + " can now log in to the Partner Dashboard with:\n\nEmail: " + created.email + "\nLogin PIN: " + created.loginPin + "\n\nShare these with them — you can also see/regenerate this PIN anytime under Sellers.");
+        renderAll();
+      };
       const rejectBtn = document.createElement("button");
       rejectBtn.className = "rowbtn reject"; rejectBtn.textContent = "Reject";
       rejectBtn.onclick = () => { psSetApplicationStatus(a.id, "Rejected"); renderAll(); };
@@ -832,6 +855,8 @@
       const notes = (s.idStatus === "Rejected" && s.lastComment) ? s.lastComment : "—";
       const plan = psGetSellerPlan(s.id);
       tr.innerHTML = "<td style='font-family:monospace;font-size:12px;'>" + psSellerPsId(s.id) + "</td><td>" + s.name + "</td><td>" + s.type + "</td><td>" + s.emirate + "</td>" +
+        "<td style='font-size:12px;'>" + (s.email || "<span style='color:var(--text-muted);'>— none —</span>") + "</td>" +
+        "<td style='font-family:monospace;font-weight:700;'>" + (s.loginPin || "—") + "</td>" +
         "<td>" + plan.tier + " · " + plan.cycle + "</td><td>" + s.listings + "</td>" +
         "<td><span class='status " + cls + "'" + (historyTitle ? " title=\"" + historyTitle.replace(/"/g,"&quot;") + "\"" : "") + ">" + s.idStatus + "</span></td>" +
         "<td style='max-width:170px;font-size:12px;color:var(--text-secondary);'>" + notes + "</td><td></td>";
@@ -841,6 +866,15 @@
       editBtn.className = "rowbtn"; editBtn.textContent = "Edit";
       editBtn.onclick = () => openEditSellerModal(s.id);
       actionTd.appendChild(editBtn);
+
+      const pinBtn = document.createElement("button");
+      pinBtn.className = "rowbtn"; pinBtn.textContent = "Regenerate PIN";
+      pinBtn.onclick = () => {
+        const pin = psRegenerateSellerPin(s.id);
+        alert("New login PIN for " + s.name + ": " + pin + "\n\nShare this with the partner along with their registered email (" + (s.email || "no email on file yet — add one via Edit") + ") so they can sign in.");
+        renderAll();
+      };
+      actionTd.appendChild(pinBtn);
 
       if (s.idStatus !== "Verified"){
         const approveBtn = document.createElement("button");
@@ -874,20 +908,32 @@
       "<div class='form-field'><label>Type</label><select id='gm-type'><option>Spare Part Supplier</option><option>Garage / Workshop</option></select></div>" +
       "<div class='form-field'><label>Emirate</label><select id='gm-emirate'>" + emirates.map(e => "<option>" + e + "</option>").join("") + "</select></div>" +
       "</div>" +
-      "<div class='form-field' style='margin-bottom:12px;'><label>Listings Count</label><input id='gm-listings' type='number' min='0'></div>";
+      "<div class='form-field' style='margin-bottom:12px;'><label>Listings Count</label><input id='gm-listings' type='number' min='0'></div>" +
+      "<div class='form-field' style='margin-bottom:12px;'><label>Login Email (this is what the partner signs in with)</label><input id='gm-email' type='email' placeholder='partner@example.com'></div>" +
+      "<div class='form-field'><label>Login PIN</label><input id='gm-pin' placeholder='4-digit PIN'></div>";
     document.getElementById("gm-name").value = s.name;
     document.getElementById("gm-type").value = s.type;
     document.getElementById("gm-emirate").value = s.emirate;
     document.getElementById("gm-listings").value = s.listings || 0;
+    document.getElementById("gm-email").value = s.email || "";
+    document.getElementById("gm-pin").value = s.loginPin || "";
     document.getElementById("gm-save").style.display = "";
     document.getElementById("gm-save").onclick = () => {
       const name = document.getElementById("gm-name").value.trim();
       if (!name){ alert("Business name can't be empty."); return; }
+      const email = document.getElementById("gm-email").value.trim();
+      const existing = email ? psFindSellerByEmail(email) : null;
+      if (existing && existing.id !== id){
+        alert("That email is already registered to another partner (" + existing.name + "). Each login email must be unique.");
+        return;
+      }
       psEditSeller(id, {
         name: name,
         type: document.getElementById("gm-type").value,
         emirate: document.getElementById("gm-emirate").value,
-        listings: Number(document.getElementById("gm-listings").value) || 0
+        listings: Number(document.getElementById("gm-listings").value) || 0,
+        email: email,
+        loginPin: document.getElementById("gm-pin").value.trim()
       });
       closeGenericModal();
       renderAll();
@@ -1124,6 +1170,11 @@
       "<div style='display:flex;gap:12px;margin-top:12px;'>" +
       "<div style='flex:1;'><b style='font-size:11px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;'>Mulkiya</b>" + (o.mulkiya ? "<img src='" + o.mulkiya + "' style='width:100%;border-radius:8px;border:1px solid var(--border);'>" : "<div style='font-size:12px;color:var(--text-muted);'>Not uploaded</div>") + "</div>" +
       "<div style='flex:1;'><b style='font-size:11px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;'>Old Part Photo</b>" + (o.oldPartPhoto ? "<img src='" + o.oldPartPhoto + "' style='width:100%;border-radius:8px;border:1px solid var(--border);'>" : "<div style='font-size:12px;color:var(--text-muted);'>Not uploaded</div>") + "</div>" +
+      "</div>" +
+      "<div style='margin-top:14px;'><b style='font-size:11px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;'>Status History (audit trail)</b>" +
+      (psGetOrderHistory(o.id).length
+        ? "<ul style='margin:0;padding-left:18px;font-size:12.5px;color:var(--text-secondary);'>" + psGetOrderHistory(o.id).map(h => "<li>" + h.at + " — " + h.status + "</li>").join("") + "</ul>"
+        : "<div style='font-size:12px;color:var(--text-muted);'>Placed as \"Pending Admin Review\" — no status changes recorded yet.</div>") +
       "</div>";
     document.getElementById("gm-save").style.display = "none";
     document.getElementById("generic-modal").classList.add("open");
@@ -1337,6 +1388,18 @@
     document.getElementById("st-commission").value = s.commissionPct;
     document.getElementById("st-adminname").value = s.adminName;
     document.getElementById("st-maintenance").checked = s.maintenanceMode;
+    document.getElementById("st-adminuser").value = s.adminUsername;
+    document.getElementById("st-adminpass").value = "";
+  }
+  function saveAdminCredentials(){
+    const username = document.getElementById("st-adminuser").value.trim();
+    const password = document.getElementById("st-adminpass").value;
+    if (!username){ alert("Admin username can't be empty."); return; }
+    const fields = {adminUsername: username};
+    if (password) fields.adminPassword = password;
+    psSetSettings(fields);
+    document.getElementById("st-adminpass").value = "";
+    flashConfirm("st-cred-confirm");
   }
   function saveSettings(){
     psSetSettings({

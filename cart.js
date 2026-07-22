@@ -14,6 +14,7 @@ function psSaveCart(cart){
   psUpdateCartBadge();
 }
 function psAddToCart(id, qty){
+  if (!psIsBuyerLoggedIn()){ psRequireBuyerLogin(); return; }
   qty = qty || 1;
   const cart = psGetCart();
   const line = cart.find(c => c.id === id);
@@ -101,6 +102,31 @@ function psGetProfile(){
   return {name: "Irfan A.", email: "irfan.aidigital@gmail.com"};
 }
 function psSaveProfile(profile){ localStorage.setItem(PS_PROFILE_KEY, JSON.stringify(profile)); }
+
+/* ---------- Buyer login (real, required before checkout/Add to Cart) ----------
+   Any real email can register as a buyer — unlike sellers/garages there is no
+   admin-approval step for buyers, so this is a lightweight "prove you own this
+   email" check rather than a registry lookup: log in by entering an email,
+   then a verification code. Since this static site has no real mail server to
+   send that code to, the code is shown on-screen, clearly labeled as a demo
+   stand-in for what would be emailed in production. */
+const PS_BUYER_SESSION_KEY = "ps_buyer_session";
+function psIsBuyerLoggedIn(){ return !!sessionStorage.getItem(PS_BUYER_SESSION_KEY); }
+function psGetLoggedInBuyerEmail(){ return sessionStorage.getItem(PS_BUYER_SESSION_KEY) || null; }
+function psBuyerLogin(email){
+  sessionStorage.setItem(PS_BUYER_SESSION_KEY, email);
+  const profile = psGetProfile();
+  psSaveProfile(Object.assign({}, profile, {email: email}));
+}
+function psBuyerLogout(){ sessionStorage.removeItem(PS_BUYER_SESSION_KEY); }
+function psGenerateVerificationCode(){ return String(Math.floor(100000 + Math.random() * 899999)); }
+/* Sends the visitor to the login page and back again once they're signed in —
+   used by psAddToCart()/psPlaceOrder() below so there is no way to add an item
+   or place an order while logged out. */
+function psRequireBuyerLogin(){
+  const back = location.pathname.split("/").pop() + location.search;
+  location.href = "login-register.html?type=buyer&redirect=" + encodeURIComponent(back);
+}
 // Make sure the badge reflects the cart's real (persisted) count on every
 // fresh page load too — not just after an in-session add/remove.
 document.addEventListener("DOMContentLoaded", psUpdateCartBadge);
@@ -112,7 +138,10 @@ const PS_SEED_ORDERS = [
 ];
 /* Order status can be changed by the admin portal for BOTH seed demo orders
    and real placed orders — overrides are stored separately so a status change
-   sticks even though PS_SEED_ORDERS itself is a constant. */
+   sticks even though PS_SEED_ORDERS itself is a constant. Each override also
+   keeps a full history/audit trail (who changed it to what, and when), stored
+   in the same admin-owned localStorage — this is the real history the admin
+   approve→forward→seller pipeline is supposed to keep. */
 const PS_ORDER_STATUS_OVERRIDES_KEY = "ps_order_status_overrides";
 function psGetOrders(){
   let overrides = {};
@@ -120,12 +149,19 @@ function psGetOrders(){
   let stored = [];
   try { stored = JSON.parse(localStorage.getItem(PS_ORDERS_KEY)) || []; } catch(e){ stored = []; }
   const all = stored.concat(PS_SEED_ORDERS);
-  return all.map(o => overrides[o.id] ? Object.assign({}, o, {status: overrides[o.id]}) : o);
+  return all.map(o => overrides[o.id] ? Object.assign({}, o, {status: overrides[o.id].status, history: overrides[o.id].history}) : o);
+}
+function psGetOrderHistory(id){
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(PS_ORDER_STATUS_OVERRIDES_KEY)) || {}; } catch(e){ overrides = {}; }
+  return (overrides[id] && overrides[id].history) || [];
 }
 function psSetOrderStatus(id, status){
   let overrides = {};
   try { overrides = JSON.parse(localStorage.getItem(PS_ORDER_STATUS_OVERRIDES_KEY)) || {}; } catch(e){ overrides = {}; }
-  overrides[id] = status;
+  const prevHistory = (overrides[id] && overrides[id].history) || [];
+  const history = prevHistory.concat([{status: status, at: new Date().toLocaleString()}]);
+  overrides[id] = {status: status, history: history};
   localStorage.setItem(PS_ORDER_STATUS_OVERRIDES_KEY, JSON.stringify(overrides));
 }
 /* details (optional) = {buyer:{name,phone,address,emirate,area}, oldPartPhoto, mulkiya}
@@ -133,6 +169,7 @@ function psSetOrderStatus(id, status){
    Mulkiya against the order before it's ever forwarded to a seller for dispatch,
    matching the real verified-fitment workflow (not a fake status). */
 function psPlaceOrder(details){
+  if (!psIsBuyerLoggedIn()){ psRequireBuyerLogin(); return null; }
   const lines = psCartLines();
   if (!lines.length) return null;
   const subtotal = psCartSubtotal();

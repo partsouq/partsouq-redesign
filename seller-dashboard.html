@@ -99,8 +99,26 @@
   #generic-modal{display:none;position:fixed;inset:0;background:rgba(15,20,30,.55);z-index:1500;align-items:center;justify-content:center;padding:20px;}
   #generic-modal.open{display:flex;}
   #generic-modal .gm-box{background:#fff;border-radius:14px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;position:relative;}
+  #generic-modal .gm-box.wide{max-width:640px;}
+  .edit-photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+  .edit-photo-box{border:1.5px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:11px;color:var(--text-secondary);background:var(--bg-alt);position:relative;}
+  .edit-photo-box img{width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:4px;background:#fff;}
+  .edit-photo-box .noimg{width:100%;height:56px;border-radius:6px;margin-bottom:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);border:1px dashed var(--border);}
+  .edit-photo-box b{display:block;font-size:10.5px;margin-bottom:6px;}
+  .edit-photo-box .ep-actions{display:flex;gap:4px;}
+  .edit-photo-box .ep-actions label, .edit-photo-box .ep-actions button{flex:1;font-size:10px;padding:4px 2px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;}
+  .edit-photo-box .ep-actions button.ep-remove{color:var(--danger-red);}
   #generic-modal .gm-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);}
   #generic-modal h3{font-size:16px;margin:0 0 14px;}
+
+  #login-gate{position:fixed;inset:0;background:var(--bg-dark);display:flex;align-items:center;justify-content:center;z-index:2000;padding:20px;}
+  #login-gate .box{background:#fff;border-radius:14px;padding:30px;max-width:380px;width:100%;text-align:center;}
+  #login-gate .box .mark{width:44px;height:44px;border-radius:10px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:16px;margin:0 auto 14px;}
+  #login-gate h2{font-size:18px;margin:0 0 6px;}
+  #login-gate p{font-size:12.5px;color:var(--text-secondary);margin:0 0 18px;line-height:1.5;}
+  #login-gate input{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:12px;box-sizing:border-box;}
+  #login-gate button{width:100%;padding:11px;border-radius:8px;background:var(--brand-blue);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;}
+  #login-gate .err{color:var(--danger-red);font-size:12px;margin-top:10px;display:none;text-align:left;}
 
   /* mobile topbar + off-canvas sidebar */
   #mobile-topbar{display:none;}
@@ -160,6 +178,18 @@
 </style>
 </head>
 <body>
+<div id="login-gate">
+  <div class="box">
+    <div class="mark">AS</div>
+    <h2>Partner Sign In</h2>
+    <p>Only sellers/garages already registered <b>and</b> approved by the AvoraSouq admin team can access this dashboard — there is no bypass. Enter the email AvoraSouq has on file for your business and the login PIN admin issued you.</p>
+    <input id="lg-email" type="email" placeholder="Registered business email">
+    <input id="lg-pin" placeholder="Login PIN">
+    <button onclick="attemptSellerLogin()">Sign In</button>
+    <p class="err" id="lg-err"></p>
+    <p style="font-size:11.5px;color:var(--text-muted);margin-top:14px;">Not registered yet? <a href="become-a-partner.html" style="color:var(--brand-blue);font-weight:600;">Apply to become a partner</a>.</p>
+  </div>
+</div>
 <div id="mobile-topbar">
   <button onclick="toggleSidebar()" aria-label="Menu">☰</button>
   <b>Partner Portal</b>
@@ -174,7 +204,7 @@
     <div class="navlink" data-page="listings">📦 My Listings</div>
     <div class="navlink" data-page="addlisting">➕ Add Listing</div>
     <div class="navlink" data-page="orders">🧾 Orders</div>
-    <div class="navlink" data-page="garagebookings">📅 Garage Bookings</div>
+    <div class="navlink" data-page="garagebookings" id="garagebookings-navlink" style="display:none;">📅 Garage Bookings</div>
     <div class="navlink" data-page="statement">💵 Payment Statement</div>
     <div class="navsection">Account</div>
     <div class="navlink" data-page="profile">👤 My Profile</div>
@@ -249,8 +279,8 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Part Name *</label>
-            <select id="al-part-select" style="margin-bottom:8px;"><option value="">Select from list, or type below</option></select>
-            <input id="al-part-custom" placeholder="Type the part name">
+            <input id="al-part-name" list="al-part-list" placeholder="Select from the list, or type a new part name">
+            <datalist id="al-part-list"></datalist>
           </div>
           <div class="form-field"><label>OEM / Part Number *</label><input id="al-oem" placeholder="e.g. 04465-0K250"></div>
         </div>
@@ -269,6 +299,10 @@
         <div class="form-grid">
           <div class="form-field"><label>Warranty *</label><div style="display:flex;gap:8px;"><input id="al-warranty" type="number" min="0" placeholder="e.g. 6"><select id="al-warranty-unit" style="max-width:120px;"><option>Day(s)</option><option>Month(s)</option><option>Year(s)</option></select></div></div>
           <div class="form-field"><label>Estimated Delivery Time *</label><div style="display:flex;gap:8px;"><input id="al-delivery" type="number" min="0" placeholder="e.g. 2"><select id="al-delivery-unit" style="max-width:120px;"><option>Hour(s)</option><option>Day(s)</option></select></div></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Delivery</label><select id="al-delivery-method"><option>Delivery Available</option><option>Pickup Only</option></select></div>
+          <div class="form-field"><label>Delivery Fee (AED)</label><input id="al-delivery-fee" type="number" min="0" placeholder="e.g. 20"></div>
         </div>
         <div class="form-field" style="margin-bottom:14px;"><label>Discount % (optional)</label><input id="al-discount" type="number" min="0" max="90" placeholder="e.g. 10"></div>
 
@@ -337,7 +371,7 @@
         <div class="form-field" style="margin-bottom:16px;"><label>Address</label><input id="pf-address" placeholder="e.g. Warehouse address, Emirate"></div>
         <div style="display:flex;gap:10px;">
           <button class="save-btn" style="flex:1;" onclick="saveProfile()">Save Changes</button>
-          <button class="rowbtn reject" style="flex:none;" onclick="location.href='index.html'">Sign Out</button>
+          <button class="rowbtn reject" style="flex:none;" onclick="signOut()">Sign Out</button>
         </div>
         <span class="save-confirm" id="pf-confirm">✓ Saved</span>
         <div class="form-grid" style="margin-top:20px;">
@@ -358,7 +392,7 @@
 </nav>
 
 <div id="generic-modal">
-  <div class="gm-box">
+  <div class="gm-box" id="gm-box">
     <button class="gm-close" onclick="closeGenericModal()">✕</button>
     <h3 id="gm-title">Edit</h3>
     <div id="gm-body"></div>
@@ -373,12 +407,49 @@
 <script src="cart.js"></script>
 <script src="admin-data.js"></script>
 <script>
-  /* Demo-only identity: this dashboard always represents one fixed seller
-     (no real login system exists — see the standing disclosure in chat).
-     Everything below reads/writes the SAME localStorage the storefront and
-     the admin portal use, so it's real data, not a mock feed. */
-  const SELLER_NAME = "Al Twal Auto Parts";
-  function getSeller(){ return psGetSellers().find(s => s.name === SELLER_NAME) || {id:"s1", name:SELLER_NAME, type:"Spare Part Supplier", emirate:"Dubai", idStatus:"Verified", listings:0}; }
+  /* ---------- Real login gate ----------
+     No fixed/hardcoded seller anymore — whoever is logged in (checked against
+     admin-approved seller/garage records by email+PIN, see admin-data.js) is
+     who this dashboard represents. Everything below reads/writes the SAME
+     localStorage the storefront and the admin portal use, so it's real data. */
+  let SELLER_NAME = null;
+  let CURRENT_SELLER_ID = null;
+  function getSeller(){ return psGetSellers().find(s => s.id === CURRENT_SELLER_ID) || {id:"", name:"", type:"", emirate:"", idStatus:"Pending", listings:0}; }
+
+  function attemptSellerLogin(){
+    const email = document.getElementById("lg-email").value.trim();
+    const pin = document.getElementById("lg-pin").value.trim();
+    const errEl = document.getElementById("lg-err");
+    const result = psAttemptSellerLogin(email, pin);
+    if (!result.ok){
+      const messages = {
+        not_registered: "This email isn't registered with AvoraSouq. Apply via Become a Partner — unregistered accounts cannot log in.",
+        not_approved: "Your account (" + (result.seller ? result.seller.name : "this business") + ") is still pending AvoraSouq admin approval.",
+        wrong_pin: "Incorrect PIN for that email. Contact AvoraSouq admin if you've lost your PIN."
+      };
+      errEl.textContent = messages[result.reason] || "Login failed.";
+      errEl.style.display = "block";
+      return;
+    }
+    startSession(result.seller);
+  }
+  document.getElementById("lg-pin").addEventListener("keydown", e => { if (e.key === "Enter") attemptSellerLogin(); });
+
+  function startSession(seller){
+    SELLER_NAME = seller.name;
+    CURRENT_SELLER_ID = seller.id;
+    document.getElementById("login-gate").style.display = "none";
+    document.getElementById("garagebookings-navlink").style.display = seller.type === "Garage / Workshop" ? "" : "none";
+    renderAll();
+  }
+  function signOut(){
+    psSellerLogout();
+    location.reload();
+  }
+  (function(){
+    const existing = psGetLoggedInSeller();
+    if (existing) startSession(existing);
+  })();
 
   /* ---------- Navigation ---------- */
   document.querySelectorAll(".navlink[data-page]").forEach(el => {
@@ -504,29 +575,140 @@
       table.appendChild(tr);
     });
   }
+  let gmPhotos = {}; // working copy of this listing's photos while the Edit modal is open
   function openEditListingModal(id){
     const p = getSellerListings().find(x => x.id === id);
     if (!p) return;
-    document.getElementById("gm-title").textContent = "Edit — " + p.name;
+    document.getElementById("gm-box").classList.add("wide");
+    document.getElementById("gm-title").textContent = "Edit Listing — " + p.name;
+    gmPhotos = Object.assign({front:null, side:null, top:null, back:null}, p.photos || {});
+    if (!gmPhotos.front && p.image) gmPhotos.front = p.image;
+
+    const catOptions = PS_CATEGORIES.map(c => "<option" + (c === p.category ? " selected" : "") + ">" + c + "</option>").join("");
+    const condOptions = ["New","Used – Excellent","Used – Good","Used – Fair"].map(c => "<option" + (c === p.condition ? " selected" : "") + ">" + c + "</option>").join("");
+    const specOptions = ["","GCC","American","Japanese","European"].map(c => "<option" + (c === (p.carSpec||"") ? " selected" : "") + ">" + (c || "Select") + "</option>").join("");
+    const deliveryMethodOptions = ["Delivery Available","Pickup Only"].map(c => "<option" + (c === (p.deliveryMethod||"Delivery Available") ? " selected" : "") + ">" + c + "</option>").join("");
+    const warrantyUnitOptions = ["Day(s)","Month(s)","Year(s)"].map(c => "<option" + (c === (p.warrantyUnit||"") ? " selected" : "") + ">" + c + "</option>").join("");
+    const deliveryUnitOptions = ["Hour(s)","Day(s)"].map(c => "<option" + (c === (p.estDeliveryUnit||"") ? " selected" : "") + ">" + c + "</option>").join("");
+
     document.getElementById("gm-body").innerHTML =
-      "<div class='form-field' style='margin-bottom:12px;'><label>Price (AED)</label><input id='gm-price' type='number'></div>" +
-      "<div class='form-field' style='margin-bottom:12px;'><label>Discount %</label><input id='gm-discount' type='number' min='0' max='90'></div>" +
-      "<div class='form-field'><label>Description</label><textarea id='gm-desc' rows='3'></textarea></div>";
+      "<div class='form-field' style='margin-bottom:12px;'><label>Part Name *</label><input id='gm-name' list='gm-part-list'><datalist id='gm-part-list'></datalist></div>" +
+      "<div class='form-field' style='margin-bottom:12px;'><label>OEM / Part Number *</label><input id='gm-oem'></div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Category *</label><select id='gm-category'>" + catOptions + "</select></div>" +
+        "<div class='form-field'><label>Condition *</label><select id='gm-condition'>" + condOptions + "</select></div>" +
+      "</div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Car Brand</label><input id='gm-brand' list='gm-brand-list'><datalist id='gm-brand-list'></datalist></div>" +
+        "<div class='form-field'><label>Car Model</label><input id='gm-model'></div>" +
+      "</div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Year Range</label><input id='gm-yearrange'></div>" +
+        "<div class='form-field'><label>Car Spec</label><select id='gm-carspec'>" + specOptions + "</select></div>" +
+      "</div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Engine No. / Code</label><input id='gm-engine'></div>" +
+        "<div class='form-field'><label>Chassis No. / Type</label><input id='gm-chassis'></div>" +
+      "</div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Price (AED) *</label><input id='gm-price' type='number'></div>" +
+        "<div class='form-field'><label>Discount %</label><input id='gm-discount' type='number' min='0' max='90'></div>" +
+      "</div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Delivery</label><select id='gm-delivery-method'>" + deliveryMethodOptions + "</select></div>" +
+        "<div class='form-field'><label>Delivery Fee (AED)</label><input id='gm-delivery-fee' type='number' min='0'></div>" +
+      "</div>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Estimated Delivery Time *</label><div style='display:flex;gap:8px;'><input id='gm-est-delivery' type='number' min='0' style='flex:1;'><select id='gm-est-delivery-unit' style='max-width:110px;'>" + deliveryUnitOptions + "</select></div></div>" +
+        "<div class='form-field'><label>Warranty *</label><div style='display:flex;gap:8px;'><input id='gm-warranty' type='number' min='0' style='flex:1;'><select id='gm-warranty-unit' style='max-width:110px;'>" + warrantyUnitOptions + "</select></div></div>" +
+      "</div>" +
+      "<div class='form-field' style='margin-bottom:14px;'><label>Description</label><textarea id='gm-desc' rows='3'></textarea></div>" +
+      "<label style='display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:8px;'>Part Photos</label>" +
+      "<div class='edit-photo-grid' id='gm-photo-grid'></div>";
+
+    document.getElementById("gm-name").value = p.name || "";
+    [...new Set(PS_PRODUCTS.map(x=>x.name))].sort((a,b)=>a.localeCompare(b)).forEach(n => { const o = document.createElement("option"); o.value=n; document.getElementById("gm-part-list").appendChild(o); });
+    document.getElementById("gm-oem").value = p.oem || p.sku || "";
+    document.getElementById("gm-brand").value = p.brand || "";
+    Object.keys(CAR_DB).forEach(b => { const o = document.createElement("option"); o.value=b; document.getElementById("gm-brand-list").appendChild(o); });
+    document.getElementById("gm-model").value = p.model || "";
+    document.getElementById("gm-yearrange").value = p.yearRange || "";
+    document.getElementById("gm-engine").value = p.engineCode || "";
+    document.getElementById("gm-chassis").value = p.chassis || "";
     document.getElementById("gm-price").value = p.price;
     document.getElementById("gm-discount").value = p.discountPct || "";
+    document.getElementById("gm-delivery-fee").value = p.deliveryFee || 20;
+    document.getElementById("gm-est-delivery").value = p.estDelivery || "";
+    document.getElementById("gm-warranty").value = p.warranty || "";
     document.getElementById("gm-desc").value = p.desc || "";
+
+    function renderGmPhotoGrid(){
+      const grid = document.getElementById("gm-photo-grid");
+      grid.innerHTML = ["front","side","top","back"].map(key => {
+        const label = key[0].toUpperCase() + key.slice(1);
+        const thumb = gmPhotos[key] ? "<img src='" + gmPhotos[key] + "'>" : "<div class='noimg'>📷</div>";
+        return "<div class='edit-photo-box'>" + thumb + "<b>" + label + "</b>" +
+          "<div class='ep-actions'>" +
+            "<label>Replace<input type='file' accept='image/*' data-photo-key='" + key + "' style='display:none;'></label>" +
+            (gmPhotos[key] ? "<button type='button' class='ep-remove' data-remove-key='" + key + "'>✕</button>" : "") +
+          "</div>" +
+        "</div>";
+      }).join("");
+      grid.querySelectorAll("input[data-photo-key]").forEach(input => {
+        input.addEventListener("change", () => {
+          const file = input.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = e => { gmPhotos[input.dataset.photoKey] = e.target.result; renderGmPhotoGrid(); };
+          reader.readAsDataURL(file);
+        });
+      });
+      grid.querySelectorAll("button[data-remove-key]").forEach(btn => {
+        btn.addEventListener("click", () => { gmPhotos[btn.dataset.removeKey] = null; renderGmPhotoGrid(); });
+      });
+    }
+    renderGmPhotoGrid();
+
     document.getElementById("gm-save").onclick = () => {
+      const name = document.getElementById("gm-name").value.trim();
+      const oem = document.getElementById("gm-oem").value.trim();
+      const price = Number(document.getElementById("gm-price").value);
+      if (!name || !oem || !price){
+        alert("Part Name, OEM/Part Number and Price are required.");
+        return;
+      }
       psOverrideListing(id, {
-        price: Number(document.getElementById("gm-price").value) || p.price,
+        name: name,
+        oem: oem, sku: oem,
+        category: document.getElementById("gm-category").value,
+        condition: document.getElementById("gm-condition").value,
+        brand: document.getElementById("gm-brand").value.trim(),
+        model: document.getElementById("gm-model").value.trim(),
+        yearRange: document.getElementById("gm-yearrange").value.trim(),
+        carSpec: document.getElementById("gm-carspec").value,
+        engineCode: document.getElementById("gm-engine").value.trim(),
+        chassis: document.getElementById("gm-chassis").value.trim(),
+        price: price,
         discountPct: Number(document.getElementById("gm-discount").value) || null,
-        desc: document.getElementById("gm-desc").value
+        deliveryMethod: document.getElementById("gm-delivery-method").value,
+        deliveryFee: Number(document.getElementById("gm-delivery-fee").value) || 20,
+        estDelivery: document.getElementById("gm-est-delivery").value,
+        estDeliveryUnit: document.getElementById("gm-est-delivery-unit").value,
+        warranty: document.getElementById("gm-warranty").value,
+        warrantyUnit: document.getElementById("gm-warranty-unit").value,
+        desc: document.getElementById("gm-desc").value,
+        photos: Object.assign({}, gmPhotos),
+        image: gmPhotos.front || gmPhotos.side || gmPhotos.top || gmPhotos.back || null
       });
       closeGenericModal();
       renderAll();
     };
     document.getElementById("generic-modal").classList.add("open");
   }
-  function closeGenericModal(){ document.getElementById("generic-modal").classList.remove("open"); }
+  function closeGenericModal(){
+    document.getElementById("generic-modal").classList.remove("open");
+    document.getElementById("gm-box").classList.remove("wide");
+  }
 
   /* ---------- Add Listing ---------- */
   let alPhotos = {front:null, side:null, top:null, back:null};
@@ -553,8 +735,8 @@
   function fillAddListingForm(){
     const catSel = document.getElementById("al-category");
     if (!catSel.options.length) PS_CATEGORIES.forEach(c => { const o = document.createElement("option"); o.value=c; o.textContent=c; catSel.appendChild(o); });
-    const partSel = document.getElementById("al-part-select");
-    if (partSel.options.length <= 1) [...new Set(PS_PRODUCTS.map(p=>p.name))].forEach(n => { const o = document.createElement("option"); o.value=n; o.textContent=n; partSel.appendChild(o); });
+    const partList = document.getElementById("al-part-list");
+    if (!partList.options.length) [...new Set(PS_PRODUCTS.map(p=>p.name))].sort((a,b)=>a.localeCompare(b)).forEach(n => { const o = document.createElement("option"); o.value=n; partList.appendChild(o); });
     const brandList = document.getElementById("al-brand-list");
     if (!brandList.options.length) Object.keys(CAR_DB).forEach(b => { const o = document.createElement("option"); o.value=b; brandList.appendChild(o); });
   }
@@ -565,7 +747,7 @@
   });
 
   function submitNewListing(){
-    const name = document.getElementById("al-part-select").value || document.getElementById("al-part-custom").value.trim();
+    const name = document.getElementById("al-part-name").value.trim();
     const oem = document.getElementById("al-oem").value.trim();
     const category = document.getElementById("al-category").value;
     const condition = document.getElementById("al-condition").value;
@@ -584,6 +766,8 @@
       carSpec: document.getElementById("al-carspec").value,
       warranty: document.getElementById("al-warranty").value, warrantyUnit: document.getElementById("al-warranty-unit").value,
       estDelivery: document.getElementById("al-delivery").value, estDeliveryUnit: document.getElementById("al-delivery-unit").value,
+      deliveryMethod: document.getElementById("al-delivery-method").value,
+      deliveryFee: Number(document.getElementById("al-delivery-fee").value) || 20,
       discountPct: Number(document.getElementById("al-discount").value) || null,
       chassis: document.getElementById("al-chassis").value.trim(),
       engineCode: document.getElementById("al-engine").value.trim(),
@@ -698,17 +882,20 @@
   }
 
   /* ---------- Garage Bookings ----------
-     This demo has a single hardcoded logged-in partner account (no real
-     multi-tenant login), so — same simplification as Orders/Listings above —
-     this shows every booking in the system rather than trying to guess which
-     garage "this" account owns. It reads the exact same psGetGarageBookings()
-     store the admin portal manages, so confirming here is real and visible
+     Only shown to accounts registered as "Garage / Workshop" (nav item is
+     hidden otherwise — see startSession()), and filtered to bookings made
+     against THIS garage's name, matching the exact psGetGarageBookings()
+     store the admin portal manages — confirming here is real and visible
      to admin too. */
   function renderGarageBookings(){
     const table = document.getElementById("garage-bookings-table");
     if (!table) return;
     while (table.rows.length > 1) table.deleteRow(1);
-    const list = psGetGarageBookings();
+    if (getSeller().type !== "Garage / Workshop"){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='9' class='empty-row'>Garage bookings are only shown to Garage / Workshop accounts.</td></tr>");
+      return;
+    }
+    const list = psGetGarageBookings().filter(b => b.garageName === SELLER_NAME);
     if (!list.length){
       table.insertAdjacentHTML("beforeend", "<tr><td colspan='9' class='empty-row'>No garage bookings yet.</td></tr>");
       return;
@@ -733,6 +920,7 @@
   }
 
   function renderAll(){
+    if (!CURRENT_SELLER_ID) return; // login gate is up — nothing to render yet
     renderDashboard();
     renderListings();
     fillAddListingForm();
@@ -741,7 +929,6 @@
     renderStatement();
     renderProfile();
   }
-  renderAll();
 </script>
 </body>
 </html>

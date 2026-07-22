@@ -127,6 +127,47 @@ function psRequireBuyerLogin(){
   const back = location.pathname.split("/").pop() + location.search;
   location.href = "login-register.html?type=buyer&redirect=" + encodeURIComponent(back);
 }
+
+/* ---------- Header account dropdown (Sign In / My Account / Log Out / Partner Dashboard) ----------
+   Shared by every page's header so "My Account" always reflects real buyer
+   login state — including a real Log Out option once you're signed in,
+   instead of only being reachable from deep inside My Account's sidebar. */
+function toggleAcctMenu(e){
+  if (e){ e.preventDefault(); e.stopPropagation(); }
+  const dd = document.getElementById("acct-dropdown");
+  if (!dd) return;
+  dd.classList.toggle("open");
+}
+function acctMenuLogout(){
+  if (confirm("Log out of AvoraSouq?")){
+    psBuyerLogout();
+    location.href = "index.html";
+  }
+}
+document.addEventListener("click", () => {
+  const dd = document.getElementById("acct-dropdown");
+  if (dd) dd.classList.remove("open");
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const dd = document.getElementById("acct-dropdown");
+  if (!dd) return;
+  dd.addEventListener("click", e => e.stopPropagation());
+  const signIn = document.getElementById("acct-link-signin");
+  const myAcct = document.getElementById("acct-link-myaccount");
+  const logout = document.getElementById("acct-link-logout");
+  const label = document.getElementById("acct-menu-label");
+  if (psIsBuyerLoggedIn()){
+    if (signIn) signIn.style.display = "none";
+    if (myAcct) myAcct.style.display = "block";
+    if (logout) logout.style.display = "block";
+    if (label) label.textContent = "My Account";
+  } else {
+    if (signIn) signIn.style.display = "block";
+    if (myAcct) myAcct.style.display = "none";
+    if (logout) logout.style.display = "none";
+    if (label) label.textContent = label.textContent; // unchanged ("Account" / "My Account")
+  }
+});
 // Make sure the badge reflects the cart's real (persisted) count on every
 // fresh page load too — not just after an in-session add/remove.
 document.addEventListener("DOMContentLoaded", psUpdateCartBadge);

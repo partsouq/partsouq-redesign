@@ -183,6 +183,10 @@
     <div class="mark">AS</div>
     <h2>Partner Sign In</h2>
     <p>Only sellers/garages already registered <b>and</b> approved by the AvoraSouq admin team can access this dashboard — there is no bypass. Enter the email AvoraSouq has on file for your business and the login PIN admin issued you.</p>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div id="lg-type-seller" class="lg-type active" onclick="selectLoginType('Spare Part Supplier')" style="flex:1;border:1.5px solid var(--brand-blue);background:var(--brand-blue-light);color:var(--brand-blue-dark);border-radius:8px;padding:9px 6px;font-size:12.5px;font-weight:700;cursor:pointer;">🏪 Spare Part Seller</div>
+      <div id="lg-type-garage" class="lg-type" onclick="selectLoginType('Garage / Workshop')" style="flex:1;border:1.5px solid var(--border);background:#fff;color:var(--text-secondary);border-radius:8px;padding:9px 6px;font-size:12.5px;font-weight:700;cursor:pointer;">🔧 Garage / Workshop</div>
+    </div>
     <input id="lg-email" type="email" placeholder="Registered business email">
     <input id="lg-pin" placeholder="Login PIN">
     <button onclick="attemptSellerLogin()">Sign In</button>
@@ -416,6 +420,20 @@
   let CURRENT_SELLER_ID = null;
   function getSeller(){ return psGetSellers().find(s => s.id === CURRENT_SELLER_ID) || {id:"", name:"", type:"", emirate:"", idStatus:"Pending", listings:0}; }
 
+  let LG_SELECTED_TYPE = "Spare Part Supplier";
+  function selectLoginType(type){
+    LG_SELECTED_TYPE = type;
+    const sellerTab = document.getElementById("lg-type-seller");
+    const garageTab = document.getElementById("lg-type-garage");
+    const isSeller = type === "Spare Part Supplier";
+    sellerTab.style.borderColor = isSeller ? "var(--brand-blue)" : "var(--border)";
+    sellerTab.style.background = isSeller ? "var(--brand-blue-light)" : "#fff";
+    sellerTab.style.color = isSeller ? "var(--brand-blue-dark)" : "var(--text-secondary)";
+    garageTab.style.borderColor = !isSeller ? "var(--brand-blue)" : "var(--border)";
+    garageTab.style.background = !isSeller ? "var(--brand-blue-light)" : "#fff";
+    garageTab.style.color = !isSeller ? "var(--brand-blue-dark)" : "var(--text-secondary)";
+    document.getElementById("lg-err").style.display = "none";
+  }
   function attemptSellerLogin(){
     const email = document.getElementById("lg-email").value.trim();
     const pin = document.getElementById("lg-pin").value.trim();
@@ -428,6 +446,12 @@
         wrong_pin: "Incorrect PIN for that email. Contact AvoraSouq admin if you've lost your PIN."
       };
       errEl.textContent = messages[result.reason] || "Login failed.";
+      errEl.style.display = "block";
+      return;
+    }
+    if (result.seller.type !== LG_SELECTED_TYPE){
+      psSellerLogout(); // psAttemptSellerLogin() already started a session before this type check — undo it, this login attempt doesn't count
+      errEl.textContent = "This email is registered as a " + result.seller.type + " account, not a " + LG_SELECTED_TYPE + " — select \"" + (result.seller.type === "Garage / Workshop" ? "Garage / Workshop" : "Spare Part Seller") + "\" above and sign in again.";
       errEl.style.display = "block";
       return;
     }

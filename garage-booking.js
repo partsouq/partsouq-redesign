@@ -1,4 +1,4 @@
-/* AvoraSouq shared "Book a Verified Garage" modal.
+/* Auto Corner shared "Book a Verified Garage" modal.
    Include after admin-data.js + products-data.js. Call openGarageBookingModal(garageId).
    Shows the garage's real profile data (rating, jobs completed, ETA, price range,
    coverage, specialties — all from PS_GARAGES / admin-data.js, nothing invented
@@ -78,7 +78,7 @@
           <div class="gb-field"><label>Issue Description</label><textarea id="gb-notes" rows="2" placeholder="Describe the issue or work needed..."></textarea></div>
           <div class="gb-field"><label>Pickup Required?</label><select id="gb-pickup"><option value="no">No — I will bring the car</option><option value="yes">Yes — pick up my car (+fee)</option></select></div>
 
-          <div class="gb-notice">ℹ️ Pay cash directly to the garage after service completion &amp; your inspection approval. All AvoraSouq partners — Cash on Delivery only.</div>
+          <div class="gb-notice">ℹ️ Pay cash directly to the garage after service completion &amp; your inspection approval. All Auto Corner partners — Cash on Delivery only.</div>
           <div class="gb-notice warn" id="gb-pickup-warn" style="display:none;">⚠ Pickup &amp; drop adds an extra cost based on distance — the garage will confirm the exact fee on WhatsApp.</div>
 
           <div class="gb-actions">
@@ -94,7 +94,7 @@
             <span style="color:var(--text-muted,#8A93A3);">Booking Reference</span>
             <b id="gb-ref"></b>
           </div>
-          <div class="gb-notice warn">⚠ All AvoraSouq partners — Cash on Delivery only. AvoraSouq will never ask for your bank details.</div>
+          <div class="gb-notice warn">⚠ All Auto Corner partners — Cash on Delivery only. Auto Corner will never ask for your bank details.</div>
           <button class="gb-btn primary" style="width:100%;" onclick="closeGarageBookingModal()">Done</button>
         </div>
       </div>

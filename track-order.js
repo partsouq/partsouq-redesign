@@ -1,4 +1,4 @@
-/* AvoraSouq shared "Track Order" modal — lets anyone check a real order or
+/* Auto Corner shared "Track Order" modal — lets anyone check a real order or
    garage booking's live status by reference number, without needing to open
    My Account. Include after cart.js + admin-data.js, then call
    openTrackOrderModal() from a header/footer link on any page. */

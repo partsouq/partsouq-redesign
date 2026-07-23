@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AvoraSouq — Partner Dashboard</title>
+<title>Auto Corner — Partner Dashboard</title>
 <style>
   :root{
     --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
@@ -180,9 +180,9 @@
 <body>
 <div id="login-gate">
   <div class="box">
-    <div class="mark">AS</div>
+    <div class="mark">AC</div>
     <h2>Partner Sign In</h2>
-    <p>Only sellers/garages already registered <b>and</b> approved by the AvoraSouq admin team can access this dashboard — there is no bypass. Enter the email AvoraSouq has on file for your business and the login PIN admin issued you.</p>
+    <p>Only sellers/garages already registered <b>and</b> approved by the Auto Corner admin team can access this dashboard — there is no bypass. Enter the email Auto Corner has on file for your business and the login PIN admin issued you.</p>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
       <div id="lg-type-seller" class="lg-type active" onclick="selectLoginType('Spare Part Supplier')" style="flex:1;border:1.5px solid var(--brand-blue);background:var(--brand-blue-light);color:var(--brand-blue-dark);border-radius:8px;padding:9px 6px;font-size:12.5px;font-weight:700;cursor:pointer;">🏪 Spare Part Seller</div>
       <div id="lg-type-garage" class="lg-type" onclick="selectLoginType('Garage / Workshop')" style="flex:1;border:1.5px solid var(--border);background:#fff;color:var(--text-secondary);border-radius:8px;padding:9px 6px;font-size:12.5px;font-weight:700;cursor:pointer;">🔧 Garage / Workshop</div>
@@ -203,7 +203,7 @@
 <div class="app">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-close" onclick="toggleSidebar(false)">✕</div>
-    <a href="index.html" class="logo"><div class="mark">AS</div><b>Partner Portal</b></a>
+    <a href="index.html" class="logo"><div class="mark">AC</div><b>Partner Portal</b></a>
     <div class="navlink active" data-page="dashboard">📊 Dashboard</div>
     <div class="navlink" data-page="listings">📦 My Listings</div>
     <div class="navlink" data-page="addlisting">➕ Add Listing</div>
@@ -217,6 +217,8 @@
 
   <div class="main">
 
+    <div id="blocked-banner" style="display:none;background:var(--danger-red-light);color:var(--danger-red);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;line-height:1.5;"></div>
+
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="topbar">
@@ -226,7 +228,7 @@
 
       <div class="plancard">
         <div>
-          <small>AVORASOUQ ID</small>
+          <small>AUTO CORNER ID</small>
           <div class="id" id="plan-psid">—</div>
         </div>
         <div>
@@ -256,7 +258,7 @@
 
       <div class="panel" style="background:var(--success-green-light);border:none;">
         <h3 style="color:var(--success-green);">💵 Cash on Delivery Reminder</h3>
-        <p style="font-size:13px;color:#0d6b4f;margin:0;">AvoraSouq will forward approved orders to you with the buyer's Mulkiya and delivery details. Dispatch only after admin approval.</p>
+        <p style="font-size:13px;color:#0d6b4f;margin:0;">Auto Corner will forward approved orders to you with the buyer's Mulkiya and delivery details. Dispatch only after admin approval.</p>
       </div>
     </div>
 
@@ -264,7 +266,7 @@
     <div class="page" id="page-listings">
       <div class="topbar"><div><h1>My Listings</h1><span id="listings-sub"></span></div><button class="save-btn" onclick="gotoPage('addlisting')">+ Add Part</button></div>
       <div class="panel">
-        <table id="listings-table"><tr><th>Image</th><th>Part</th><th>OEM / SKU</th><th>Price</th><th>Status</th><th>Action</th></tr></table>
+        <table id="listings-table"><tr><th>Listing ID</th><th>Image</th><th>Part</th><th>OEM / SKU</th><th>Price</th><th>Delivery Fee</th><th>Commission</th><th>Status</th><th>Action</th></tr></table>
       </div>
     </div>
 
@@ -305,8 +307,8 @@
           <div class="form-field"><label>Estimated Delivery Time *</label><div style="display:flex;gap:8px;"><input id="al-delivery" type="number" min="0" placeholder="e.g. 2"><select id="al-delivery-unit" style="max-width:120px;"><option>Hour(s)</option><option>Day(s)</option></select></div></div>
         </div>
         <div class="form-grid">
-          <div class="form-field"><label>Delivery</label><select id="al-delivery-method"><option>Delivery Available</option><option>Pickup Only</option></select></div>
-          <div class="form-field"><label>Delivery Fee (AED)</label><input id="al-delivery-fee" type="number" min="0" placeholder="e.g. 20"></div>
+          <div class="form-field"><label>Delivery</label><input value="Delivery is mandatory for every listing — pickup isn't offered" disabled style="background:var(--bg-alt);color:var(--text-muted);"></div>
+          <div class="form-field"><label>Delivery Fee (AED) *</label><input id="al-delivery-fee" type="number" min="0" placeholder="e.g. 20"></div>
         </div>
         <div class="form-field" style="margin-bottom:14px;"><label>Discount % (optional)</label><input id="al-discount" type="number" min="0" max="90" placeholder="e.g. 10"></div>
 
@@ -326,15 +328,16 @@
 
         <div class="policy-box">⚠ Policy: Only genuine, functional, good-condition parts. Damaged or misrepresented parts = immediate suspension. Buyers pay cash on receipt — part must match listing exactly.</div>
 
-        <button class="save-btn" onclick="submitNewListing()">Submit for Review</button>
-        <span class="save-confirm" id="al-confirm">✓ Submitted — awaiting AvoraSouq review</span>
-        <p style="font-size:11.5px;color:var(--text-muted);margin-top:10px;">New listings go to AvoraSouq for review before they appear in search.</p>
+        <button class="save-btn" id="al-submit-btn" onclick="submitNewListing()">Submit for Review</button>
+        <span class="save-confirm" id="al-confirm">✓ Submitted — awaiting Auto Corner review</span>
+        <p id="al-blocked-note" style="display:none;font-size:12px;color:var(--danger-red);margin-top:8px;">🚫 Your account is currently blocked due to pending commission — you cannot submit new listings until Auto Corner's admin/accounts team unblocks your account.</p>
+        <p style="font-size:11.5px;color:var(--text-muted);margin-top:10px;">New listings go to Auto Corner for review before they appear in search.</p>
       </div>
     </div>
 
     <!-- ORDERS -->
     <div class="page" id="page-orders">
-      <div class="topbar"><div><h1>Orders Received</h1><span>Only shows orders AvoraSouq has approved and forwarded to you</span></div></div>
+      <div class="topbar"><div><h1>Orders Received</h1><span>Only shows orders Auto Corner has approved and forwarded to you</span></div></div>
       <div id="orders-list"></div>
     </div>
 
@@ -348,7 +351,10 @@
 
     <!-- PAYMENT STATEMENT -->
     <div class="page" id="page-statement">
-      <div class="topbar"><div><h1>Payment Statement</h1><span>A running record of every payment AvoraSouq has confirmed receiving from you — like a bank statement.</span></div></div>
+      <div class="topbar"><div><h1>Payment Statement</h1><span>Your Auto Corner commission ledger and every payment confirmed against it.</span></div></div>
+      <div class="panel">
+        <div class="stats" id="commission-summary-stats" style="margin-bottom:4px;"></div>
+      </div>
       <div class="panel">
         <div style="background:var(--bg-dark);color:#fff;border-radius:10px;padding:20px;text-align:center;margin-bottom:18px;">
           <small style="color:var(--text-muted);text-transform:uppercase;font-size:11px;">Total Paid to Date</small>
@@ -441,9 +447,9 @@
     const result = psAttemptSellerLogin(email, pin);
     if (!result.ok){
       const messages = {
-        not_registered: "This email isn't registered with AvoraSouq. Apply via Become a Partner — unregistered accounts cannot log in.",
-        not_approved: "Your account (" + (result.seller ? result.seller.name : "this business") + ") is still pending AvoraSouq admin approval.",
-        wrong_pin: "Incorrect PIN for that email. Contact AvoraSouq admin if you've lost your PIN."
+        not_registered: "This email isn't registered with Auto Corner. Apply via Become a Partner — unregistered accounts cannot log in.",
+        not_approved: "Your account (" + (result.seller ? result.seller.name : "this business") + ") is still pending Auto Corner admin approval.",
+        wrong_pin: "Incorrect PIN for that email. Contact Auto Corner admin if you've lost your PIN."
       };
       errEl.textContent = messages[result.reason] || "Login failed.";
       errEl.style.display = "block";
@@ -574,14 +580,17 @@
     const table = document.getElementById("listings-table");
     table.querySelectorAll("tr:not(:first-child)").forEach(r=>r.remove());
     const listings = getSellerListings();
-    if (!listings.length) table.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No listings yet — add your first part.</td></tr>");
+    if (!listings.length) table.insertAdjacentHTML("beforeend", "<tr><td colspan='9' class='empty-row'>No listings yet — add your first part.</td></tr>");
     listings.forEach(p => {
       const tr = document.createElement("tr");
       const thumb = p.image ? '<img src="' + p.image + '">' : psIcon(p.category);
       const cls = p.status === "Approved" ? "green" : p.status === "Pending Review" ? "orange" : "red";
       const oem = p.oem || p.sku || "—";
       const discountTag = p.discountPct ? " (" + p.discountPct + "% off)" : "";
-      tr.innerHTML = "<td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + discountTag + "</td><td>" + oem + "</td><td>" + psFmt(p.price) + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td><td></td>";
+      const commissionText = p.status === "Approved"
+        ? (p.commissionType ? (p.commissionType === "Percent" ? p.commissionValue + "%" : "AED " + p.commissionValue + "/unit") : "—")
+        : "Set at approval";
+      tr.innerHTML = "<td style='font-family:monospace;font-size:11.5px;'>" + psListingDisplayId(p.id) + "</td><td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + discountTag + "</td><td>" + oem + "</td><td>" + psFmt(p.price) + "</td><td>" + psFmt(p.deliveryFee || 20) + "</td><td>" + commissionText + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td><td></td>";
       const actionTd = tr.lastElementChild;
       const editBtn = document.createElement("button");
       editBtn.className = "rowbtn"; editBtn.textContent = "Edit";
@@ -590,7 +599,7 @@
       const delBtn = document.createElement("button");
       delBtn.className = "rowbtn reject"; delBtn.textContent = "Request Deletion";
       delBtn.onclick = () => {
-        if (confirm("Send AvoraSouq a request to remove \"" + p.name + "\" from the live catalog?")){
+        if (confirm("Send Auto Corner a request to remove \"" + p.name + "\" from the live catalog?")){
           psRequestListingDeletion(p.id, p.name, SELLER_NAME);
           alert("Deletion request sent — an admin will review it.");
         }
@@ -611,7 +620,6 @@
     const catOptions = PS_CATEGORIES.map(c => "<option" + (c === p.category ? " selected" : "") + ">" + c + "</option>").join("");
     const condOptions = ["New","Used – Excellent","Used – Good","Used – Fair"].map(c => "<option" + (c === p.condition ? " selected" : "") + ">" + c + "</option>").join("");
     const specOptions = ["","GCC","American","Japanese","European"].map(c => "<option" + (c === (p.carSpec||"") ? " selected" : "") + ">" + (c || "Select") + "</option>").join("");
-    const deliveryMethodOptions = ["Delivery Available","Pickup Only"].map(c => "<option" + (c === (p.deliveryMethod||"Delivery Available") ? " selected" : "") + ">" + c + "</option>").join("");
     const warrantyUnitOptions = ["Day(s)","Month(s)","Year(s)"].map(c => "<option" + (c === (p.warrantyUnit||"") ? " selected" : "") + ">" + c + "</option>").join("");
     const deliveryUnitOptions = ["Hour(s)","Day(s)"].map(c => "<option" + (c === (p.estDeliveryUnit||"") ? " selected" : "") + ">" + c + "</option>").join("");
 
@@ -639,8 +647,8 @@
         "<div class='form-field'><label>Discount %</label><input id='gm-discount' type='number' min='0' max='90'></div>" +
       "</div>" +
       "<div class='form-grid'>" +
-        "<div class='form-field'><label>Delivery</label><select id='gm-delivery-method'>" + deliveryMethodOptions + "</select></div>" +
-        "<div class='form-field'><label>Delivery Fee (AED)</label><input id='gm-delivery-fee' type='number' min='0'></div>" +
+        "<div class='form-field'><label>Delivery</label><input value='Delivery is mandatory for every listing — pickup is not offered' disabled style='background:var(--bg-alt);color:var(--text-muted);'></div>" +
+        "<div class='form-field'><label>Delivery Fee (AED) *</label><input id='gm-delivery-fee' type='number' min='0'></div>" +
       "</div>" +
       "<div class='form-grid'>" +
         "<div class='form-field'><label>Estimated Delivery Time *</label><div style='display:flex;gap:8px;'><input id='gm-est-delivery' type='number' min='0' style='flex:1;'><select id='gm-est-delivery-unit' style='max-width:110px;'>" + deliveryUnitOptions + "</select></div></div>" +
@@ -697,8 +705,9 @@
       const name = document.getElementById("gm-name").value.trim();
       const oem = document.getElementById("gm-oem").value.trim();
       const price = Number(document.getElementById("gm-price").value);
-      if (!name || !oem || !price){
-        alert("Part Name, OEM/Part Number and Price are required.");
+      const deliveryFeeVal = document.getElementById("gm-delivery-fee").value;
+      if (!name || !oem || !price || deliveryFeeVal === ""){
+        alert("Part Name, OEM/Part Number, Price and Delivery Fee are required. Delivery is mandatory for every listing.");
         return;
       }
       psOverrideListing(id, {
@@ -714,8 +723,8 @@
         chassis: document.getElementById("gm-chassis").value.trim(),
         price: price,
         discountPct: Number(document.getElementById("gm-discount").value) || null,
-        deliveryMethod: document.getElementById("gm-delivery-method").value,
-        deliveryFee: Number(document.getElementById("gm-delivery-fee").value) || 20,
+        deliveryMethod: "Delivery Available",
+        deliveryFee: Number(deliveryFeeVal),
         estDelivery: document.getElementById("gm-est-delivery").value,
         estDeliveryUnit: document.getElementById("gm-est-delivery-unit").value,
         warranty: document.getElementById("gm-warranty").value,
@@ -771,14 +780,19 @@
   });
 
   function submitNewListing(){
+    if (psIsSellerBlocked(SELLER_NAME)){
+      alert("Your account is blocked due to pending commission — you cannot submit new listings until Auto Corner's admin/accounts team clears this and unblocks your account.");
+      return;
+    }
     const name = document.getElementById("al-part-name").value.trim();
     const oem = document.getElementById("al-oem").value.trim();
     const category = document.getElementById("al-category").value;
     const condition = document.getElementById("al-condition").value;
     const brand = document.getElementById("al-brand").value.trim();
     const price = Number(document.getElementById("al-price").value);
-    if (!name || !oem || !category || !condition || !brand || !price){
-      alert("Please fill in part name, OEM/part number, category, condition, car brand and price — all marked *.");
+    const deliveryFee = document.getElementById("al-delivery-fee").value;
+    if (!name || !oem || !category || !condition || !brand || !price || deliveryFee === ""){
+      alert("Please fill in part name, OEM/part number, category, condition, car brand, price and delivery fee — all marked *. Delivery is mandatory for every listing.");
       return;
     }
     const all = psGetAllSubmittedListings();
@@ -790,8 +804,8 @@
       carSpec: document.getElementById("al-carspec").value,
       warranty: document.getElementById("al-warranty").value, warrantyUnit: document.getElementById("al-warranty-unit").value,
       estDelivery: document.getElementById("al-delivery").value, estDeliveryUnit: document.getElementById("al-delivery-unit").value,
-      deliveryMethod: document.getElementById("al-delivery-method").value,
-      deliveryFee: Number(document.getElementById("al-delivery-fee").value) || 20,
+      deliveryMethod: "Delivery Available",
+      deliveryFee: Number(deliveryFee),
       discountPct: Number(document.getElementById("al-discount").value) || null,
       chassis: document.getElementById("al-chassis").value.trim(),
       engineCode: document.getElementById("al-engine").value.trim(),
@@ -821,7 +835,7 @@
     wrap.innerHTML = "";
     const orders = psGetOrdersForSeller(SELLER_NAME).filter(o => o.status !== "Pending Admin Review");
     if (!orders.length){
-      wrap.innerHTML = "<div class='panel'><p class='empty-row'>No approved orders yet. Orders appear here once AvoraSouq verifies the buyer's Mulkiya.</p></div>";
+      wrap.innerHTML = "<div class='panel'><p class='empty-row'>No approved orders yet. Orders appear here once Auto Corner verifies the buyer's Mulkiya.</p></div>";
       return;
     }
     const ORDER_FLOW = ["Processing","Out for Delivery","Delivered"];
@@ -859,6 +873,13 @@
 
   /* ---------- Payment Statement ---------- */
   function renderStatement(){
+    const summary = psGetSellerCommissionSummary(SELLER_NAME);
+    document.getElementById("commission-summary-stats").innerHTML = [
+      {label:"Commission Owed (Total)", val: psFmt(summary.commissionOwed)},
+      {label:"Paid", val: psFmt(summary.paid)},
+      {label:"Pending", val: psFmt(summary.pending), warn: summary.pending > 0},
+      {label:"Your Limit", val: psFmt(summary.limit)}
+    ].map(s => '<div class="stat"><b style="' + (s.warn ? "color:var(--danger-red);" : "") + '">' + s.val + '</b><span>' + s.label + '</span></div>').join("");
     const entries = psGetPaymentStatements(SELLER_NAME);
     const total = entries.reduce((s,e) => s + Number(e.amount||0), 0);
     document.getElementById("stmt-total").textContent = psFmt(total);
@@ -943,8 +964,33 @@
     });
   }
 
+  /* ---------- Commission block banner ----------
+     Reflects the real auto-block state computed in admin-data.js — if
+     pending commission has reached this seller's limit, Add Listing is
+     disabled below and a clear explanation shows here. Unblocking only
+     ever happens from the admin side (Partner Billing / partner-detail.html). */
+  function renderBlockedBanner(){
+    const banner = document.getElementById("blocked-banner");
+    const summary = psGetSellerCommissionSummary(SELLER_NAME);
+    if (summary.blocked){
+      banner.style.display = "block";
+      banner.innerHTML = "🚫 <b>Your account is blocked.</b> Pending commission owed to Auto Corner is AED " + summary.pending.toFixed(2) + ", which has reached your AED " + summary.limit.toFixed(2) + " limit. You cannot add new listings or receive new orders until Auto Corner's admin/accounts team clears this and unblocks your account — please contact them.";
+    } else {
+      banner.style.display = "none";
+    }
+    const submitBtn = document.getElementById("al-submit-btn");
+    const blockedNote = document.getElementById("al-blocked-note");
+    if (submitBtn){
+      submitBtn.disabled = summary.blocked;
+      submitBtn.style.opacity = summary.blocked ? "0.5" : "1";
+      submitBtn.style.cursor = summary.blocked ? "not-allowed" : "pointer";
+    }
+    if (blockedNote) blockedNote.style.display = summary.blocked ? "block" : "none";
+    return summary.blocked;
+  }
   function renderAll(){
     if (!CURRENT_SELLER_ID) return; // login gate is up — nothing to render yet
+    renderBlockedBanner();
     renderDashboard();
     renderListings();
     fillAddListingForm();

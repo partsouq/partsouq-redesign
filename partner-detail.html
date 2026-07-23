@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto Corner — Partner Detail</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
+    --border:#E2E8F0;
+    --text:#161B22; --text-secondary:#57606F; --text-muted:#8A93A3;
+    --brand-blue:#1E56D8; --brand-blue-dark:#14399B; --brand-blue-light:#EAF0FE;
+    --accent-orange:#FF7A1A; --accent-orange-light:#FFF1E6;
+    --success-green:#1FA37A; --success-green-light:#E7F8F1;
+    --danger-red:#D92D20; --danger-red-light:#FEF0EE;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg-alt);color:var(--text);}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:980px;margin:0 auto;padding:28px 24px 60px;}
+  .backlink{font-size:13px;color:var(--brand-blue);font-weight:600;display:inline-block;margin-bottom:16px;}
+  .head{display:flex;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+  .av{width:56px;height:56px;border-radius:50%;background:var(--brand-blue-light);color:var(--brand-blue-dark);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;flex-shrink:0;}
+  .head h1{font-size:22px;margin:0 0 4px;}
+  .head .meta{font-size:13px;color:var(--text-secondary);}
+  .badge{font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;display:inline-block;margin-top:6px;}
+  .badge.blocked{background:var(--danger-red-light);color:var(--danger-red);}
+  .badge.active{background:var(--success-green-light);color:var(--success-green);}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .stat span{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px;}
+  .stat b{font-size:20px;}
+  .stat.warn b{color:var(--danger-red);}
+  .stat.good b{color:var(--success-green);}
+
+  .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;}
+  .panel h3{font-size:15px;margin:0 0 4px;}
+  .panel .sub{font-size:12.5px;color:var(--text-secondary);margin:0 0 14px;}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{padding:10px 18px;border-radius:8px;font-weight:700;font-size:13px;border:none;cursor:pointer;}
+  .btn.primary{background:var(--brand-blue);color:#fff;}
+  .btn.danger{background:var(--danger-red-light);color:var(--danger-red);}
+  .btn.approve{background:var(--success-green);color:#fff;}
+  .btn.outline{background:#fff;border:1px solid var(--border);color:var(--text);}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;color:var(--text-muted);font-weight:600;font-size:11.5px;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:10px;border-bottom:1px solid var(--border);}
+  .status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+  .status.green{background:var(--success-green-light);color:var(--success-green);}
+  .status.orange{background:var(--accent-orange-light);color:#B75C10;}
+  .status.red{background:var(--danger-red-light);color:var(--danger-red);}
+  .empty-row{text-align:center;color:var(--text-muted);padding:20px;font-size:13px;}
+
+  #gate{position:fixed;inset:0;background:var(--bg-dark);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;}
+  #gate .box{background:#fff;border-radius:14px;padding:30px;max-width:380px;text-align:center;}
+  #gate a{color:var(--brand-blue);font-weight:700;}
+</style>
+</head>
+<body>
+
+<div id="gate" style="display:none;">
+  <div class="box">
+    <h2>Admin sign-in required</h2>
+    <p style="font-size:13px;color:var(--text-secondary);">This partner detail view is admin/accounts-team only. <a href="admin-portal.html">Sign in to the Admin Portal</a> first, then reopen this page from Partner Billing.</p>
+  </div>
+</div>
+
+<div class="wrap" id="content">
+  <a href="admin-portal.html" class="backlink">← Back to Admin Portal</a>
+  <div class="head">
+    <div class="av" id="pd-avatar">--</div>
+    <div>
+      <h1 id="pd-name">Loading…</h1>
+      <div class="meta" id="pd-meta"></div>
+      <span class="badge" id="pd-status-badge"></span>
+    </div>
+  </div>
+
+  <div class="stats" id="pd-stats"></div>
+
+  <div class="panel">
+    <h3>Commission &amp; Payment Control</h3>
+    <p class="sub">Blocking happens automatically once pending commission reaches the limit below — unblocking is always a manual action, and limit increases need MD approval.</p>
+    <div class="actions">
+      <button class="btn primary" id="pd-pay-btn">Record Payment</button>
+      <button class="btn danger" id="pd-block-btn">Block</button>
+      <button class="btn outline" id="pd-limit-btn">Request Limit Increase</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Listings</h3>
+    <p class="sub">Every listing this partner has on the platform, with its own Listing ID and commission rate.</p>
+    <table id="pd-listings-table"><tr><th>Listing ID</th><th>Part</th><th>Price</th><th>Delivery Fee</th><th>Commission</th><th>Status</th></tr></table>
+  </div>
+
+  <div class="panel">
+    <h3>Sales Order Report</h3>
+    <p class="sub">Every order that has generated commission for this partner (excludes orders still pending admin review or cancelled).</p>
+    <table id="pd-orders-table"><tr><th>Order</th><th>Item(s)</th><th>Sale Value</th><th>Commission</th><th>Status</th></tr></table>
+  </div>
+
+  <div class="panel">
+    <h3>Payment History</h3>
+    <table id="pd-payments-table"><tr><th>Date</th><th>Amount</th><th>Note</th></tr></table>
+  </div>
+</div>
+
+<script src="products-data.js"></script>
+<script src="cart.js"></script>
+<script src="admin-data.js"></script>
+<script>
+  if (!psIsAdminLoggedIn()){
+    document.getElementById("gate").style.display = "flex";
+    document.getElementById("content").style.display = "none";
+  } else {
+    const sellerName = new URLSearchParams(location.search).get("seller") || "";
+    const seller = psGetSellers().find(s => s.name === sellerName);
+
+    function render(){
+      const summary = psGetSellerCommissionSummary(sellerName);
+      document.getElementById("pd-avatar").textContent = sellerName.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
+      document.getElementById("pd-name").textContent = sellerName;
+      document.getElementById("pd-meta").textContent = seller ? (seller.type + " · " + seller.emirate + " · " + psSellerPsId(seller.id)) : "Not found in seller directory";
+      const badge = document.getElementById("pd-status-badge");
+      badge.textContent = summary.blocked ? "🚫 Blocked" : "✓ Active";
+      badge.className = "badge " + (summary.blocked ? "blocked" : "active");
+
+      document.getElementById("pd-stats").innerHTML = [
+        {label:"Listing Count", val: summary.listingsCount},
+        {label:"Listed Item Total Value", val: psFmt(summary.listedValue)},
+        {label:"Total Sold Value", val: psFmt(summary.soldValue)},
+        {label:"Units Sold", val: summary.unitsSold},
+        {label:"Auto Corner Commission (Total)", val: psFmt(summary.commissionOwed)},
+        {label:"Paid Commission", val: psFmt(summary.paid), cls:"good"},
+        {label:"Pending Commission", val: psFmt(summary.pending), cls: summary.pending > 0 ? "warn" : "good"},
+        {label:"Commission Limit", val: psFmt(summary.limit)}
+      ].map(s => "<div class='stat" + (s.cls ? " " + s.cls : "") + "'><span>" + s.label + "</span><b>" + s.val + "</b></div>").join("");
+
+      const blockBtn = document.getElementById("pd-block-btn");
+      blockBtn.textContent = summary.blocked ? "Unblock" : "Block";
+      blockBtn.className = "btn " + (summary.blocked ? "approve" : "danger");
+      blockBtn.onclick = () => {
+        if (summary.blocked){
+          psSetSellerBlocked(sellerName, false, "Manually unblocked by admin/accounts team.");
+        } else {
+          const reason = prompt("Reason for blocking " + sellerName + ":", "Manual block by admin/accounts team.");
+          if (reason === null) return;
+          psSetSellerBlocked(sellerName, true, reason || "Manual block by admin/accounts team.");
+        }
+        render();
+      };
+
+      document.getElementById("pd-pay-btn").onclick = () => {
+        const amt = prompt("Amount received from " + sellerName + " toward commission owed (AED):", summary.pending || summary.commissionOwed);
+        if (amt === null) return;
+        if (!amt || isNaN(Number(amt))){ alert("Please enter a valid amount."); return; }
+        psConfirmPayment(sellerName, Number(amt), "Commission settlement");
+        render();
+      };
+
+      document.getElementById("pd-limit-btn").onclick = () => {
+        const newLimit = prompt("New commission limit for " + sellerName + " (AED) — this Operations request needs MD approval before it takes effect:", summary.limit);
+        if (newLimit === null) return;
+        if (!newLimit || isNaN(Number(newLimit)) || Number(newLimit) <= summary.limit){ alert("Please enter a number greater than the current limit (" + psFmt(summary.limit) + ")."); return; }
+        const note = prompt("Reason for requesting this increase (shown to MD):", "");
+        psRequestLimitIncrease(sellerName, Number(newLimit), note || "");
+        alert("Request submitted — visible under Admin Portal > MD Approvals until decided.");
+      };
+
+      // Listings
+      const listingsTable = document.getElementById("pd-listings-table");
+      while (listingsTable.rows.length > 1) listingsTable.deleteRow(1);
+      const listings = psGetAllListings().filter(l => l.seller === sellerName);
+      if (!listings.length) listingsTable.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No listings yet.</td></tr>");
+      listings.forEach(l => {
+        const cls = l.status === "Approved" ? "green" : l.status === "Pending Review" ? "orange" : "red";
+        const commissionText = l.status === "Approved"
+          ? (l.commissionType ? (l.commissionType === "Percent" ? l.commissionValue + "%" : "AED " + l.commissionValue + "/unit") : "— (legacy rate)")
+          : "—";
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td style='font-family:monospace;font-size:11.5px;'>" + psListingDisplayId(l.id) + "</td><td>" + l.name + "</td><td>" + psFmt(l.price) + "</td><td>" + psFmt(l.deliveryFee || 0) + "</td><td>" + commissionText + "</td><td><span class='status " + cls + "'>" + l.status + "</span></td>";
+        listingsTable.appendChild(tr);
+      });
+
+      // Orders (sales order report)
+      const ordersTable = document.getElementById("pd-orders-table");
+      while (ordersTable.rows.length > 1) ordersTable.deleteRow(1);
+      const relevantOrders = psGetOrders().filter(o => o.status !== "Pending Admin Review" && o.status !== "Cancelled" && (o.items||[]).some(item => {
+        const product = item.id ? psFindProduct(item.id) : psFindProductByName(item.name);
+        return product && product.seller === sellerName;
+      }));
+      if (!relevantOrders.length) ordersTable.insertAdjacentHTML("beforeend", "<tr><td colspan='5' class='empty-row'>No qualifying sales yet.</td></tr>");
+      relevantOrders.forEach(o => {
+        const myItems = o.items.filter(item => {
+          const product = item.id ? psFindProduct(item.id) : psFindProductByName(item.name);
+          return product && product.seller === sellerName;
+        });
+        let saleValue = 0, commission = 0;
+        myItems.forEach(item => {
+          const product = item.id ? psFindProduct(item.id) : psFindProductByName(item.name);
+          const qty = item.qty || 1;
+          const lineValue = product.price * qty;
+          const rate = psEffectiveCommission(product);
+          saleValue += lineValue;
+          commission += rate.type === "Percent" ? (lineValue * (rate.value/100)) : (rate.value * qty);
+        });
+        const cls = o.status === "Delivered" ? "green" : o.status === "Cancelled" ? "red" : "orange";
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td>#" + o.id + "</td><td>" + myItems.map(i=>i.name).join(", ") + "</td><td>" + psFmt(saleValue) + "</td><td>" + psFmt(commission) + "</td><td><span class='status " + cls + "'>" + o.status + "</span></td>";
+        ordersTable.appendChild(tr);
+      });
+
+      // Payment history
+      const paymentsTable = document.getElementById("pd-payments-table");
+      while (paymentsTable.rows.length > 1) paymentsTable.deleteRow(1);
+      const payments = psGetPaymentStatements(sellerName);
+      if (!payments.length) paymentsTable.insertAdjacentHTML("beforeend", "<tr><td colspan='3' class='empty-row'>No payments recorded yet.</td></tr>");
+      payments.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td>" + p.at + "</td><td>" + psFmt(p.amount) + "</td><td>" + (p.note||"—") + "</td>";
+        paymentsTable.appendChild(tr);
+      });
+    }
+    render();
+  }
+</script>
+</body>
+</html>

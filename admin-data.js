@@ -1,4 +1,4 @@
-/* AvoraSouq shared admin/operations data layer.
+/* Auto Corner shared admin/operations data layer.
    Client-side demo store (localStorage) — every store here is read AND
    written by real pages on the site (not just the admin portal), so admin
    actions actually change what visitors see. A real production version of
@@ -83,16 +83,16 @@ function psSetApplicationStatus(id, status){
 
 /* ---------- Seller directory (seed + persisted edits + admin/application additions) ----------
    Every seller/garage record also carries `email` (the login identity) and `loginPin`
-   (a PIN issued by the AvoraSouq admin team — see psGenerateLoginPin()). Only accounts
+   (a PIN issued by the Auto Corner admin team — see psGenerateLoginPin()). Only accounts
    with idStatus === "Verified" AND a matching email+PIN can sign in to the Partner
    Dashboard (seller-dashboard.html) — there is no bypass around this check. */
 const PS_SELLERS_SEED = [
-  {id:"s1", name:"Al Twal Auto Parts",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Verified", listings:6, email:"altwal@avorasouq-demo.com",       loginPin:"1234"},
-  {id:"s2", name:"Gulf Auto Spares",     type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6, email:"gulfauto@avorasouq-demo.com",      loginPin:"2345"},
-  {id:"s3", name:"Sharjah Motor Spares", type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6, email:"sharjahmotor@avorasouq-demo.com",  loginPin:"3456"},
-  {id:"s4", name:"Deira Auto Traders",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Pending",  listings:6, email:"deira@avorasouq-demo.com",         loginPin:"4567"},
-  {id:"s5", name:"Al Barsha Garage",     type:"Garage / Workshop",   emirate:"Dubai",   idStatus:"Pending",  listings:0, email:"albarsha@avorasouq-demo.com",      loginPin:"5678"},
-  {id:"s6", name:"Speedfix Workshop",    type:"Garage / Workshop",   emirate:"Ajman",   idStatus:"Verified", listings:0, email:"speedfix@avorasouq-demo.com",      loginPin:"6789"}
+  {id:"s1", name:"Al Twal Auto Parts",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Verified", listings:6, email:"altwal@autocorner-demo.com",       loginPin:"1234"},
+  {id:"s2", name:"Gulf Auto Spares",     type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6, email:"gulfauto@autocorner-demo.com",      loginPin:"2345"},
+  {id:"s3", name:"Sharjah Motor Spares", type:"Spare Part Supplier", emirate:"Sharjah", idStatus:"Verified", listings:6, email:"sharjahmotor@autocorner-demo.com",  loginPin:"3456"},
+  {id:"s4", name:"Deira Auto Traders",   type:"Spare Part Supplier", emirate:"Dubai",   idStatus:"Pending",  listings:6, email:"deira@autocorner-demo.com",         loginPin:"4567"},
+  {id:"s5", name:"Al Barsha Garage",     type:"Garage / Workshop",   emirate:"Dubai",   idStatus:"Pending",  listings:0, email:"albarsha@autocorner-demo.com",      loginPin:"5678"},
+  {id:"s6", name:"Speedfix Workshop",    type:"Garage / Workshop",   emirate:"Ajman",   idStatus:"Verified", listings:0, email:"speedfix@autocorner-demo.com",      loginPin:"6789"}
 ];
 /* Generates a fresh 4-digit PIN — used when admin approves a new application
    and whenever admin clicks "Regenerate PIN" for an existing partner. */
@@ -218,7 +218,7 @@ function psAddListingDirect(listing){
   const rec = Object.assign({
     id: "admin-" + Math.floor(1000 + Math.random() * 8999),
     status: "Approved",
-    seller: "AvoraSouq Team",
+    seller: "Auto Corner Team",
     rating: 0, reviews: 0
   }, listing);
   list.push(rec);
@@ -237,7 +237,7 @@ function psGetAllListings(){
   return seed.concat(submitted);
 }
 function psGetLiveListings(){
-  return psGetAllListings().filter(l => l.status === "Approved" && l.status !== "Out of Stock");
+  return psGetAllListings().filter(l => l.status === "Approved" && l.status !== "Out of Stock" && !psIsSellerBlocked(l.seller));
 }
 
 /* ---------- Garage bookings ("Book a Verified Garage") ---------- */
@@ -280,7 +280,7 @@ const PS_CONTENT_DEFAULTS = {
     image: "images/promo-banner.jpg"
   },
   partnerBanner: {
-    title: "Grow your business with AvoraSouq",
+    title: "Grow your business with Auto Corner",
     subtitle: "Join 250+ verified sellers and garages already earning through the platform."
   },
   offerBanner: {
@@ -402,7 +402,7 @@ const PS_SETTINGS_KEY = "ps_admin_settings";
 /* adminUsername/adminPassword are a real (locally-stored, demo-only) admin
    credential pair — the admin login gate checks the entered username+password
    against these rather than accepting anything. Changeable from Admin > Settings. */
-const PS_SETTINGS_DEFAULTS = {commissionPct: 8, maintenanceMode: false, adminName: "Irfan A.", adminUsername: "admin", adminPassword: "AvoraSouq@2026"};
+const PS_SETTINGS_DEFAULTS = {commissionPct: 8, maintenanceMode: false, adminName: "Irfan A.", adminUsername: "admin", adminPassword: "AutoCorner@2026"};
 function psGetSettings(){
   let stored = {};
   try { stored = JSON.parse(localStorage.getItem(PS_SETTINGS_KEY)) || {}; } catch(e){ stored = {}; }
@@ -439,8 +439,8 @@ function psComputePartnerBilling(){
   return {rows: rows, unattributedUnits: unattributed, commissionPct: commissionPct};
 }
 
-/* ---------- Seller AvoraSouq ID + Subscription Plan ----------
-   Every seller gets a stable AvoraSouq ID (ASS-00001 style, based on their
+/* ---------- Seller Auto Corner ID + Subscription Plan ----------
+   Every seller gets a stable Auto Corner ID (ACS-00001 style, based on their
    position in the directory so it never changes across reloads) and a
    subscription plan record. This drives the Seller Dashboard's Dashboard
    and Profile pages, and is what the admin's Subscriptions & Payments /
@@ -450,7 +450,7 @@ function psSellerPsId(sellerId){
   const all = psGetSellers();
   const idx = all.findIndex(s => s.id === sellerId);
   const n = idx > -1 ? idx + 1 : ((Math.abs(String(sellerId).split("").reduce((a,c)=>a+c.charCodeAt(0),0)) % 99999) + 1);
-  return "ASS-" + String(n).padStart(5, "0");
+  return "ACS-" + String(n).padStart(5, "0");
 }
 function psGetAllSellerPlans(){
   try { return JSON.parse(localStorage.getItem(PS_SELLER_PLAN_KEY)) || {}; } catch(e){ return {}; }
@@ -542,7 +542,7 @@ function psCheckAdminCredentials(username, password){
 
 /* ---------- Seller/garage partner session ----------
    Real login gate for seller-dashboard.html: a partner must enter the email
-   AvoraSouq admin has on file for their account PLUS the PIN admin issued them
+   Auto Corner admin has on file for their account PLUS the PIN admin issued them
    (see psGenerateLoginPin()/psRegenerateSellerPin()). Both must match a
    Verified record — unregistered emails and unapproved (Pending/Rejected)
    accounts are always rejected, with no bypass. */
@@ -569,4 +569,224 @@ function psAttemptSellerLogin(email, pin){
   if (String(s.loginPin || "") !== String(pin || "").trim()) return {ok:false, reason:"wrong_pin"};
   psSellerLogin(s.id);
   return {ok:true, seller:s};
+}
+
+/* ==================================================================
+   COMMISSION, BILLING & PARTNER PAYMENT CONTROL
+   ------------------------------------------------------------------
+   Every listing that goes through the normal seller-submission ->
+   admin-review pipeline now carries its OWN commission (commissionType:
+   "Percent" | "Fixed", commissionValue: number) — set by admin AT THE
+   MOMENT of approval via psApproveListingWithCommission() below. A
+   listing cannot be approved without one (enforced in the admin UI).
+   Legacy/seed catalog items that were never submitted through this
+   pipeline don't have a per-listing commission, so billing falls back
+   to the platform-wide Settings rate for those only — everything new
+   going forward always has its own rate.
+   ================================================================== */
+
+/* ---------- Stable, human-readable Listing ID (e.g. LST-00042) ----------
+   Based on each listing's position in the full combined catalog
+   (seed + submitted, in the same stable order psGetAllListings() always
+   returns), so it never changes across reloads. */
+function psListingDisplayId(id){
+  const all = psGetAllListings();
+  const idx = all.findIndex(l => l.id === id);
+  const n = idx > -1 ? idx + 1 : (Math.abs(String(id).split("").reduce((a,c)=>a+c.charCodeAt(0),0)) % 99999) + 1;
+  return "LST-" + String(n).padStart(5, "0");
+}
+
+/* Approves a pending seller-submitted listing — commission is REQUIRED,
+   there is no way to approve without it. This is the only path that
+   should ever move a listing from "Pending Review" to "Approved". */
+function psApproveListingWithCommission(id, commissionType, commissionValue){
+  if ((commissionType !== "Percent" && commissionType !== "Fixed") || !(Number(commissionValue) > 0)){
+    return {ok:false, reason:"Commission (Percent or Fixed AED, greater than 0) is required to approve a listing."};
+  }
+  psOverrideListing(id, {
+    status: "Approved",
+    commissionType: commissionType,
+    commissionValue: Number(commissionValue)
+  });
+  return {ok:true};
+}
+
+/* Effective commission rate lookup for a specific listing/product — its
+   own commissionType/commissionValue if it has one (set at approval),
+   otherwise the platform-wide fallback rate from Settings (legacy/seed
+   items only). Returns {type, value} where type is always "Percent" here
+   for the fallback case. */
+function psEffectiveCommission(product){
+  if (product && (product.commissionType === "Percent" || product.commissionType === "Fixed") && Number(product.commissionValue) > 0){
+    return {type: product.commissionType, value: Number(product.commissionValue)};
+  }
+  return {type: "Percent", value: psGetSettings().commissionPct};
+}
+
+/* ---------- Partner Billing (reworked to use each listing's OWN commission) ----------
+   Orders still "Pending Admin Review" don't count yet — nothing is owed
+   to Auto Corner until admin has actually reviewed and forwarded the
+   order. Cancelled orders never count. Everything else (Processing, Out
+   for Delivery, Delivered) does, matching "commission is generated once
+   the sale is confirmed by admin." */
+function psComputePartnerBilling(){
+  const commissionPct = psGetSettings().commissionPct;
+  const bySeller = {};
+  let unattributed = 0;
+  psGetOrders().forEach(order => {
+    if (order.status === "Pending Admin Review" || order.status === "Cancelled") return;
+    order.items.forEach(item => {
+      const product = item.id ? psFindProduct(item.id) : psFindProductByName(item.name);
+      if (!product){ unattributed += (item.qty || 1); return; }
+      const seller = product.seller || "Unknown Seller";
+      if (!bySeller[seller]) bySeller[seller] = {seller: seller, unitsSold: 0, salesValue: 0, commissionOwed: 0};
+      const qty = item.qty || 1;
+      const lineValue = product.price * qty;
+      const rate = psEffectiveCommission(product);
+      const lineCommission = rate.type === "Percent" ? (lineValue * (rate.value / 100)) : (rate.value * qty);
+      bySeller[seller].unitsSold += qty;
+      bySeller[seller].salesValue += lineValue;
+      bySeller[seller].commissionOwed += lineCommission;
+    });
+  });
+  const rows = Object.values(bySeller).map(r => Object.assign(r, {
+    commissionOwed: Math.round(r.commissionOwed * 100) / 100
+  }));
+  rows.sort((a,b) => b.salesValue - a.salesValue);
+  return {rows: rows, unattributedUnits: unattributed, commissionPct: commissionPct};
+}
+
+/* ---------- Partner commission limit (auto-block threshold) ----------
+   Default AED 500 per seller/garage unless Operations has requested (and
+   MD has approved — see the Limit Increase workflow below) a higher one. */
+const PS_SELLER_LIMITS_KEY = "ps_seller_commission_limits";
+const PS_DEFAULT_COMMISSION_LIMIT = 500;
+function psGetSellerLimit(sellerName){
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(PS_SELLER_LIMITS_KEY)) || {}; } catch(e){ overrides = {}; }
+  return overrides[sellerName] || PS_DEFAULT_COMMISSION_LIMIT;
+}
+function psSetSellerLimit(sellerName, newLimit){
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(PS_SELLER_LIMITS_KEY)) || {}; } catch(e){ overrides = {}; }
+  overrides[sellerName] = Number(newLimit);
+  localStorage.setItem(PS_SELLER_LIMITS_KEY, JSON.stringify(overrides));
+}
+
+/* ---------- Blocked state ----------
+   Blocking happens automatically the moment pending commission reaches
+   the limit. Unblocking is ALWAYS a manual admin/accounts-team action —
+   paying down the balance never auto-unblocks, matching "should reach
+   out to the admin team" to get unblocked. */
+const PS_SELLER_BLOCKED_KEY = "ps_seller_blocked";
+function psGetBlockedMap(){
+  try { return JSON.parse(localStorage.getItem(PS_SELLER_BLOCKED_KEY)) || {}; } catch(e){ return {}; }
+}
+function psIsSellerBlocked(sellerName){
+  psRefreshAutoBlock(sellerName); // self-healing: re-evaluate the auto-block condition before answering
+  const map = psGetBlockedMap();
+  return !!(map[sellerName] && map[sellerName].blocked);
+}
+/* Lightweight version of the pending-commission check, safe to call from
+   psIsSellerBlocked() on every listing lookup (storefront pages call this
+   often) — does the same math as psGetSellerCommissionSummary() without
+   the extra listing-count/listed-value work that function also does. */
+function psRefreshAutoBlock(sellerName){
+  if (!sellerName) return;
+  const billing = psComputePartnerBilling();
+  const row = billing.rows.find(r => r.seller === sellerName);
+  if (!row) return; // no sales yet — nothing can be owed, nothing to block
+  const paid = psGetPaymentStatements(sellerName).reduce((s,p) => s + Number(p.amount||0), 0);
+  const pending = Math.max(0, Math.round((row.commissionOwed - paid) * 100) / 100);
+  const limit = psGetSellerLimit(sellerName);
+  psCheckAutoBlock(sellerName, pending, limit);
+}
+function psGetBlockInfo(sellerName){
+  return psGetBlockedMap()[sellerName] || null;
+}
+function psSetSellerBlocked(sellerName, blocked, reason){
+  const map = psGetBlockedMap();
+  const prevHistory = (map[sellerName] && map[sellerName].history) || [];
+  const history = prevHistory.concat([{blocked: blocked, reason: reason || "", at: new Date().toLocaleString()}]);
+  map[sellerName] = {blocked: blocked, reason: reason || "", history: history};
+  localStorage.setItem(PS_SELLER_BLOCKED_KEY, JSON.stringify(map));
+}
+/* Checked every time a seller's commission summary is computed (see
+   psGetSellerCommissionSummary below) — this is the single choke point
+   that keeps the auto-block state in sync with reality.
+   IMPORTANT: reads the blocked map DIRECTLY (not via psIsSellerBlocked,
+   which itself calls psRefreshAutoBlock -> psCheckAutoBlock) — calling
+   psIsSellerBlocked() from in here would recurse infinitely the moment
+   pending first reaches the limit. */
+function psCheckAutoBlock(sellerName, pending, limit){
+  const alreadyBlocked = !!(psGetBlockedMap()[sellerName] && psGetBlockedMap()[sellerName].blocked);
+  if (pending >= limit && !alreadyBlocked){
+    psSetSellerBlocked(sellerName, true, "Auto-blocked: pending commission of AED " + pending.toFixed(2) + " reached the AED " + limit.toFixed(2) + " limit.");
+  }
+}
+
+/* ---------- Full per-partner commission summary ----------
+   The single source of truth behind the Partner Billing table, the
+   partner detail popup, and the seller-dashboard's own "what do I owe"
+   view. Also where auto-blocking is evaluated. */
+function psGetSellerCommissionSummary(sellerName){
+  const billing = psComputePartnerBilling();
+  const row = billing.rows.find(r => r.seller === sellerName) || {seller: sellerName, unitsSold: 0, salesValue: 0, commissionOwed: 0};
+  const paid = psGetPaymentStatements(sellerName).reduce((s,p) => s + Number(p.amount||0), 0);
+  const pending = Math.max(0, Math.round((row.commissionOwed - paid) * 100) / 100);
+  const limit = psGetSellerLimit(sellerName);
+  const listings = psGetAllListings().filter(l => l.seller === sellerName && l.status !== "Removed" && l.status !== "Rejected");
+  const listedValue = listings.reduce((s,l) => s + (l.price || 0), 0);
+  const blocked = psIsSellerBlocked(sellerName); // also re-evaluates + applies the auto-block condition
+  return {
+    seller: sellerName,
+    listingsCount: listings.length,
+    listedValue: listedValue,
+    unitsSold: row.unitsSold,
+    soldValue: row.salesValue,
+    commissionOwed: row.commissionOwed,
+    paid: paid,
+    pending: pending,
+    limit: limit,
+    blocked: blocked,
+    blockInfo: psGetBlockInfo(sellerName)
+  };
+}
+
+/* ---------- Limit-increase requests (Operations proposes, MD approves) ----------
+   A higher limit never takes effect just because Operations asked for it —
+   only psDecideLimitRequest() approving it actually changes the seller's
+   limit. This models the two-step "Operations requests, MD approves"
+   process inside this single admin login (this demo has one shared admin
+   account rather than separate Operations/Accounts/MD logins — everything
+   below is still fully real and enforced, just operated by whoever is
+   signed in to Admin at the time). */
+const PS_LIMIT_REQUESTS_KEY = "ps_limit_increase_requests";
+function psGetLimitRequests(){
+  try { return JSON.parse(localStorage.getItem(PS_LIMIT_REQUESTS_KEY)) || []; } catch(e){ return []; }
+}
+function psRequestLimitIncrease(sellerName, requestedLimit, note){
+  const list = psGetLimitRequests();
+  const rec = {
+    id: "LIM-" + Math.floor(1000 + Math.random() * 8999),
+    sellerName: sellerName,
+    currentLimit: psGetSellerLimit(sellerName),
+    requestedLimit: Number(requestedLimit),
+    note: note || "",
+    status: "Pending MD Approval",
+    at: new Date().toLocaleString()
+  };
+  list.unshift(rec);
+  localStorage.setItem(PS_LIMIT_REQUESTS_KEY, JSON.stringify(list));
+  return rec;
+}
+function psDecideLimitRequest(id, approve, decisionNote){
+  const list = psGetLimitRequests();
+  const rec = list.find(r => r.id === id);
+  if (!rec) return;
+  rec.status = approve ? "Approved" : "Rejected";
+  rec.decisionNote = decisionNote || "";
+  rec.decidedAt = new Date().toLocaleString();
+  localStorage.setItem(PS_LIMIT_REQUESTS_KEY, JSON.stringify(list));
+  if (approve) psSetSellerLimit(rec.sellerName, rec.requestedLimit);
 }

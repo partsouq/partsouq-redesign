@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AvoraSouq — My Account</title>
+<title>Auto Corner — My Account</title>
 <style>
   :root{
     --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
@@ -102,7 +102,7 @@
 </head>
 <body>
 
-  <header><div class="wrap"><a href="index.html" class="logo"><div class="mark">AS</div><div class="word"><b>AvoraSouq</b><small>AUTO PARTS MARKETPLACE</small></div></a><div style="display:flex;gap:10px;"><a href="index.html" class="btn">🏠 Home</a><a href="cart-checkout.html" class="btn" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a></div></div></header>
+  <header><div class="wrap"><a href="index.html" class="logo"><div class="mark">AC</div><div class="word"><b>Auto Corner</b><small>AUTO PARTS MARKETPLACE</small></div></a><div style="display:flex;gap:10px;"><a href="index.html" class="btn">🏠 Home</a><a href="cart-checkout.html" class="btn" style="position:relative;">🛒 Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a></div></div></header>
 
   <div class="wrap crumbs" style="padding-top:14px;font-size:12.5px;color:var(--text-muted);"><a href="index.html" style="color:var(--brand-blue);font-weight:600;">← Back to Home</a></div>
 
@@ -236,7 +236,7 @@
     if (deepLinkPage && document.getElementById("page-" + deepLinkPage)) showPage(deepLinkPage);
 
     function doLogout(){
-      if (confirm("Log out of AvoraSouq?")){
+      if (confirm("Log out of Auto Corner?")){
         psBuyerLogout();
         location.href = "login-register.html";
       }
@@ -383,7 +383,7 @@
           '<a href="search-results.html" class="btn">View Details</a>' +
           '<a href="#" class="btn" style="border-color:var(--accent-orange);color:#B75C10;" onclick="openDisputeModal(\'' + order.id + '\');return false;">⚠ Report an Issue</a>';
         /* Buyers can cancel their own order themselves — but only while it's
-           still "Pending Admin Review". Once AvoraSouq approves it and forwards
+           still "Pending Admin Review". Once Auto Corner approves it and forwards
            it to the seller for dispatch, cancellation has to go through support
            (matches what the homepage's Policies & Terms > Cancellations text
            now promises, and mirrors the seller-side cancel-order pattern). */

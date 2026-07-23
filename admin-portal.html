@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AvoraSouq — Admin Portal</title>
+<title>Auto Corner — Admin Portal</title>
 <style>
   :root{
     --bg:#FFFFFF; --bg-alt:#F5F7FA; --bg-dark:#10192E;
@@ -147,9 +147,9 @@
 
 <div id="login-gate">
   <div class="box">
-    <div class="mark">AS</div>
+    <div class="mark">AC</div>
     <h2>Admin Sign In</h2>
-    <p>This is a separate, dedicated login for the AvoraSouq admin team only — sellers and garages sign in on the Partner Dashboard instead. Credentials are checked for real (stored locally in this demo build, changeable in Settings). Default: <b>admin</b> / <b>AvoraSouq@2026</b>.</p>
+    <p>This is a separate, dedicated login for the Auto Corner admin team only — sellers and garages sign in on the Partner Dashboard instead. Credentials are checked for real (stored locally in this demo build, changeable in Settings). Default: <b>admin</b> / <b>AutoCorner@2026</b>.</p>
     <input id="login-user" type="text" placeholder="Username" autocomplete="username">
     <input id="login-pass" type="password" placeholder="Password" autocomplete="current-password">
     <button onclick="attemptLogin()">Sign In</button>
@@ -166,7 +166,7 @@
 <div class="app">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-close" onclick="toggleSidebar(false)">✕</div>
-    <a href="index.html" class="logo"><div class="mark">AS</div><b>Admin Portal</b></a>
+    <a href="index.html" class="logo"><div class="mark">AC</div><b>Admin Portal</b></a>
 
     <div class="navsection">Overview</div>
     <div class="navlink active" data-page="dashboard">📊 Dashboard</div>
@@ -187,6 +187,7 @@
     <div class="navsection">Finance (Accounts)</div>
     <div class="navlink" data-page="finance">📄 Subscriptions &amp; Payments</div>
     <div class="navlink" data-page="billing">💳 Partner Billing</div>
+    <div class="navlink" data-page="mdapprovals">🖋️ MD Approvals <span class="cnt" id="nav-mdapprovals-badge" style="display:none;">0</span></div>
 
     <div class="navsection">Listings</div>
     <div class="navlink" data-page="alllistings">≣ All Listings</div>
@@ -261,12 +262,12 @@
       <div class="topbar"><div><h1>Listing / Service Overrides</h1><span>Review new seller submissions — approve to publish, reject to send back</span></div></div>
       <div class="panel">
         <h3>Pending Review</h3>
-        <p class="sub">Listings sellers submitted with a photo — approve to publish, reject to send back.</p>
-        <table id="pending-listings"><tr><th>Image</th><th>Part</th><th>SKU</th><th>Category</th><th>Price</th><th>Seller</th><th>Action</th></tr></table>
+        <p class="sub">Listings sellers submitted with a photo — approving requires setting a commission (mandatory), rejecting sends it back.</p>
+        <table id="pending-listings"><tr><th>Listing ID</th><th>Image</th><th>Part</th><th>SKU</th><th>Price</th><th>Delivery Fee</th><th>Seller</th><th>Action</th></tr></table>
       </div>
       <div class="panel">
         <h3>Recently Decided</h3>
-        <table id="decided-listings"><tr><th>Image</th><th>Part</th><th>Seller</th><th>Status</th></tr></table>
+        <table id="decided-listings"><tr><th>Listing ID</th><th>Image</th><th>Part</th><th>Seller</th><th>Commission</th><th>Status</th></tr></table>
       </div>
     </div>
 
@@ -323,7 +324,7 @@
       <div class="panel">
         <h3>Seller Directory</h3>
         <p class="sub">Email + Login PIN below is exactly what a seller/garage needs to sign in to the Partner Dashboard — only Verified accounts can log in.</p>
-        <table id="sellers-table"><tr><th>AvoraSouq ID</th><th>Business</th><th>Type</th><th>Emirate</th><th>Login Email</th><th>Login PIN</th><th>Plan</th><th>Listings</th><th>ID Status</th><th>Notes</th><th>Action</th></tr></table>
+        <table id="sellers-table"><tr><th>Auto Corner ID</th><th>Business</th><th>Type</th><th>Emirate</th><th>Login Email</th><th>Login PIN</th><th>Plan</th><th>Listings</th><th>ID Status</th><th>Notes</th><th>Action</th></tr></table>
       </div>
     </div>
 
@@ -365,11 +366,23 @@
     </div>
 
     <div class="page" id="page-billing">
-      <div class="topbar"><div><h1>Partner Billing</h1><span>Computed from real placed orders matched to each seller's catalog</span></div></div>
+      <div class="topbar"><div><h1>Partner Billing &amp; Commission Control</h1><span>Real per-partner commission ledger — click a name for the full breakdown</span></div></div>
       <div class="panel">
-        <p class="sub">Commission rate: <b id="billing-rate"></b> (set in System &gt; Settings). Order lines that can't be matched to a known product are shown separately rather than guessed.</p>
-        <table id="billing-table"><tr><th>Seller</th><th>Units Sold</th><th>Sales Value</th><th>Commission Owed</th><th>Paid to Date</th><th>Action</th></tr></table>
+        <p class="sub">Fallback rate for legacy/seed listings only: <b id="billing-rate"></b> (set in System &gt; Settings). Every listing approved through Pending Review carries its own commission instead. A partner is auto-blocked the moment their <b>pending</b> (unpaid) commission reaches their limit — unblocking is always a manual action here. Order lines that can't be matched to a known product are shown separately rather than guessed.</p>
+        <table id="billing-table"><tr><th>Seller / Garage</th><th>Listings</th><th>Listed Value</th><th>Units Sold</th><th>Sold Value</th><th>Commission Owed</th><th>Paid</th><th>Pending</th><th>Limit</th><th>Status</th><th>Action</th></tr></table>
         <p class="sub" id="billing-unattributed" style="margin-top:12px;"></p>
+      </div>
+    </div>
+
+    <div class="page" id="page-mdapprovals">
+      <div class="topbar"><div><h1>MD Approvals</h1><span>Commission-limit increase requests — a higher limit only takes effect once approved here</span></div></div>
+      <div class="panel">
+        <h3>Pending Requests</h3>
+        <table id="mdapprovals-pending-table"><tr><th>Seller / Garage</th><th>Current Limit</th><th>Requested Limit</th><th>Note</th><th>Requested</th><th>Action</th></tr></table>
+      </div>
+      <div class="panel">
+        <h3>Decided Requests</h3>
+        <table id="mdapprovals-decided-table"><tr><th>Seller / Garage</th><th>Current → Requested</th><th>Status</th><th>Decision Note</th></tr></table>
       </div>
     </div>
 
@@ -725,16 +738,16 @@
     clearRows("pending-listings");
     const pending = all.filter(l => l.status === "Pending Review");
     if (!pending.length){
-      pendingTable.insertAdjacentHTML("beforeend", "<tr><td colspan='7' class='empty-row'>No pending listings — all caught up.</td></tr>");
+      pendingTable.insertAdjacentHTML("beforeend", "<tr><td colspan='8' class='empty-row'>No pending listings — all caught up.</td></tr>");
     }
     pending.forEach(p => {
       const tr = document.createElement("tr");
       const thumb = p.image ? '<img src="' + p.image + '">' : psIcon(p.category);
-      tr.innerHTML = "<td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + "</td><td>" + p.sku + "</td><td>" + p.category + "</td><td>" + psFmt(p.price) + "</td><td>" + p.seller + "</td><td></td>";
+      tr.innerHTML = "<td style='font-family:monospace;font-size:11.5px;'>" + psListingDisplayId(p.id) + "</td><td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + "</td><td>" + p.sku + "</td><td>" + psFmt(p.price) + "</td><td>" + psFmt(p.deliveryFee || 0) + "</td><td>" + p.seller + "</td><td></td>";
       const actionTd = tr.lastElementChild;
       const approveBtn = document.createElement("button");
-      approveBtn.className = "rowbtn approve"; approveBtn.textContent = "Approve";
-      approveBtn.onclick = () => { psSetListingStatus(p.id, "Approved"); renderAll(); };
+      approveBtn.className = "rowbtn approve"; approveBtn.textContent = "Approve…";
+      approveBtn.onclick = () => openApproveListingModal(p.id);
       const rejectBtn = document.createElement("button");
       rejectBtn.className = "rowbtn reject"; rejectBtn.textContent = "Reject";
       rejectBtn.onclick = () => { psSetListingStatus(p.id, "Rejected"); renderAll(); };
@@ -746,15 +759,49 @@
     clearRows("decided-listings");
     const decided = all.filter(l => l.status === "Approved" || l.status === "Rejected");
     if (!decided.length){
-      decidedTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>Nothing decided yet.</td></tr>");
+      decidedTable.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>Nothing decided yet.</td></tr>");
     }
     decided.slice(-10).reverse().forEach(p => {
       const tr = document.createElement("tr");
       const thumb = p.image ? '<img src="' + p.image + '">' : psIcon(p.category);
       const cls = p.status === "Approved" ? "green" : "red";
-      tr.innerHTML = "<td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + "</td><td>" + p.seller + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td>";
+      const commissionText = p.status === "Approved"
+        ? (p.commissionType ? (p.commissionType === "Percent" ? p.commissionValue + "%" : "AED " + p.commissionValue + "/unit") : "— (legacy rate)")
+        : "—";
+      tr.innerHTML = "<td style='font-family:monospace;font-size:11.5px;'>" + psListingDisplayId(p.id) + "</td><td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + "</td><td>" + p.seller + "</td><td>" + commissionText + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td>";
       decidedTable.appendChild(tr);
     });
+  }
+  /* ---------- Approve-with-commission modal ---------- */
+  function openApproveListingModal(id){
+    const p = psGetAllSubmittedListings().find(l => l.id === id);
+    if (!p) return;
+    document.getElementById("gm-title").textContent = "Approve — " + p.name;
+    document.getElementById("gm-body").innerHTML =
+      "<p style='font-size:12.5px;color:var(--text-secondary);margin:0 0 14px;'>Listing ID <b>" + psListingDisplayId(id) + "</b> · Price " + psFmt(p.price) + " · Delivery Fee " + psFmt(p.deliveryFee || 0) + " · Seller: " + p.seller + "</p>" +
+      "<p style='font-size:12.5px;color:var(--text-secondary);margin:0 0 14px;'><b>Commission is mandatory</b> — this listing cannot be approved without it.</p>" +
+      "<div class='form-grid'>" +
+        "<div class='form-field'><label>Commission Type *</label><select id='am-comm-type'><option value='Percent'>Percent (%)</option><option value='Fixed'>Fixed (AED per unit)</option></select></div>" +
+        "<div class='form-field'><label>Commission Value *</label><input id='am-comm-value' type='number' min='0.01' step='0.01' placeholder='e.g. 8'></div>" +
+      "</div>" +
+      "<p class='err' id='am-err' style='display:none;color:#D92D20;font-size:12px;margin-top:6px;'></p>";
+    document.getElementById("am-comm-value").value = psGetSettings().commissionPct;
+    document.getElementById("gm-save").textContent = "Approve Listing";
+    document.getElementById("gm-save").onclick = () => {
+      const type = document.getElementById("am-comm-type").value;
+      const value = document.getElementById("am-comm-value").value;
+      const result = psApproveListingWithCommission(id, type, value);
+      if (!result.ok){
+        const err = document.getElementById("am-err");
+        err.textContent = result.reason;
+        err.style.display = "block";
+        return;
+      }
+      closeGenericModal();
+      document.getElementById("gm-save").textContent = "Save";
+      renderAll();
+    };
+    document.getElementById("generic-modal").classList.add("open");
   }
 
   /* ---------- Featured Banner Management ---------- */
@@ -943,6 +990,7 @@
   function closeGenericModal(){
     document.getElementById("generic-modal").classList.remove("open");
     document.getElementById("gm-save").style.display = "";
+    document.getElementById("gm-save").textContent = "Save";
   }
 
   /* ---------- Garages ---------- */
@@ -1005,29 +1053,125 @@
     document.getElementById("billing-rate").textContent = result.commissionPct + "%";
     clearRows("billing-table");
     const table = document.getElementById("billing-table");
-    if (!result.rows.length){
-      table.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No attributable sales yet.</td></tr>");
+    // Every seller/garage in the directory gets a row (not just ones with sales) so
+    // limits/blocking can be managed even before their first sale.
+    const allSellerNames = psGetSellers().map(s => s.name);
+    if (!allSellerNames.length){
+      table.insertAdjacentHTML("beforeend", "<tr><td colspan='11' class='empty-row'>No sellers/garages registered yet.</td></tr>");
     }
-    result.rows.forEach(r => {
-      const paid = psGetPaymentStatements(r.seller).reduce((s,p) => s + Number(p.amount||0), 0);
+    allSellerNames.forEach(name => {
+      const s = psGetSellerCommissionSummary(name);
       const tr = document.createElement("tr");
-      tr.innerHTML = "<td>" + r.seller + "</td><td>" + r.unitsSold + "</td><td>" + psFmt(r.salesValue) + "</td><td>" + psFmt(r.commissionOwed) + "</td><td>" + psFmt(paid) + "</td><td></td>";
+      const statusHtml = s.blocked
+        ? "<span class='status red' title=\"" + (s.blockInfo ? s.blockInfo.reason.replace(/"/g,"&quot;") : "") + "\">🚫 Blocked</span>"
+        : "<span class='status green'>Active</span>";
+      tr.innerHTML =
+        "<td><a href='partner-detail.html?seller=" + encodeURIComponent(name) + "' target='_blank' style='color:var(--brand-blue);font-weight:700;'>" + name + "</a></td>" +
+        "<td>" + s.listingsCount + "</td>" +
+        "<td>" + psFmt(s.listedValue) + "</td>" +
+        "<td>" + s.unitsSold + "</td>" +
+        "<td>" + psFmt(s.soldValue) + "</td>" +
+        "<td>" + psFmt(s.commissionOwed) + "</td>" +
+        "<td>" + psFmt(s.paid) + "</td>" +
+        "<td style='font-weight:700;" + (s.pending > 0 ? "color:var(--danger-red);" : "") + "'>" + psFmt(s.pending) + "</td>" +
+        "<td>" + psFmt(s.limit) + "</td>" +
+        "<td>" + statusHtml + "</td>" +
+        "<td></td>";
       const actionTd = tr.lastElementChild;
-      const btn = document.createElement("button");
-      btn.className = "rowbtn approve"; btn.textContent = "Confirm Payment";
-      btn.onclick = () => {
-        const amt = prompt("Amount received from " + r.seller + " (AED):", r.commissionOwed);
+
+      const payBtn = document.createElement("button");
+      payBtn.className = "rowbtn approve"; payBtn.textContent = "Record Payment";
+      payBtn.onclick = () => {
+        const amt = prompt("Amount received from " + name + " toward commission owed (AED):", s.pending || s.commissionOwed);
         if (amt === null) return;
         if (!amt || isNaN(Number(amt))){ alert("Please enter a valid amount."); return; }
-        psConfirmPayment(r.seller, Number(amt), "Commission settlement");
+        psConfirmPayment(name, Number(amt), "Commission settlement");
         renderAll();
       };
-      actionTd.appendChild(btn);
+      actionTd.appendChild(payBtn);
+
+      const blockBtn = document.createElement("button");
+      blockBtn.className = "rowbtn " + (s.blocked ? "approve" : "reject");
+      blockBtn.textContent = s.blocked ? "Unblock" : "Block";
+      blockBtn.onclick = () => {
+        if (s.blocked){
+          psSetSellerBlocked(name, false, "Manually unblocked by admin/accounts team.");
+        } else {
+          const reason = prompt("Reason for blocking " + name + ":", "Manual block by admin/accounts team.");
+          if (reason === null) return;
+          psSetSellerBlocked(name, true, reason || "Manual block by admin/accounts team.");
+        }
+        renderAll();
+      };
+      actionTd.appendChild(blockBtn);
+
+      const limitBtn = document.createElement("button");
+      limitBtn.className = "rowbtn"; limitBtn.textContent = "Request Limit Increase";
+      limitBtn.onclick = () => {
+        const newLimit = prompt("New commission limit for " + name + " (AED) — this is an Operations request and only takes effect once approved under MD Approvals:", s.limit);
+        if (newLimit === null) return;
+        if (!newLimit || isNaN(Number(newLimit)) || Number(newLimit) <= s.limit){ alert("Please enter a number greater than the current limit (" + psFmt(s.limit) + ")."); return; }
+        const note = prompt("Reason for requesting this increase (shown to MD):", "");
+        psRequestLimitIncrease(name, Number(newLimit), note || "");
+        alert("Request submitted — it now needs MD approval under MD Approvals before it takes effect.");
+        renderAll();
+      };
+      actionTd.appendChild(limitBtn);
+
       table.appendChild(tr);
     });
     document.getElementById("billing-unattributed").textContent = result.unattributedUnits
       ? result.unattributedUnits + " unit(s) from legacy demo orders couldn't be matched to a known product/seller and are excluded above."
       : "";
+  }
+
+  /* ---------- MD Approvals (commission-limit increase requests) ---------- */
+  function renderMdApprovalsPage(){
+    const requests = psGetLimitRequests();
+    const pending = requests.filter(r => r.status === "Pending MD Approval");
+    const decided = requests.filter(r => r.status !== "Pending MD Approval");
+
+    clearRows("mdapprovals-pending-table");
+    const pendingTable = document.getElementById("mdapprovals-pending-table");
+    if (!pending.length){
+      pendingTable.insertAdjacentHTML("beforeend", "<tr><td colspan='6' class='empty-row'>No pending limit-increase requests.</td></tr>");
+    }
+    pending.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + r.sellerName + "</td><td>" + psFmt(r.currentLimit) + "</td><td>" + psFmt(r.requestedLimit) + "</td><td style='max-width:200px;'>" + (r.note || "—") + "</td><td>" + r.at + "</td><td></td>";
+      const actionTd = tr.lastElementChild;
+      const approveBtn = document.createElement("button");
+      approveBtn.className = "rowbtn approve"; approveBtn.textContent = "Approve (as MD)";
+      approveBtn.onclick = () => {
+        const note = prompt("Optional MD decision note:", "Approved.");
+        psDecideLimitRequest(r.id, true, note || "");
+        renderAll();
+      };
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "rowbtn reject"; rejectBtn.textContent = "Reject";
+      rejectBtn.onclick = () => {
+        const note = prompt("Reason for rejecting this limit increase:", "");
+        if (note === null) return;
+        psDecideLimitRequest(r.id, false, note);
+        renderAll();
+      };
+      actionTd.appendChild(approveBtn); actionTd.appendChild(rejectBtn);
+      pendingTable.appendChild(tr);
+    });
+
+    clearRows("mdapprovals-decided-table");
+    const decidedTable = document.getElementById("mdapprovals-decided-table");
+    if (!decided.length){
+      decidedTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>No decisions yet.</td></tr>");
+    }
+    decided.slice(0,15).forEach(r => {
+      const tr = document.createElement("tr");
+      const cls = r.status === "Approved" ? "green" : "red";
+      tr.innerHTML = "<td>" + r.sellerName + "</td><td>" + psFmt(r.currentLimit) + " → " + psFmt(r.requestedLimit) + "</td><td><span class='status " + cls + "'>" + r.status + "</span></td><td style='max-width:220px;'>" + (r.decisionNote || "—") + "</td>";
+      decidedTable.appendChild(tr);
+    });
+
+    updateNavBadge("nav-mdapprovals-badge", pending.length);
   }
 
   /* ---------- All Listings / Add Listing ---------- */
@@ -1424,6 +1568,7 @@
     renderGarageBookingsPage();
     renderFinancePage();
     renderBillingPage();
+    renderMdApprovalsPage();
     renderAllListingsPage();
     renderListingDeletionsPage();
     fillAddListingForm();

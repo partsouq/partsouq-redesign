@@ -105,7 +105,7 @@
   /* With a real photo (photographic banner from the reference): full-bleed wide
      banner, copy overlaid on a dark scrim over the left of the image — same
      composition as the reference's own "wide banner" layout. */
-  .promo-card.has-photo{display:flex;align-items:center;aspect-ratio:3.4/1;min-height:0;max-height:220px;grid-template-columns:none;}
+  .promo-card.has-photo{display:flex;width:100%;align-items:center;aspect-ratio:3.4/1;min-height:0;max-height:220px;grid-template-columns:none;}
   .promo-card.has-photo::before{content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(100deg, rgba(7,12,26,.84) 0%, rgba(7,12,26,.56) 40%, rgba(7,12,26,.16) 72%, rgba(7,12,26,.03) 100%);}
   .promo-card.has-photo>.promo-copy{max-width:440px;padding:0 36px;}
@@ -229,7 +229,7 @@
     .promo-card>.promo-copy{padding:24px 22px 4px;}
     .promo-art{justify-content:flex-start;padding:4px 22px 24px;height:auto;}
     #promo-image{height:auto;aspect-ratio:16/9;}
-    .promo-card.has-photo{aspect-ratio:16/10;max-height:220px;}
+    .promo-card.has-photo{width:100%;aspect-ratio:16/10;max-height:220px;}
     .promo-card.has-photo::before{background:linear-gradient(180deg, rgba(7,12,26,.72) 0%, rgba(7,12,26,.6) 55%, rgba(7,12,26,.78) 100%);}
     .promo-card.has-photo>.promo-copy{max-width:none;padding:18px;}
     .promo-card.has-photo h2{font-size:16px;}

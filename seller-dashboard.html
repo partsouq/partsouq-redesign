@@ -823,6 +823,10 @@
         alert("Part Name, OEM/Part Number, Price and Delivery Fee are required. Delivery is mandatory for every listing.");
         return;
       }
+      if (!gmPhotos.front && !gmPhotos.side && !gmPhotos.top && !gmPhotos.back){
+        alert("At least one real photo of the part is required — buyers need to see an actual photo of what they're buying. Please add a photo before saving.");
+        return;
+      }
       psOverrideListing(id, {
         name: name,
         oem: oem, sku: oem,
@@ -913,6 +917,10 @@
     const deliveryFee = document.getElementById("al-delivery-fee").value;
     if (!name || !oem || !category || !condition || !brand || !price || deliveryFee === ""){
       alert("Please fill in part name, OEM/part number, category, condition, car brand, price and delivery fee — all marked *. Delivery is mandatory for every listing.");
+      return;
+    }
+    if (!alPhotos.front && !alPhotos.side && !alPhotos.top && !alPhotos.back){
+      alert("Please upload at least one real photo of the part (Front View is best) — buyers need to see an actual photo of what they're buying, not just an icon. Add a photo before submitting.");
       return;
     }
     const all = psGetAllSubmittedListings();

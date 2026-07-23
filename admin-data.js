@@ -790,3 +790,51 @@ function psDecideLimitRequest(id, approve, decisionNote){
   localStorage.setItem(PS_LIMIT_REQUESTS_KEY, JSON.stringify(list));
   if (approve) psSetSellerLimit(rec.sellerName, rec.requestedLimit);
 }
+
+/* ---------- Auto Corner ID Verification ----------
+   A real, additional step after a seller/garage logs in with their real
+   email+PIN: they must upload an actual ID/Trade License document, which a
+   human on the admin/accounts team reviews and Approves/Rejects. This is
+   distinct from the pre-login application approval (idStatus above, which
+   only covers whether Auto Corner let them register at all) — this is
+   Auto Corner's own compliance verification, backed by a real uploaded
+   document rather than just an admin toggle. */
+const PS_ID_VERIFICATION_KEY = "ps_seller_id_verification";
+function psGetIdVerificationMap(){
+  try { return JSON.parse(localStorage.getItem(PS_ID_VERIFICATION_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+/* Always returns a full record — sellers with no entry yet default to "Not Submitted". */
+function psGetIdVerification(sellerName){
+  const map = psGetIdVerificationMap();
+  return map[sellerName] || {status: "Not Submitted", document: null, submittedAt: null, note: "", decidedAt: null};
+}
+function psSubmitIdVerification(sellerName, documentDataUrl){
+  const map = psGetIdVerificationMap();
+  const prev = map[sellerName] || {};
+  map[sellerName] = Object.assign({}, prev, {
+    status: "Pending",
+    document: documentDataUrl,
+    submittedAt: new Date().toLocaleString(),
+    note: ""
+  });
+  localStorage.setItem(PS_ID_VERIFICATION_KEY, JSON.stringify(map));
+}
+function psDecideIdVerification(sellerName, approve, note){
+  const map = psGetIdVerificationMap();
+  const prev = map[sellerName] || {};
+  map[sellerName] = Object.assign({}, prev, {
+    status: approve ? "Verified" : "Rejected",
+    note: note || "",
+    decidedAt: new Date().toLocaleString()
+  });
+  localStorage.setItem(PS_ID_VERIFICATION_KEY, JSON.stringify(map));
+}
+/* Every submission currently awaiting admin review — powers the admin
+   portal's "ID Verifications" queue and its pending-count badge. */
+function psGetPendingIdVerifications(){
+  const map = psGetIdVerificationMap();
+  return Object.keys(map)
+    .filter(name => map[name].status === "Pending")
+    .map(name => Object.assign({sellerName: name}, map[name]));
+}

@@ -141,6 +141,13 @@
     .ps-bottom-nav a.active{color:var(--brand-blue);}
     .ps-bottom-nav a .ic{font-size:20px;line-height:1;}
   }
+
+  /* ---------- Admin lightbox — zoom seller-uploaded documents/photos full-size ---------- */
+  .admin-lightbox{display:none;position:fixed;inset:0;background:rgba(8,12,22,.92);z-index:3000;align-items:center;justify-content:center;flex-direction:column;padding:30px;}
+  .admin-lightbox.open{display:flex;}
+  .admin-lightbox img{max-width:90vw;max-height:78vh;border-radius:10px;background:#fff;}
+  .admin-lightbox .alb-counter{color:#fff;font-size:13px;margin-bottom:14px;}
+  .admin-lightbox .alb-close{position:absolute;top:20px;right:26px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -188,6 +195,7 @@
     <div class="navlink" data-page="finance">📄 Subscriptions &amp; Payments</div>
     <div class="navlink" data-page="billing">💳 Partner Billing</div>
     <div class="navlink" data-page="mdapprovals">🖋️ MD Approvals <span class="cnt" id="nav-mdapprovals-badge" style="display:none;">0</span></div>
+    <div class="navlink" data-page="idverifications">🪪 ID Verifications <span class="cnt" id="nav-idverifications-badge" style="display:none;">0</span></div>
 
     <div class="navsection">Listings</div>
     <div class="navlink" data-page="alllistings">≣ All Listings</div>
@@ -386,6 +394,18 @@
       </div>
     </div>
 
+    <div class="page" id="page-idverifications">
+      <div class="topbar"><div><h1>ID Verifications</h1><span>Real documents sellers/garages upload after login — review and Approve/Reject each one</span></div></div>
+      <div class="panel">
+        <h3>Pending Review</h3>
+        <table id="idverifications-pending-table"><tr><th>Seller / Garage</th><th>Document</th><th>Submitted</th><th>Action</th></tr></table>
+      </div>
+      <div class="panel">
+        <h3>Decided</h3>
+        <table id="idverifications-decided-table"><tr><th>Seller / Garage</th><th>Status</th><th>Note</th><th>Decided</th></tr></table>
+      </div>
+    </div>
+
     <div class="page" id="page-alllistings">
       <div class="topbar"><div><h1>All Listings</h1><span>Every seed + seller/admin listing — edit price or take it offline</span></div></div>
       <div class="panel">
@@ -540,6 +560,12 @@
       <button class="save-btn" style="flex:1;" id="gm-save">Save</button>
     </div>
   </div>
+</div>
+
+<div class="admin-lightbox" id="admin-lightbox">
+  <button class="alb-close" onclick="closeAdminLightbox()">✕</button>
+  <div class="alb-counter" id="alb-counter"></div>
+  <img id="alb-img">
 </div>
 
 <script src="products-data.js"></script>
@@ -993,6 +1019,18 @@
     document.getElementById("gm-save").textContent = "Save";
   }
 
+  /* ---------- Admin lightbox — zoom any seller-uploaded photo/document full-size ---------- */
+  let albShots = []; let albActive = 0;
+  function openAdminLightbox(shots, startIndex){
+    albShots = (shots || []).filter(s => s && s.src);
+    if (!albShots.length) return;
+    albActive = startIndex || 0;
+    document.getElementById("alb-img").src = albShots[albActive].src;
+    document.getElementById("alb-counter").textContent = albShots[albActive].label + " (" + (albActive+1) + " of " + albShots.length + ")";
+    document.getElementById("admin-lightbox").classList.add("open");
+  }
+  function closeAdminLightbox(){ document.getElementById("admin-lightbox").classList.remove("open"); }
+
   /* ---------- Garages ---------- */
   function renderGaragesPage(){
     clearRows("garages-table");
@@ -1172,6 +1210,64 @@
     });
 
     updateNavBadge("nav-mdapprovals-badge", pending.length);
+  }
+
+  /* ---------- ID Verifications (real documents sellers/garages upload post-login) ---------- */
+  function renderIdVerificationsPage(){
+    const map = psGetIdVerificationMap();
+    const names = Object.keys(map);
+    const pending = names.filter(n => map[n].status === "Pending");
+    const decided = names.filter(n => map[n].status === "Verified" || map[n].status === "Rejected");
+
+    clearRows("idverifications-pending-table");
+    const pendingTable = document.getElementById("idverifications-pending-table");
+    if (!pending.length){
+      pendingTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>No ID verifications awaiting review.</td></tr>");
+    }
+    pending.forEach(name => {
+      const v = map[name];
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + name + "</td><td></td><td>" + (v.submittedAt || "—") + "</td><td></td>";
+      const docTd = tr.children[1];
+      if (v.document){
+        const img = document.createElement("img");
+        img.src = v.document;
+        img.style.cssText = "width:56px;height:56px;object-fit:cover;border-radius:6px;cursor:zoom-in;border:1px solid var(--border);";
+        img.onclick = () => openAdminLightbox([{label: name + " — ID Document", src: v.document}], 0);
+        docTd.appendChild(img);
+      } else {
+        docTd.textContent = "—";
+      }
+      const actionTd = tr.lastElementChild;
+      const approveBtn = document.createElement("button");
+      approveBtn.className = "rowbtn approve"; approveBtn.textContent = "Approve";
+      approveBtn.onclick = () => { psDecideIdVerification(name, true, ""); renderAll(); };
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "rowbtn reject"; rejectBtn.textContent = "Reject";
+      rejectBtn.onclick = () => {
+        const note = prompt("Reason for rejecting " + name + "'s ID verification (shown to them so they can resubmit):", "Document unclear — please re-upload.");
+        if (note === null) return;
+        psDecideIdVerification(name, false, note);
+        renderAll();
+      };
+      actionTd.appendChild(approveBtn); actionTd.appendChild(rejectBtn);
+      pendingTable.appendChild(tr);
+    });
+
+    clearRows("idverifications-decided-table");
+    const decidedTable = document.getElementById("idverifications-decided-table");
+    if (!decided.length){
+      decidedTable.insertAdjacentHTML("beforeend", "<tr><td colspan='4' class='empty-row'>No decisions yet.</td></tr>");
+    }
+    decided.forEach(name => {
+      const v = map[name];
+      const tr = document.createElement("tr");
+      const cls = v.status === "Verified" ? "green" : "red";
+      tr.innerHTML = "<td>" + name + "</td><td><span class='status " + cls + "'>" + v.status + "</span></td><td style='max-width:220px;'>" + (v.note || "—") + "</td><td>" + (v.decidedAt || "—") + "</td>";
+      decidedTable.appendChild(tr);
+    });
+
+    updateNavBadge("nav-idverifications-badge", pending.length);
   }
 
   /* ---------- All Listings / Add Listing ---------- */
@@ -1569,6 +1665,7 @@
     renderFinancePage();
     renderBillingPage();
     renderMdApprovalsPage();
+    renderIdVerificationsPage();
     renderAllListingsPage();
     renderListingDeletionsPage();
     fillAddListingForm();

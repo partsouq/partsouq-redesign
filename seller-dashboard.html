@@ -69,7 +69,7 @@
   .save-confirm{color:var(--success-green);font-size:12.5px;font-weight:600;margin-left:10px;display:none;}
 
   .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
-  .photo-box{border:1.5px dashed var(--border);border-radius:9px;padding:14px 8px;text-align:center;cursor:pointer;font-size:11.5px;color:var(--text-secondary);background:var(--bg-alt);}
+  .photo-box{border:1.5px dashed var(--border);border-radius:9px;padding:14px 8px;text-align:center;cursor:pointer;font-size:11.5px;color:var(--text-secondary);background:var(--bg-alt);position:relative;}
   .photo-box.has-file{border-style:solid;border-color:var(--success-green);background:var(--success-green-light);}
   .photo-box img{max-height:44px;border-radius:5px;margin-bottom:4px;}
   .photo-box b{display:block;font-size:12px;margin-bottom:2px;}
@@ -119,6 +119,20 @@
   #login-gate input{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:12px;box-sizing:border-box;}
   #login-gate button{width:100%;padding:11px;border-radius:8px;background:var(--brand-blue);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;}
   #login-gate .err{color:var(--danger-red);font-size:12px;margin-top:10px;display:none;text-align:left;}
+
+  #idverify-gate{position:fixed;inset:0;background:var(--bg-dark);display:none;align-items:center;justify-content:center;z-index:1900;padding:20px;}
+  #idverify-gate.open{display:flex;}
+  #idverify-gate .box{background:#fff;border-radius:14px;padding:30px;max-width:420px;width:100%;text-align:center;}
+  #idverify-gate .box .mark{width:44px;height:44px;border-radius:10px;border:2px solid var(--brand-blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--success-green);font-size:16px;margin:0 auto 14px;}
+  #idverify-gate h2{font-size:18px;margin:0 0 6px;}
+  #idverify-gate p{font-size:12.5px;color:var(--text-secondary);margin:0 0 16px;line-height:1.5;text-align:left;}
+  #idverify-gate .idv-upload{border:1.5px dashed var(--border);border-radius:9px;padding:20px 10px;text-align:center;cursor:pointer;font-size:12.5px;color:var(--text-secondary);background:var(--bg-alt);margin-bottom:14px;}
+  #idverify-gate .idv-upload.has-file{border-style:solid;border-color:var(--success-green);background:var(--success-green-light);}
+  #idverify-gate .idv-upload img{max-height:120px;border-radius:6px;margin-bottom:6px;}
+  #idverify-gate button{width:100%;padding:11px;border-radius:8px;background:var(--brand-blue);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;}
+  #idverify-gate button:disabled{background:var(--text-muted);cursor:not-allowed;}
+  #idverify-gate .idv-note{font-size:11.5px;color:var(--text-muted);margin-top:14px;text-align:left;}
+  #idverify-gate .idv-rejected{background:var(--danger-red-light);color:var(--danger-red);border-radius:9px;padding:10px 12px;font-size:12px;margin-bottom:14px;text-align:left;}
 
   /* mobile topbar + off-canvas sidebar */
   #mobile-topbar{display:none;}
@@ -175,6 +189,19 @@
     .ps-bottom-nav a.active{color:var(--brand-blue);}
     .ps-bottom-nav a .ic{font-size:20px;line-height:1;}
   }
+
+  /* ---------- Seller photo zoom lightbox (view your own uploaded photos full-size) ---------- */
+  .thumb-cell img, .edit-photo-box img, .photo-box img{cursor:zoom-in;}
+  .sd-lightbox{display:none;position:fixed;inset:0;background:rgba(8,12,22,.92);z-index:3000;align-items:center;justify-content:center;flex-direction:column;padding:30px;}
+  .sd-lightbox.open{display:flex;}
+  .sd-lightbox img{max-width:90vw;max-height:72vh;border-radius:10px;background:#fff;}
+  .sd-lightbox .sdlb-counter{color:#fff;font-size:13px;margin-bottom:14px;}
+  .sd-lightbox .sdlb-close{position:absolute;top:20px;right:26px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;}
+  .sd-lightbox .sdlb-thumbs{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center;}
+  .sd-lightbox .sdlb-thumbs div{width:56px;height:56px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;opacity:.6;}
+  .sd-lightbox .sdlb-thumbs div.active{border-color:var(--brand-blue);opacity:1;}
+  .sd-lightbox .sdlb-thumbs img{width:100%;height:100%;object-fit:cover;max-width:none;max-height:none;border-radius:0;}
+  .zoom-btn{position:absolute;top:4px;right:4px;background:rgba(16,25,46,.7);color:#fff;border:none;border-radius:6px;font-size:11px;padding:3px 6px;cursor:pointer;line-height:1;}
 </style>
 </head>
 <body>
@@ -194,6 +221,22 @@
     <p style="font-size:11.5px;color:var(--text-muted);margin-top:14px;">Not registered yet? <a href="become-a-partner.html" style="color:var(--brand-blue);font-weight:600;">Apply to become a partner</a>.</p>
   </div>
 </div>
+
+<div id="idverify-gate">
+  <div class="box">
+    <div class="mark">AC</div>
+    <h2>Auto Corner ID Verification</h2>
+    <div id="idv-rejected-note" class="idv-rejected" style="display:none;"></div>
+    <p>One more real step before you can list or sell: upload a photo of your Trade License (or Emirates ID for a sole proprietor) so Auto Corner's accounts team can verify your business identity. This is reviewed by a real person on the admin side — not an automatic pass.</p>
+    <label class="idv-upload" id="idv-upload-label" for="idv-doc">
+      <div id="idv-upload-inner"><div style="font-size:22px;">🪪</div><b>Tap to upload ID / Trade License photo</b></div>
+      <input id="idv-doc" type="file" accept="image/*" style="display:none;">
+    </label>
+    <button id="idv-submit-btn" onclick="submitIdVerification()" disabled>Submit for Verification</button>
+    <p class="idv-note">Your document is stored only in this browser's local demo storage and shown to the Auto Corner admin/accounts team for review — it is never emailed or sent anywhere else.</p>
+  </div>
+</div>
+
 <div id="mobile-topbar">
   <button onclick="toggleSidebar()" aria-label="Menu">☰</button>
   <b>Partner Portal</b>
@@ -218,6 +261,7 @@
   <div class="main">
 
     <div id="blocked-banner" style="display:none;background:var(--danger-red-light);color:var(--danger-red);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;line-height:1.5;"></div>
+    <div id="idverify-pending-banner" style="display:none;background:var(--accent-orange-light);color:#B75C10;border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;line-height:1.5;"></div>
 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
@@ -413,6 +457,13 @@
   </div>
 </div>
 
+<div class="sd-lightbox" id="sd-lightbox">
+  <button class="sdlb-close" onclick="closeSdLightbox()">✕</button>
+  <div class="sdlb-counter" id="sdlb-counter"></div>
+  <img id="sdlb-img">
+  <div class="sdlb-thumbs" id="sdlb-thumbs"></div>
+</div>
+
 <script src="products-data.js"></script>
 <script src="cart.js"></script>
 <script src="admin-data.js"></script>
@@ -471,6 +522,57 @@
     document.getElementById("login-gate").style.display = "none";
     document.getElementById("garagebookings-navlink").style.display = seller.type === "Garage / Workshop" ? "" : "none";
     renderAll();
+    checkIdVerificationGate();
+  }
+
+  /* ---------- Auto Corner ID Verification (real additional step after login) ----------
+     Not Submitted / Rejected -> block the dashboard behind a required upload screen.
+     Pending -> let them in, but show a clear "under review" banner.
+     Verified -> nothing to show, proceed normally. */
+  let idvDocData = null;
+  function checkIdVerificationGate(){
+    const v = psGetIdVerification(SELLER_NAME);
+    const gate = document.getElementById("idverify-gate");
+    const pendingBanner = document.getElementById("idverify-pending-banner");
+    if (v.status === "Not Submitted" || v.status === "Rejected"){
+      gate.classList.add("open");
+      const rejectedNote = document.getElementById("idv-rejected-note");
+      if (v.status === "Rejected"){
+        rejectedNote.style.display = "block";
+        rejectedNote.textContent = "🚫 Your previous submission was rejected" + (v.note ? (": " + v.note) : ".") + " Please upload a clearer document and resubmit.";
+      } else {
+        rejectedNote.style.display = "none";
+      }
+      pendingBanner.style.display = "none";
+    } else {
+      gate.classList.remove("open");
+      if (v.status === "Pending"){
+        pendingBanner.style.display = "block";
+        pendingBanner.innerHTML = "🪪 <b>ID Verification pending review.</b> Your document was submitted on " + v.submittedAt + " and is awaiting Auto Corner admin/accounts review.";
+      } else {
+        pendingBanner.style.display = "none";
+      }
+    }
+  }
+  document.getElementById("idv-doc").addEventListener("change", () => {
+    const input = document.getElementById("idv-doc");
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      idvDocData = e.target.result;
+      document.getElementById("idv-upload-label").classList.add("has-file");
+      document.getElementById("idv-upload-inner").innerHTML = "<img src='" + idvDocData + "'><b>Document selected ✓ — tap to replace</b>";
+      document.getElementById("idv-upload-label").appendChild(input);
+      document.getElementById("idv-submit-btn").disabled = false;
+    };
+    reader.readAsDataURL(file);
+  });
+  function submitIdVerification(){
+    if (!idvDocData) return;
+    psSubmitIdVerification(SELLER_NAME, idvDocData);
+    idvDocData = null;
+    checkIdVerificationGate();
   }
   function signOut(){
     psSellerLogout();
@@ -592,6 +694,9 @@
         : "Set at approval";
       tr.innerHTML = "<td style='font-family:monospace;font-size:11.5px;'>" + psListingDisplayId(p.id) + "</td><td><div class='thumb-cell'>" + thumb + "</div></td><td>" + p.name + discountTag + "</td><td>" + oem + "</td><td>" + psFmt(p.price) + "</td><td>" + psFmt(p.deliveryFee || 20) + "</td><td>" + commissionText + "</td><td><span class='status " + cls + "'>" + p.status + "</span></td><td></td>";
       const actionTd = tr.lastElementChild;
+      if (p.image){
+        tr.querySelector(".thumb-cell").onclick = () => openSdLightbox(photoShotsFor(p), 0);
+      }
       const editBtn = document.createElement("button");
       editBtn.className = "rowbtn"; editBtn.textContent = "Edit";
       editBtn.onclick = () => openEditListingModal(p.id);
@@ -678,8 +783,8 @@
       const grid = document.getElementById("gm-photo-grid");
       grid.innerHTML = ["front","side","top","back"].map(key => {
         const label = key[0].toUpperCase() + key.slice(1);
-        const thumb = gmPhotos[key] ? "<img src='" + gmPhotos[key] + "'>" : "<div class='noimg'>📷</div>";
-        return "<div class='edit-photo-box'>" + thumb + "<b>" + label + "</b>" +
+        const thumb = gmPhotos[key] ? "<img src='" + gmPhotos[key] + "' data-view-key='" + key + "'>" : "<div class='noimg'>📷</div>";
+        return "<div class='edit-photo-box'>" + thumb + (gmPhotos[key] ? "<button type='button' class='zoom-btn' data-zoom-key='" + key + "'>🔍</button>" : "") + "<b>" + label + "</b>" +
           "<div class='ep-actions'>" +
             "<label>Replace<input type='file' accept='image/*' data-photo-key='" + key + "' style='display:none;'></label>" +
             (gmPhotos[key] ? "<button type='button' class='ep-remove' data-remove-key='" + key + "'>✕</button>" : "") +
@@ -698,6 +803,14 @@
       grid.querySelectorAll("button[data-remove-key]").forEach(btn => {
         btn.addEventListener("click", () => { gmPhotos[btn.dataset.removeKey] = null; renderGmPhotoGrid(); });
       });
+      // View/zoom this listing's own uploaded photos full-size — opens on whichever angle was clicked
+      const gmShots = ["front","side","top","back"].filter(k => gmPhotos[k]).map(k => ({key:k, label: k==="front"?"Main":k[0].toUpperCase()+k.slice(1), src: gmPhotos[k]}));
+      const openGmShot = (key) => {
+        const idx = gmShots.findIndex(s => s.key === key);
+        openSdLightbox(gmShots.map(s => ({label:s.label, src:s.src})), idx > -1 ? idx : 0);
+      };
+      grid.querySelectorAll("img[data-view-key]").forEach(img => { img.onclick = () => openGmShot(img.dataset.viewKey); });
+      grid.querySelectorAll("button[data-zoom-key]").forEach(btn => { btn.onclick = () => openGmShot(btn.dataset.zoomKey); });
     }
     renderGmPhotoGrid();
 
@@ -757,8 +870,15 @@
       reader.onload = e => {
         alPhotos[key] = e.target.result;
         label.classList.add("has-file");
-        label.innerHTML = '<img src="' + e.target.result + '"><b>' + key[0].toUpperCase()+key.slice(1) + ' ✓</b>';
+        label.innerHTML = '<img src="' + e.target.result + '"><b>' + key[0].toUpperCase()+key.slice(1) + ' ✓</b><button type="button" class="zoom-btn" data-al-zoom="' + key + '">🔍</button>';
         label.appendChild(input);
+        // View/zoom this just-selected photo before submitting — stopPropagation so it
+        // doesn't also re-trigger the label's file picker (the label wraps the input).
+        label.querySelector("[data-al-zoom]").addEventListener("click", (ev) => {
+          ev.preventDefault(); ev.stopPropagation();
+          const shots = ["front","side","top","back"].filter(k => alPhotos[k]).map(k => ({label: k==="front"?"Main":k[0].toUpperCase()+k.slice(1), src: alPhotos[k]}));
+          openSdLightbox(shots, shots.findIndex(s => s.src === alPhotos[key]));
+        });
       };
       reader.readAsDataURL(file);
     });
@@ -962,6 +1082,46 @@
       }
       table.appendChild(tr);
     });
+  }
+
+  /* ---------- Photo zoom lightbox ----------
+     Lets a seller view/zoom their OWN uploaded photos full-size — used from
+     the My Listings table thumbnail, the Edit Listing modal's photo grid, and
+     the Add Listing preview. Takes an array of {label, src} shots (already
+     filtered to only the angles that have a photo) plus which one to open on. */
+  let sdShots = [];
+  let sdActive = 0;
+  function openSdLightbox(shots, startIndex){
+    sdShots = (shots || []).filter(s => s && s.src);
+    if (!sdShots.length) return;
+    sdActive = startIndex || 0;
+    document.getElementById("sd-lightbox").classList.add("open");
+    renderSdLightbox();
+  }
+  function closeSdLightbox(){ document.getElementById("sd-lightbox").classList.remove("open"); }
+  function renderSdLightbox(){
+    document.getElementById("sdlb-img").src = sdShots[sdActive].src;
+    document.getElementById("sdlb-counter").textContent = sdShots[sdActive].label + " (" + (sdActive+1) + " of " + sdShots.length + ")";
+    const wrap = document.getElementById("sdlb-thumbs");
+    wrap.innerHTML = "";
+    sdShots.forEach((shot, i) => {
+      const div = document.createElement("div");
+      div.className = i === sdActive ? "active" : "";
+      div.innerHTML = "<img src='" + shot.src + "'>";
+      div.onclick = () => { sdActive = i; renderSdLightbox(); };
+      wrap.appendChild(div);
+    });
+  }
+  /* Builds the {label, src} shot list from a listing's photos object (or its
+     single legacy `image` field for older/seed-style records). */
+  function photoShotsFor(p){
+    const photos = p && p.photos;
+    const shots = [];
+    if (photos){
+      ["front","side","top","back"].forEach(k => { if (photos[k]) shots.push({label: k === "front" ? "Main" : k[0].toUpperCase()+k.slice(1), src: photos[k]}); });
+    }
+    if (!shots.length && p && p.image) shots.push({label: "Main", src: p.image});
+    return shots;
   }
 
   /* ---------- Commission block banner ----------

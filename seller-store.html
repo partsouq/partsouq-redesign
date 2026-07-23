@@ -57,6 +57,8 @@
   .card .thumb svg{width:40px;height:40px;stroke:var(--brand-blue);}
   .card .thumb img{width:100%;height:100%;object-fit:cover;}
   .card .badgepct{position:absolute;top:8px;left:8px;background:var(--accent-orange);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;}
+  .card .quickaddbtn{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:var(--brand-blue);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;font-weight:700;line-height:1;padding:0;}
+  .card .quickaddbtn:hover{background:var(--brand-blue-dark);}
   .card .name{display:block;color:var(--text);font-size:13px;font-weight:600;margin-bottom:2px;}
   .card .sku{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
   .card .price{font-weight:700;color:var(--brand-blue-dark);font-size:15px;}
@@ -119,7 +121,7 @@
     <div class="wrap">
       <a href="index.html" class="logo"><div class="mark">AC</div><div class="word"><b>Auto Corner</b><small>AUTO PARTS MARKETPLACE</small></div></a>
       <form class="searchbar" action="search-results.html" method="get"><input name="q" placeholder="Search part name, OEM number or car model..."><button type="submit">🔍</button></form>
-      <div class="headerlinks"><a href="my-account.html?page=wishlist" style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Wishlist</a><a href="cart-checkout.html" style="position:relative;display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><div class="acct-menu" style="position:relative;display:inline-block;"><a href="#" onclick="toggleAcctMenu(event);return false;" style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="acct-menu-label">Account</span></a><div class="acct-dropdown" id="acct-dropdown"><a href="login-register.html?type=buyer" id="acct-link-signin">Sign In</a><a href="my-account.html" id="acct-link-myaccount" style="display:none;">👤 My Account</a><a href="seller-dashboard.html">🔧 Partner Dashboard</a><a href="#" id="acct-link-logout" class="logout" style="display:none;" onclick="acctMenuLogout();return false;">Log Out</a></div></div></div>
+      <div class="headerlinks"><a href="my-account.html?page=wishlist" style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Wishlist</a><a href="cart-checkout.html" style="position:relative;display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>Cart<span class="ps-cart-badge" style="display:none;position:absolute;top:-6px;right:-14px;background:var(--accent-orange);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;align-items:center;justify-content:center;padding:0 3px;">0</span></a><div class="acct-menu" style="position:relative;display:inline-block;"><a href="#" onclick="toggleAcctMenu(event);return false;" style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="acct-menu-label">Account</span></a><div class="acct-dropdown" id="acct-dropdown"><a href="login-register.html?type=buyer" id="acct-link-signin">Sign In</a><a href="my-account.html" id="acct-link-myaccount" style="display:none;">My Account</a><a href="seller-dashboard.html">Partner Dashboard</a><a href="#" id="acct-link-logout" class="logout" style="display:none;" onclick="acctMenuLogout();return false;">Log Out</a></div></div></div>
     </div>
   </header>
 
@@ -143,7 +145,7 @@
     <div id="store-empty" style="display:none;color:var(--text-secondary);font-size:14px;padding:30px 0;text-align:center;">This seller doesn't have any live listings right now.</div>
   </div>
 
-  <footer>© 2026 Auto Corner — <a href="index.html" style="color:inherit;">autocorner.com</a> — All rights reserved. Dubai, UAE. · <a href="admin-portal.html" style="color:inherit;">🛡 Admin Sign In</a></footer>
+  <footer>© 2026 Auto Corner — <a href="index.html" style="color:inherit;">autocorner.com</a> — All rights reserved. Dubai, UAE.</footer>
 
   <nav class="ps-bottom-nav">
     <a href="index.html"><span class="ic">🏠</span>Home</a>
@@ -188,7 +190,9 @@
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML =
-        '<div class="thumb">' + (discount ? '<span class="badgepct">-' + discount + '%</span>' : "") + thumb + '</div>' +
+        '<div class="thumb">' + (discount ? '<span class="badgepct">-' + discount + '%</span>' : "") +
+        '<button type="button" class="quickaddbtn" data-quickadd="' + p.id + '" title="Quick add to cart">+</button>' +
+        thumb + '</div>' +
         '<a href="product-detail.html?id=' + p.id + '" class="name">' + p.name + '</a>' +
         '<div class="sku">' + p.sku + '</div>' +
         '<div class="price">' + psFmt(p.price) + (p.oldPrice ? '<span class="old">' + psFmt(p.oldPrice) + '</span>' : "") + '</div>' +
@@ -199,6 +203,14 @@
         psAddToCart(p.id, 1);
         e.target.textContent = "Added ✓";
         setTimeout(() => { e.target.textContent = "Add to Cart"; }, 1200);
+      });
+      card.querySelector(".quickaddbtn").addEventListener("click", e => {
+        e.preventDefault();
+        psAddToCart(p.id, 1);
+        const btn = e.currentTarget;
+        const prev = btn.textContent;
+        btn.textContent = "✓";
+        setTimeout(() => { btn.textContent = prev; }, 1000);
       });
       grid.appendChild(card);
     });
